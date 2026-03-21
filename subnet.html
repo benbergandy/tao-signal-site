@@ -71,26 +71,19 @@
   .chart-controls { display:flex; gap:4px; align-items:center; flex-wrap:wrap; }
   .ctrl-divider { width:1px; height:14px; background:var(--border2); margin:0 2px; }
 
-  .toggle-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:3px 7px; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-  .toggle-btn:hover { border-color:var(--cyan); color:var(--cyan); }
-  .toggle-btn.t-green.active  { color:var(--green);  border-color:var(--green);  background:var(--green-dim); }
-  .toggle-btn.t-cyan.active   { color:var(--cyan);   border-color:var(--cyan);   background:var(--cyan-dim); }
-  .toggle-btn.t-yellow.active { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
-  .toggle-btn.t-orange.active { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
-  .toggle-btn.t-purple.active { color:var(--purple); border-color:var(--purple); background:rgba(153,102,255,0.08); }
-  .toggle-btn.t-red.active    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
-  /* Range buttons */
   .range-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:3px 7px; cursor:pointer; transition:all 0.15s; }
   .range-btn:hover { border-color:var(--text); color:var(--text); }
   .range-btn.active { border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim); }
+  .scale-select { font-family:'IBM Plex Mono',monospace; font-size:9px; background:var(--surface2); border:1px solid var(--border2); color:var(--cyan); padding:3px 6px; cursor:pointer; text-transform:uppercase; letter-spacing:0.06em; }
 
   .chart-body { padding:14px 16px; }
-
   .chart-legend { display:flex; gap:12px; padding:7px 16px 10px; flex-wrap:wrap; border-top:1px solid var(--border); }
   .legend-item { display:flex; align-items:center; gap:5px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
   .legend-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
   .legend-line { width:14px; height:2px; flex-shrink:0; }
   .legend-dash { width:14px; height:0; border-top:2px dashed; flex-shrink:0; }
+  .flow-note { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); padding:6px 16px; border-top:1px solid var(--border); background:rgba(255,208,0,0.03); }
+  .loading-charts { display:flex; align-items:center; justify-content:center; height:180px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); flex-direction:column; gap:8px; }
 
   .sidebar { display:flex; flex-direction:column; gap:14px; }
   .info-card { background:var(--surface); border:1px solid var(--border); }
@@ -114,10 +107,11 @@
   .b-red    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
   .b-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
   .b-muted  { color:var(--muted);  border-color:var(--border2);background:transparent; }
-
   .c-green{color:var(--green)} .c-cyan{color:var(--cyan)} .c-yellow{color:var(--yellow)} .c-red{color:var(--red)} .c-orange{color:var(--orange)}
 
-  .loading { display:flex; align-items:center; justify-content:center; height:100px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); }
+  .loading { display:flex; align-items:center; justify-content:center; height:80px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); }
+  .disclaimer { border-top:1px solid var(--border); padding:16px 24px; background:var(--surface); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); line-height:1.6; }
+  .disclaimer strong { color:var(--text); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   .fade-in { animation:fadeUp 0.4s ease both; }
   ::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-track{background:var(--surface)} ::-webkit-scrollbar-thumb{background:var(--border2)}
@@ -165,98 +159,84 @@
 </div>
 
 <div class="stats-strip fade-in">
-  <div class="stat-item"><div class="stat-label">Alpha Price</div><div class="stat-val" id="statPrice">—</div><div class="stat-delta" id="statPriceDelta">—</div></div>
+  <div class="stat-item"><div class="stat-label">Alpha Price</div><div class="stat-val" id="statPrice">—</div><div class="stat-delta" id="statMovingPrice">—</div></div>
+  <div class="stat-item"><div class="stat-label">Price vs EMA</div><div class="stat-val" id="statPriceEma">—</div><div class="stat-delta" id="statPriceEmaSignal">—</div></div>
+  <div class="stat-item"><div class="stat-label">EMA Inflow</div><div class="stat-val" id="statInflow">—</div><div class="stat-delta" id="statInflowSignal">—</div></div>
   <div class="stat-item"><div class="stat-label">Emission Share</div><div class="stat-val" id="statEmission">—</div><div class="stat-delta" id="statVsNetwork">—</div></div>
-  <div class="stat-item"><div class="stat-label">Flow 1D</div><div class="stat-val" id="statFlow1d">—</div></div>
-  <div class="stat-item"><div class="stat-label">Flow 7D</div><div class="stat-val" id="statFlow7d">—</div></div>
-  <div class="stat-item"><div class="stat-label">Flow 30D</div><div class="stat-val" id="statFlow30d">—</div></div>
-  <div class="stat-item"><div class="stat-label">Active Miners</div><div class="stat-val" id="statMiners">—</div></div>
+  <div class="stat-item"><div class="stat-label">Alpha Ratio</div><div class="stat-val" id="statAlphaRatio">—</div><div class="stat-delta">staked / pool</div></div>
+  <div class="stat-item"><div class="stat-label">Active Neurons</div><div class="stat-val" id="statMiners">—</div></div>
   <div class="stat-item"><div class="stat-label">Age (post-dTAO)</div><div class="stat-val" id="statAge">—</div></div>
 </div>
 
 <div class="main">
   <div class="chart-section">
 
-    <!-- PRICE CHART -->
     <div class="chart-card fade-in">
       <div class="chart-header">
         <div class="chart-title">📈 Alpha Token Price</div>
         <div class="chart-controls">
-          <!-- Range -->
-          <button class="range-btn" id="range1m" onclick="setRange('1m')">1M</button>
-          <button class="range-btn" id="range3m" onclick="setRange('3m')">3M</button>
-          <button class="range-btn active" id="range6m" onclick="setRange('6m')">6M</button>
-          <button class="range-btn" id="rangeAll" onclick="setRange('all')">ALL</button>
+          <button class="range-btn" data-chart="price" data-range="1m" onclick="setRange(this,'price')">1M</button>
+          <button class="range-btn" data-chart="price" data-range="3m" onclick="setRange(this,'price')">3M</button>
+          <button class="range-btn active" data-chart="price" data-range="6m" onclick="setRange(this,'price')">6M</button>
+          <button class="range-btn" data-chart="price" data-range="all" onclick="setRange(this,'price')">ALL</button>
           <div class="ctrl-divider"></div>
-          <!-- Scale -->
-          <select onchange="setScale(this.value)" style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--surface2);border:1px solid var(--border2);color:var(--cyan);padding:3px 6px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;">
-            <option value="log" selected>LOG</option>
-            <option value="linear">LINEAR</option>
+          <select class="scale-select" onchange="setPriceScale(this.value)">
+            <option value="linear" selected>LINEAR</option>
+            <option value="log">LOG</option>
           </select>
-          <div class="ctrl-divider"></div>
-          <!-- Overlays -->
-          <button class="toggle-btn t-green active" id="btnEma7" onclick="toggleOverlay('ema7')">EMA 7</button>
-          <button class="toggle-btn t-cyan active" id="btnEma30" onclick="toggleOverlay('ema30')">EMA 30</button>
-          <button class="toggle-btn t-purple active" id="btnEvents" onclick="toggleOverlay('events')">Events</button>
         </div>
       </div>
-      <div class="chart-body"><canvas id="priceChart" height="260"></canvas></div>
+      <div class="chart-body" id="priceBody">
+        <div class="loading-charts"><span>Loading chain history...</span></div>
+      </div>
       <div class="chart-legend">
-        <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Bullish (EMA7 > EMA30)</div>
-        <div class="legend-item"><div class="legend-line" style="background:var(--red)"></div>Bearish (EMA7 < EMA30)</div>
-        <div class="legend-item"><div class="legend-dash" style="border-color:var(--green)"></div>EMA 7</div>
-        <div class="legend-item"><div class="legend-dash" style="border-color:var(--cyan)"></div>EMA 30</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>dTAO</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Taoflow</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Halving</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Bullish (price > EMA)</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--red)"></div>Bearish (price < EMA)</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:var(--cyan)"></div>Moving Price (EMA)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>dTAO Feb 2025</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Taoflow Nov 2025</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Halving Dec 2025</div>
       </div>
     </div>
 
-    <!-- EMISSION CHART -->
     <div class="chart-card fade-in">
       <div class="chart-header">
         <div class="chart-title">⚡ Emission Share vs Network</div>
         <div class="chart-controls">
-          <!-- Range -->
-          <button class="range-btn" id="erange1m" onclick="setEmissionRange('1m')">1M</button>
-          <button class="range-btn" id="erange3m" onclick="setEmissionRange('3m')">3M</button>
-          <button class="range-btn active" id="erange6m" onclick="setEmissionRange('6m')">6M</button>
-          <button class="range-btn" id="erangeAll" onclick="setEmissionRange('all')">ALL</button>
-          <div class="ctrl-divider"></div>
-          <button class="toggle-btn t-yellow active" id="btnEma7e" onclick="toggleEmission('ema7e')">EMA 7</button>
-          <button class="toggle-btn t-orange active" id="btnNetAvg" onclick="toggleEmission('netavg')">Avg Line</button>
-          <button class="toggle-btn t-purple active" id="btnEventsE" onclick="toggleEmission('eventsE')">Events</button>
+          <button class="range-btn" data-chart="emission" data-range="1m" onclick="setRange(this,'emission')">1M</button>
+          <button class="range-btn" data-chart="emission" data-range="3m" onclick="setRange(this,'emission')">3M</button>
+          <button class="range-btn active" data-chart="emission" data-range="6m" onclick="setRange(this,'emission')">6M</button>
+          <button class="range-btn" data-chart="emission" data-range="all" onclick="setRange(this,'emission')">ALL</button>
         </div>
       </div>
-      <div class="chart-body"><canvas id="emissionChart" height="190"></canvas></div>
+      <div class="chart-body" id="emissionBody">
+        <div class="loading-charts"><span>Loading chain history...</span></div>
+      </div>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-line" style="background:var(--yellow)"></div>Below avg → mean reversion signal (62.2% win rate)</div>
         <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Above avg → already priced in</div>
-        <div class="legend-item"><div class="legend-dash" style="border-color:var(--orange)"></div>Network avg (~0.78%)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Signal fired</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:var(--orange)"></div>Network avg</div>
       </div>
     </div>
 
-    <!-- FLOW CHART -->
     <div class="chart-card fade-in">
       <div class="chart-header">
-        <div class="chart-title">🌊 Recycled TAO Flow</div>
+        <div class="chart-title">🌊 EMA TAO Inflow</div>
         <div class="chart-controls">
-          <button class="range-btn" id="frange1m" onclick="setFlowRange('1m')">1M</button>
-          <button class="range-btn" id="frange3m" onclick="setFlowRange('3m')">3M</button>
-          <button class="range-btn active" id="frange6m" onclick="setFlowRange('6m')">6M</button>
-          <button class="range-btn" id="frangeAll" onclick="setFlowRange('all')">ALL</button>
-          <div class="ctrl-divider"></div>
-          <button class="toggle-btn t-cyan active" id="btnFlow1d" onclick="toggleFlow('flow1d')">1D Flow</button>
-          <button class="toggle-btn t-yellow active" id="btnFlow7d" onclick="toggleFlow('flow7d')">7D Trend</button>
+          <button class="range-btn" data-chart="flow" data-range="1m" onclick="setRange(this,'flow')">1M</button>
+          <button class="range-btn" data-chart="flow" data-range="3m" onclick="setRange(this,'flow')">3M</button>
+          <button class="range-btn active" data-chart="flow" data-range="6m" onclick="setRange(this,'flow')">6M</button>
+          <button class="range-btn" data-chart="flow" data-range="all" onclick="setRange(this,'flow')">ALL</button>
         </div>
       </div>
-      <div class="chart-body"><canvas id="flowChart" height="160"></canvas></div>
+      <div class="chart-body" id="flowBody">
+        <div class="loading-charts"><span>Loading chain history...</span></div>
+      </div>
+      <div class="flow-note">⚠ EMA TAO inflow data available from Taoflow upgrade (Nov 2025). Earlier values are zero.</div>
     </div>
 
   </div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="info-card fade-in">
       <div class="info-card-header">Current Signals</div>
@@ -267,46 +247,40 @@
       <div class="info-card-body" id="signalHistoryPanel"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
+      <div class="info-card-header">Chain Data ⛓</div>
+      <div class="info-card-body" id="chainInfo"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
       <div class="info-card-header">Subnet Info</div>
       <div class="info-card-body" id="subnetInfo"><div class="loading">Loading...</div></div>
     </div>
   </div>
 </div>
 
+<div class="disclaimer">
+  <strong>DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions.
+</div>
+
 <script>
-const RAO = 1_000_000_000;
-const NETWORK_AVG_PCT = 100 / 128;
-const params = new URLSearchParams(window.location.search);
-const NETUID = parseInt(params.get('id') || '3');
-
-let priceChart = null, emissionChart = null, flowChart = null;
-let overlays   = { ema7:true, ema30:true, events:true };
-let emOverlays = { ema7e:true, netavg:true, eventsE:true };
-let flowVis    = { flow1d:true, flow7d:true };
-let logScale   = true;
-let priceRange = '6m';
-let emRange    = '6m';
-let flowRange  = '6m';
-
-let _pool = null, _hist = null, _totalRaw = 0;
+const params  = new URLSearchParams(window.location.search);
+const NETUID  = parseInt(params.get('id') || '3');
+const NETWORK_AVG = 100 / 128;
 
 const PROTOCOL_EVENTS = [
-  { date:'2025-02-14', color:'#00d4ff' },
+  { date:'2025-02-13', color:'#00d4ff' },
   { date:'2025-11-01', color:'#ff8800' },
   { date:'2025-12-14', color:'#9966ff' },
 ];
 
-// ── HELPERS ───────────────────────────────────────────────────
-function calcEMA(data, period) {
-  const k = 2/(period+1);
-  const ema = [data[0]||0];
-  for (let i=1; i<data.length; i++) ema.push((data[i]||0)*k + ema[i-1]*(1-k));
-  return ema;
-}
+let _history = [];
+let _charts  = { price: null, emission: null, flow: null };
+let _ranges  = { price: '6m', emission: '6m', flow: '6m' };
+let _priceScale = 'linear';
 
-function filterByRange(labels, data, range) {
+// ── HELPERS ──────────────────────────────────────────────────
+function filterRange(labels, data, range) {
   if (range === 'all') return { labels, data };
-  const days = range==='1m'?30 : range==='3m'?90 : 180;
+  const days = range==='1m'?30:range==='3m'?90:180;
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
   const cutStr = cutoff.toISOString().slice(0,10);
@@ -314,38 +288,20 @@ function filterByRange(labels, data, range) {
   if (idx < 0) return { labels, data };
   return {
     labels: labels.slice(idx),
-    data: Array.isArray(data[0]) ? data.map(d => d.slice(idx)) : data.slice(idx),
+    data:   Array.isArray(data[0]) ? data.map(d => d.slice(idx)) : data.slice(idx),
   };
-}
-
-function fmtTao(rao) {
-  const t = rao/RAO;
-  return Math.abs(t) >= 1000 ? (t/1000).toFixed(1)+'k' : t.toFixed(1);
-}
-
-function fmtPct(v, d=2) { return `${v>=0?'+':''}${v.toFixed(d)}%`; }
-
-function badgeClass(signal) {
-  if (!signal) return 'b-muted';
-  const s = signal.toLowerCase();
-  if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran','well_below','below','slight_below'].some(v=>s.includes(v))) return 'b-green';
-  if (['turning','moderate','declining','inflow','established','slight_above'].some(v=>s.includes(v))) return 'b-cyan';
-  if (['slowing','low','falling','few','slight_inflow','growing','young','quiet','above'].some(v=>s.includes(v))) return 'b-yellow';
-  if (['weak','zero','none','heavy_outflow','well_above'].some(v=>s.includes(v))) return 'b-red';
-  if (['bleeding','minimal_emission','zero_emission'].some(v=>s.includes(v))) return 'b-orange';
-  return 'b-muted';
 }
 
 function badge(signal) {
   if (!signal || signal==='UNKNOWN') return '<span class="badge b-muted">—</span>';
-  return `<span class="badge ${badgeClass(signal)}"><span class="badge-dot"></span>${signal}</span>`;
-}
-
-function signalFromFlows(f1d, f7d) {
-  if (f1d>0&&f7d>0) return { label:'STRONG',  color:'#00ff88' };
-  if (f1d>0&&f7d<=0) return { label:'TURNING', color:'#00d4ff' };
-  if (f1d<=0&&f7d>0) return { label:'SLOWING', color:'#ffd000' };
-  return                    { label:'WEAK',    color:'#ff3355' };
+  const s = signal.toLowerCase();
+  let cls = 'b-muted';
+  if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran','well_below','below','slight_below','deeply_oversold'].some(v=>s.includes(v))) cls='b-green';
+  else if (['turning','moderate','declining','inflow','established','falling'].some(v=>s.includes(v))) cls='b-cyan';
+  else if (['slowing','low','slight_inflow','growing','young','rising','above'].some(v=>s.includes(v))) cls='b-yellow';
+  else if (['weak','zero','none','heavy_outflow','well_above','far_above'].some(v=>s.includes(v))) cls='b-red';
+  else if (['bleeding','minimal','surging'].some(v=>s.includes(v))) cls='b-orange';
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${signal}</span>`;
 }
 
 const TTip = {
@@ -353,443 +309,287 @@ const TTip = {
   titleColor:'#445566', bodyColor:'#c8d8e8',
   titleFont:{family:'IBM Plex Mono',size:10}, bodyFont:{family:'IBM Plex Mono',size:11}, padding:10,
 };
-
 const XScale = {
   grid:{color:'rgba(26,34,48,0.5)',drawTicks:false},
   ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8,maxRotation:0},
   border:{color:'#1a2230'},
 };
 
-function yScale(label, color='#445566', isLog=false) {
-  console.log('yScale called, isLog=', isLog, 'logScale=', logScale);
+function yOpts(label, color='#445566', isLog=false) {
   return {
     type: isLog ? 'logarithmic' : 'linear',
-    position:'left',
     grid:{color:'rgba(26,34,48,0.5)',drawTicks:false},
-    ticks:{
-      color, font:{family:'IBM Plex Mono',size:9},
-      callback: v => {
-        if (isLog) {
-          // Show clean log labels
-          const log = Math.log10(v);
-          if (Math.abs(log - Math.round(log)) < 0.01) return v < 0.001 ? v.toExponential(0) : v.toFixed(v<1?4:2);
-          return '';
-        }
-        return v.toFixed(4);
-      }
+    ticks:{color,font:{family:'IBM Plex Mono',size:9},
+      callback: v => isLog ? (Math.abs(Math.log10(v)-Math.round(Math.log10(v)))<0.01 ? v.toFixed(v<1?4:2) : '') : v.toFixed(4)
     },
     border:{color:'#1a2230'},
     title:{display:true,text:label,color,font:{family:'IBM Plex Mono',size:8}},
   };
 }
 
+function drawEvents(chart, labels) {
+  const ctx2 = chart.ctx;
+  PROTOCOL_EVENTS.forEach(ev => {
+    const idx = labels.findIndex(l => l >= ev.date);
+    if (idx < 0) return;
+    const x = chart.scales.x.getPixelForValue(idx);
+    ctx2.save();
+    ctx2.strokeStyle = ev.color; ctx2.lineWidth = 1;
+    ctx2.setLineDash([4,4]); ctx2.globalAlpha = 0.7;
+    ctx2.beginPath(); ctx2.moveTo(x,chart.chartArea.top); ctx2.lineTo(x,chart.chartArea.bottom); ctx2.stroke();
+    ctx2.restore();
+  });
+}
+
+function ensureCanvas(bodyId, chartId, height) {
+  const body = document.getElementById(bodyId);
+  body.innerHTML = `<div style="height:${height}px;position:relative"><canvas id="${chartId}"></canvas></div>`;
+  return document.getElementById(chartId);
+}
+
 // ── PRICE CHART ───────────────────────────────────────────────
 function buildPriceChart() {
-  if (!_pool) return;
-  const ctx = document.getElementById('priceChart').getContext('2d');
+  if (!_history.length) return;
+  const isLog = _priceScale === 'log';
 
-  const allLabels = _pool.map(r => r.timestamp?.slice(0,10));
-  const allPrices = _pool.map(r => parseFloat(r.price||0));
+  const allLabels = _history.map(r => r.date);
+  const allPrices = _history.map(r => isLog && (r.price||0)<=0 ? 0.000001 : (r.price||0));
+  const allEMA    = _history.map(r => r.moving_price || 0);
 
-  // Filter zeros for log scale
-  const safePrices = allPrices.map(v => (logScale && v <= 0) ? 0.000001 : v);
+  const { labels, data: [prices, ema] } = filterRange(allLabels, [allPrices, allEMA], _ranges.price);
 
-  const { labels, data: [prices, ema7raw, ema30raw] } = filterByRange(
-    allLabels,
-    [safePrices, calcEMA(allPrices, 7), calcEMA(allPrices, 30)],
-    priceRange
-  );
-
-  // EMA crossover coloring
   const segs = [];
-  let bull = ema7raw[0] >= ema30raw[0], start = 0;
-  for (let i=1; i<ema7raw.length; i++) {
-    const nowBull = ema7raw[i] >= ema30raw[i];
-    if (nowBull !== bull) { segs.push({start,end:i,bull}); start=i; bull=nowBull; }
+  let bull = prices[0] >= ema[0], start = 0;
+  for (let i=1; i<prices.length; i++) {
+    const nb = prices[i] >= ema[i];
+    if (nb !== bull) { segs.push({start,end:i,bull}); start=i; bull=nb; }
   }
-  segs.push({start,end:ema7raw.length-1,bull});
+  segs.push({start,end:prices.length-1,bull});
 
-  // Event annotations as vertical lines
-  const eventPluginData = overlays.events ? PROTOCOL_EVENTS.map(ev => {
-    const idx = labels.findIndex(l => l >= ev.date);
-    return idx >= 0 ? { idx, color: ev.color } : null;
-  }).filter(Boolean) : [];
-
-  if (priceChart) {
-  priceChart.destroy();
-  priceChart = null;
-}
-// Also force destroy any existing chart on the canvas
-Chart.getChart('priceChart')?.destroy();
-  priceChart = new Chart(ctx, {
+  const canvas = ensureCanvas('priceBody','priceChart',240);
+  _charts.price = new Chart(canvas, {
     type:'line',
-    data:{
-      labels,
-      datasets:[
-        {
-          label:'Price',
-          data:prices,
-          borderWidth:1.5, pointRadius:0, tension:0.3, fill:false,
-          segment:{ borderColor: ctx => {
-            const i = ctx.p1DataIndex;
-            const seg = segs.find(s => i>=s.start && i<=s.end);
-            return seg?.bull ? 'rgba(0,255,136,0.9)':'rgba(255,51,85,0.85)';
-          }}
-        },
-        {
-          label:'EMA 7',
-          data: overlays.ema7 ? ema7raw : Array(prices.length).fill(null),
-          borderColor:'rgba(0,255,136,0.4)', borderWidth:1, borderDash:[3,3],
-          pointRadius:0, tension:0.3, fill:false,
-        },
-        {
-          label:'EMA 30',
-          data: overlays.ema30 ? ema30raw : Array(prices.length).fill(null),
-          borderColor:'rgba(0,212,255,0.4)', borderWidth:1, borderDash:[3,3],
-          pointRadius:0, tension:0.3, fill:false,
-        },
-      ]
-    },
+    data:{ labels, datasets:[
+      { label:'Price', data:prices, borderWidth:1.5, pointRadius:0, tension:0.3, fill:false,
+        segment:{ borderColor: ctx => {
+          const i = ctx.p1DataIndex;
+          const s = segs.find(s => i>=s.start&&i<=s.end);
+          return s?.bull ? 'rgba(0,255,136,0.9)' : 'rgba(255,51,85,0.85)';
+        }}
+      },
+      { label:'EMA', data:ema, borderColor:'rgba(0,212,255,0.5)', borderWidth:1,
+        borderDash:[3,3], pointRadius:0, tension:0.3, fill:false },
+    ]},
     options:{
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{...TTip, callbacks:{
-          label:ctx=>{
-            if(ctx.dataset.label==='Price') return ` Price: ${ctx.parsed.y?.toFixed(6)||'—'} TAO`;
-            if(ctx.dataset.label.startsWith('EMA')) return ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(6)||'—'}`;
-            return '';
-          }
-        }},
-      },
-      scales:{ x:XScale, y:yScale('ALPHA PRICE (TAO)', '#445566', logScale) },
-      // Draw event lines as a custom plugin
-      animation: { onComplete: function() {
-        const chart = this;
-        const ctx2 = chart.ctx;
-        eventPluginData.forEach(ev => {
-          const x = chart.scales.x.getPixelForValue(ev.idx);
-          ctx2.save();
-          ctx2.strokeStyle = ev.color;
-          ctx2.lineWidth = 1;
-          ctx2.setLineDash([4,4]);
-          ctx2.globalAlpha = 0.7;
-          ctx2.beginPath();
-          ctx2.moveTo(x, chart.chartArea.top);
-          ctx2.lineTo(x, chart.chartArea.bottom);
-          ctx2.stroke();
-          ctx2.restore();
-        });
-      }}
+      plugins:{ legend:{display:false}, tooltip:{...TTip,callbacks:{
+        label:ctx=>ctx.dataset.label==='Price'?` Price: ${ctx.parsed.y?.toFixed(6)} TAO`:` EMA: ${ctx.parsed.y?.toFixed(6)} TAO`
+      }}},
+      scales:{ x:XScale, y:yOpts('ALPHA PRICE (TAO)','#445566',isLog) },
+      animation:{ onComplete:function(){ drawEvents(this,labels); } }
     }
   });
 }
 
 // ── EMISSION CHART ────────────────────────────────────────────
 function buildEmissionChart() {
-  if (!_hist) return;
-  const ctx = document.getElementById('emissionChart').getContext('2d');
+  if (!_history.length) return;
+  const networkAvg = 0.5 / 128;
+  const allLabels  = _history.map(r => r.date);
+  const allEm      = _history.map(r => r.emission_tao || 0);
 
-  const allLabels = _hist.map(r => r.timestamp?.slice(0,10));
-  const allRaw    = _hist.map(r => parseFloat(r.emission||0)/RAO);
-  const networkAvg = _totalRaw > 0 ? _totalRaw/RAO/128 : 0;
+  const { labels, data: [em] } = filterRange(allLabels, [allEm], _ranges.emission);
+  const avgLine = em.map(() => networkAvg);
 
-  const { labels, data: [raw, ema7e] } = filterByRange(
-    allLabels, [allRaw, calcEMA(allRaw,7)], emRange
-  );
-
-  const avgLine   = emOverlays.netavg ? raw.map(()=>networkAvg) : Array(raw.length).fill(null);
-  const signalDots = raw.map((v,i) => {
-    if (i===0) return null;
-    return (raw[i-1]>=networkAvg && v<networkAvg) ? v : null;
-  });
-
-  const eventPluginData = emOverlays.eventsE ? PROTOCOL_EVENTS.map(ev => {
-    const idx = labels.findIndex(l => l >= ev.date);
-    return idx >= 0 ? { idx, color: ev.color } : null;
-  }).filter(Boolean) : [];
-
-  if (emissionChart) emissionChart.destroy();
-  emissionChart = new Chart(ctx, {
+  const canvas = ensureCanvas('emissionBody','emissionChart',180);
+  _charts.emission = new Chart(canvas, {
     type:'line',
-    data:{
-      labels,
-      datasets:[
-        {
-          label:'Emission',
-          data:raw,
-          borderWidth:1.5, pointRadius:0, tension:0.3,
-          fill:true, backgroundColor:'rgba(255,208,0,0.04)',
-          segment:{ borderColor: ctx => {
-            const i = ctx.p1DataIndex;
-            return raw[i] < networkAvg ? 'rgba(255,208,0,0.9)':'rgba(0,255,136,0.7)';
-          }}
-        },
-        {
-          label:'EMA 7',
-          data: emOverlays.ema7e ? ema7e : Array(raw.length).fill(null),
-          borderColor:'rgba(255,208,0,0.4)', borderWidth:1, borderDash:[3,3],
-          pointRadius:0, tension:0.3, fill:false,
-        },
-        {
-          label:'Avg',
-          data:avgLine,
-          borderColor:'rgba(255,136,0,0.65)', borderWidth:1, borderDash:[6,3],
-          pointRadius:0, tension:0, fill:false,
-        },
-        {
-          label:'Signal',
-          data:signalDots,
-          borderColor:'transparent', backgroundColor:'rgba(0,255,136,0.9)',
-          pointRadius:5, pointHoverRadius:7, showLine:false, fill:false,
-        },
-      ]
-    },
+    data:{ labels, datasets:[
+      { label:'Emission', data:em, borderWidth:1.5, pointRadius:0, tension:0.3,
+        fill:true, backgroundColor:'rgba(255,208,0,0.04)',
+        segment:{ borderColor:ctx=>em[ctx.p1DataIndex]<networkAvg?'rgba(255,208,0,0.9)':'rgba(0,255,136,0.7)' }
+      },
+      { label:'Network Avg', data:avgLine, borderColor:'rgba(255,136,0,0.65)',
+        borderWidth:1, borderDash:[6,3], pointRadius:0, tension:0, fill:false },
+    ]},
     options:{
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{...TTip, callbacks:{
-          label:ctx=>{
-            if(ctx.dataset.label==='Emission') return ` Emission: ${ctx.parsed.y?.toFixed(4)||'—'} TAO/blk`;
-            if(ctx.dataset.label==='Avg') return ` Network avg: ${ctx.parsed.y?.toFixed(4)||'—'}`;
-            if(ctx.dataset.label==='Signal') return ` ← Mean reversion signal fired`;
-            if(ctx.dataset.label==='EMA 7') return ` EMA7: ${ctx.parsed.y?.toFixed(4)||'—'}`;
-            return '';
-          }
-        }},
-      },
-      scales:{ x:XScale, y:yScale('EMISSION (TAO/BLOCK)','rgba(255,208,0,0.5)') },
-      animation:{ onComplete: function() {
-        const chart = this; const ctx2 = chart.ctx;
-        eventPluginData.forEach(ev => {
-          const x = chart.scales.x.getPixelForValue(ev.idx);
-          ctx2.save(); ctx2.strokeStyle=ev.color; ctx2.lineWidth=1;
-          ctx2.setLineDash([4,4]); ctx2.globalAlpha=0.7;
-          ctx2.beginPath(); ctx2.moveTo(x,chart.chartArea.top); ctx2.lineTo(x,chart.chartArea.bottom); ctx2.stroke(); ctx2.restore();
-        });
-      }}
+      plugins:{ legend:{display:false}, tooltip:{...TTip,callbacks:{
+        label:ctx=>ctx.dataset.label==='Emission'?` Emission: ${ctx.parsed.y?.toFixed(6)} TAO/blk`:` Network avg: ${ctx.parsed.y?.toFixed(6)}`
+      }}},
+      scales:{ x:XScale, y:yOpts('EMISSION (TAO/BLOCK)','rgba(255,208,0,0.5)') },
+      animation:{ onComplete:function(){ drawEvents(this,labels); } }
     }
   });
 }
 
 // ── FLOW CHART ────────────────────────────────────────────────
 function buildFlowChart() {
-  if (!_hist) return;
-  const ctx = document.getElementById('flowChart').getContext('2d');
+  if (!_history.length) return;
+  const allLabels = _history.map(r => r.date);
+  const allFlows  = _history.map(r => r.ema_tao_inflow || 0);
 
-  const allLabels  = _hist.map(r => r.timestamp?.slice(0,10));
-  const allLifetime = _hist.map(r => parseFloat(r.recycled_lifetime||0));
-  const allFlow1d  = allLifetime.map((v,i) => i>0?(v-allLifetime[i-1])/RAO:0);
-  const allFlow7d  = allLifetime.map((v,i) => i>=7?(v-allLifetime[i-7])/RAO/7:0);
+  const { labels, data:[flows] } = filterRange(allLabels, [allFlows], _ranges.flow);
 
-  const { labels, data:[flow1d, flow7d] } = filterByRange(allLabels, [allFlow1d, allFlow7d], flowRange);
-
-  if (flowChart) flowChart.destroy();
-  flowChart = new Chart(ctx, {
+  const canvas = ensureCanvas('flowBody','flowChart',160);
+  _charts.flow = new Chart(canvas, {
     type:'bar',
-    data:{
-      labels,
-      datasets:[
-        {
-          label:'1D Flow',
-          data: flowVis.flow1d ? flow1d : Array(flow1d.length).fill(null),
-          backgroundColor: flow1d.map(v=>v>=0?'rgba(0,255,136,0.6)':'rgba(255,51,85,0.6)'),
-          borderWidth:0, barPercentage:0.8,
-        },
-        {
-          label:'7D Trend',
-          data: flowVis.flow7d ? flow7d : Array(flow7d.length).fill(null),
-          borderColor:'rgba(0,212,255,0.6)', borderWidth:1.5,
-          pointRadius:0, tension:0.3, fill:false, type:'line',
-        },
-      ]
-    },
+    data:{ labels, datasets:[{
+      label:'EMA Inflow', data:flows,
+      backgroundColor:flows.map(v=>v>=0?'rgba(0,255,136,0.6)':'rgba(255,51,85,0.6)'),
+      borderWidth:0, barPercentage:0.8,
+    }]},
     options:{
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{...TTip, callbacks:{
-          label:ctx=>{
-            if(ctx.dataset.label==='1D Flow') return ` 1D: ${ctx.parsed.y?.toFixed(1)||'—'} TAO`;
-            if(ctx.dataset.label==='7D Trend') return ` 7D avg: ${ctx.parsed.y?.toFixed(1)||'—'} TAO/day`;
-            return '';
-          }
-        }},
-      },
-      scales:{ x:XScale, y:{...yScale('RECYCLED TAO'), ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9}}} }
+      plugins:{ legend:{display:false}, tooltip:{...TTip,callbacks:{
+        label:ctx=>` EMA Inflow: ${ctx.parsed.y?.toFixed(6)} TAO/blk`
+      }}},
+      scales:{ x:XScale, y:yOpts('EMA TAO INFLOW') }
     }
   });
 }
 
-// ── TOGGLE HANDLERS ───────────────────────────────────────────
-function setScale(val) {
-  logScale = (val === 'log');
+// ── RANGE / SCALE HANDLERS ────────────────────────────────────
+function setRange(btn, chartKey) {
+  const range = btn.dataset.range;
+  _ranges[chartKey] = range;
+  btn.closest('.chart-controls').querySelectorAll(`[data-chart="${chartKey}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (chartKey==='price')    buildPriceChart();
+  if (chartKey==='emission') buildEmissionChart();
+  if (chartKey==='flow')     buildFlowChart();
+}
+
+function setPriceScale(v) {
+  _priceScale = v;
   buildPriceChart();
-}
-
-function toggleOverlay(key) {
-  overlays[key] = !overlays[key];
-  document.getElementById({ema7:'btnEma7',ema30:'btnEma30',events:'btnEvents'}[key])?.classList.toggle('active',overlays[key]);
-  buildPriceChart();
-}
-
-function toggleEmission(key) {
-  emOverlays[key] = !emOverlays[key];
-  document.getElementById({ema7e:'btnEma7e',netavg:'btnNetAvg',eventsE:'btnEventsE'}[key])?.classList.toggle('active',emOverlays[key]);
-  buildEmissionChart();
-}
-
-function toggleFlow(key) {
-  flowVis[key] = !flowVis[key];
-  document.getElementById({flow1d:'btnFlow1d',flow7d:'btnFlow7d'}[key])?.classList.toggle('active',flowVis[key]);
-  buildFlowChart();
-}
-
-function setRange(r) {
-  priceRange = r;
-  ['1m','3m','6m','all'].forEach(x => document.getElementById(`range${x}`)?.classList.toggle('active', x===r));
-  buildPriceChart();
-}
-
-function setEmissionRange(r) {
-  emRange = r;
-  ['1m','3m','6m','all'].forEach(x => document.getElementById(`erange${x}`)?.classList.toggle('active', x===r));
-  buildEmissionChart();
-}
-
-function setFlowRange(r) {
-  flowRange = r;
-  ['1m','3m','6m','all'].forEach(x => document.getElementById(`frange${x}`)?.classList.toggle('active', x===r));
-  buildFlowChart();
 }
 
 // ── SIGNAL HISTORY ────────────────────────────────────────────
-function buildSignalHistory(hist) {
-  const recent = hist.slice(-14);
-  const lifetime = recent.map(r => parseFloat(r.recycled_lifetime||0));
-  const flow1d = lifetime.map((v,i) => i>0?v-lifetime[i-1]:0);
-  const flow7d = recent.map((r,i) => {
-    const idx = hist.length-14+i-7;
-    const prev = idx>=0 ? parseFloat(hist[idx].recycled_lifetime||0) : parseFloat(recent[0].recycled_lifetime||0);
-    return parseFloat(r.recycled_lifetime||0)-prev;
-  });
-  return recent.map((r,i) => {
-    const sig = signalFromFlows(flow1d[i], flow7d[i]);
+function buildSignalHistory() {
+  const recent = _history.slice(-14).reverse();
+  if (!recent.length) { document.getElementById('signalHistoryPanel').innerHTML = '<div class="loading">No data</div>'; return; }
+  document.getElementById('signalHistoryPanel').innerHTML = recent.map(r => {
+    const f = r.ema_tao_inflow || 0;
+    const color = f>0.01?'var(--green)':f>0?'var(--cyan)':f>-0.01?'var(--yellow)':'var(--red)';
+    const label = f>0.01?'STRONG':f>0?'TURNING':f>-0.01?'SLOWING':'WEAK';
     return `<div class="signal-day">
-      <div class="signal-date">${r.timestamp?.slice(0,10)||'—'}</div>
-      <div class="signal-bar" style="background:${sig.color};opacity:0.7"></div>
-      <span class="badge" style="font-size:8px;padding:2px 5px;color:${sig.color};border-color:${sig.color};background:transparent">${sig.label}</span>
+      <div class="signal-date">${r.date}</div>
+      <div class="signal-bar" style="background:${color};opacity:0.7"></div>
+      <span class="badge" style="font-size:8px;padding:2px 5px;color:${color};border-color:${color};background:transparent">${label}</span>
     </div>`;
-  }).reverse().join('');
+  }).join('');
 }
 
 // ── MAIN LOAD ─────────────────────────────────────────────────
 async function loadData() {
   try {
-    const [poolRes, histRes, combinedRes, qualityRes, subnetsRes] = await Promise.all([
-      fetch(`data/warehouse/pool_history/sn${NETUID}.json?t=${Date.now()}`),
-      fetch(`data/warehouse/subnet_history/sn${NETUID}.json?t=${Date.now()}`),
+    const [combinedRes, chainRes, qualityRes] = await Promise.all([
       fetch(`data/combined_scores.json?t=${Date.now()}`),
+      fetch(`data/chain_data.json?t=${Date.now()}`),
       fetch(`data/quality_scores.json?t=${Date.now()}`),
-      fetch(`data/subnets.json?t=${Date.now()}`),
     ]);
 
-    if (!poolRes.ok) throw new Error(`No pool history for SN${NETUID}`);
+    const combined = await combinedRes.json();
+    const chain    = await chainRes.json();
+    const quality  = await qualityRes.json();
 
-    _pool     = await poolRes.json();
-    _hist     = await histRes.json();
-    const combined = (await combinedRes.json()).scores?.find(s=>s.netuid===NETUID);
-    const quality  = (await qualityRes.json()).scores?.find(s=>s.netuid===NETUID);
-    const subnets  = await subnetsRes.json();
-    const live     = subnets.subnets?.find(s=>s.netuid===NETUID);
-    _totalRaw = subnets.subnets?.reduce((a,s)=>a+parseInt(s.emission||0),0)||0;
+    const score = combined.scores?.find(s => s.netuid===NETUID);
+    const live  = chain.subnets?.find(s => s.netuid===NETUID);
+    const qual  = quality.scores?.find(s => s.netuid===NETUID);
 
-    const name   = combined?.name || live?.name || `SN${NETUID}`;
-    const symbol = _pool[0]?.symbol || '';
+    const name   = score?.name || live?.name || `SN${NETUID}`;
+    const symbol = live?.symbol || '';
 
     document.title = `TAO Signal — ${name}`;
     document.getElementById('breadcrumbName').textContent = name;
-    document.getElementById('netuidBadge').textContent = `SN${NETUID}`;
-    document.getElementById('subnetName').innerHTML = `${name} <span class="symbol">${symbol}</span>`;
-    document.getElementById('scoreCombined').textContent    = combined?.combined_score?.toFixed(1)||'—';
-    document.getElementById('scoreOpportunity').textContent = combined?.opportunity_score?.toFixed(1)||'—';
-    document.getElementById('scoreQuality').textContent     = combined?.quality_score?.toFixed(1)||quality?.quality_score?.toFixed(1)||'—';
+    document.getElementById('netuidBadge').textContent    = `SN${NETUID}`;
+    document.getElementById('subnetName').innerHTML       = `${name} <span class="symbol">${symbol}</span>`;
+    document.getElementById('scoreCombined').textContent    = score?.combined_score?.toFixed(1) || '—';
+    document.getElementById('scoreOpportunity').textContent = score?.opportunity_score?.toFixed(1) || '—';
+    document.getElementById('scoreQuality').textContent     = score?.quality_score?.toFixed(1) || qual?.quality_score?.toFixed(1) || '—';
 
-    if (combined?.opportunity_suppressed) {
+    if (score?.opportunity_suppressed) {
       document.getElementById('suppressionWarning').classList.remove('hidden');
       const msgs = {
-        ZERO_EMISSION:'⚠ Opportunity score suppressed — zero emissions. High scores here are a trap, not a signal.',
-        BLEEDING:'⚠ Opportunity score suppressed — minimal emissions AND negative 30d flow. Subnet is bleeding.',
-        MINIMAL_EMISSION:'⚠ Opportunity score capped — minimal emissions. Treat opportunity signals with caution.',
+        ZERO_EMISSION:'⚠ Opportunity score suppressed — zero emissions. High scores here are a trap.',
+        BLEEDING:'⚠ Opportunity score suppressed — minimal emissions AND negative 30d flow.',
+        MINIMAL_EMISSION:'⚠ Opportunity score capped — minimal emissions. Treat signals with caution.',
       };
-      document.getElementById('suppressionText').textContent = msgs[combined.opportunity_suppressed]||'⚠ Suppressed';
-      document.getElementById('scoreOppSub').textContent = combined.opportunity_suppressed.replace(/_/g,' ').toLowerCase();
+      document.getElementById('suppressionText').textContent = msgs[score.opportunity_suppressed] || '⚠ Suppressed';
+      document.getElementById('scoreOppSub').textContent = score.opportunity_suppressed.replace(/_/g,' ').toLowerCase();
     }
 
-    const signals = [combined?.flow_signal, combined?.recycled_signal, combined?.price_signal, combined?.vs_network_signal, combined?.emission_velocity_signal].filter(Boolean);
+    const signals = [score?.flow_signal, score?.price_vs_ema_signal, score?.vs_network_signal, score?.emission_velocity_signal].filter(Boolean);
     document.getElementById('signalRow').innerHTML = signals.map(s=>badge(s)).join('');
 
-    const latestPool = _pool[_pool.length-1];
-    const prevPool7  = _pool[_pool.length-8];
-    const priceNow   = parseFloat(latestPool?.price||0);
-    const price7d    = parseFloat(prevPool7?.price||priceNow);
-    const priceDelta = price7d>0 ? ((priceNow-price7d)/price7d*100) : 0;
+    // Stats
+    const price      = live?.alpha_price_tao || 0;
+    const movPrice   = live?.moving_price || 0;
+    const priceVsEma = live?.price_vs_ema || 1;
+    const inflow     = live?.ema_tao_inflow || 0;
+    const emission   = live?.emission_tao || 0;
+    const totalEm    = chain.total_emission_tao || 1;
+    const emShare    = (emission / totalEm * 100).toFixed(3);
+    const alphaRatio = live?.alpha_ratio || 0;
+    const miners     = live?.miners || 0;
+    const regAt      = live?.network_registered_at || 0;
+    const block      = chain.block || 0;
+    const ageDays    = regAt && block ? Math.floor((block-regAt)/7200) : 0;
 
-    document.getElementById('statPrice').textContent      = priceNow.toFixed(6)+' TAO';
-    document.getElementById('statPriceDelta').textContent = fmtPct(priceDelta)+' (7d)';
-    document.getElementById('statPriceDelta').className   = 'stat-delta '+(priceDelta>=0?'c-green':'c-red');
+    document.getElementById('statPrice').textContent        = price.toFixed(6) + ' τ';
+    document.getElementById('statMovingPrice').textContent  = movPrice ? `EMA: ${movPrice.toFixed(6)} τ` : '—';
+    document.getElementById('statPriceEma').textContent     = priceVsEma.toFixed(4) + 'x';
+    document.getElementById('statPriceEmaSignal').textContent = score?.price_vs_ema_signal || '—';
+    document.getElementById('statPriceEmaSignal').className = 'stat-delta ' + (priceVsEma < 1 ? 'c-green' : 'c-yellow');
+    document.getElementById('statInflow').textContent       = (inflow>=0?'+':'') + inflow.toFixed(4) + ' τ';
+    document.getElementById('statInflow').className         = 'stat-val ' + (inflow>=0?'c-green':'c-red');
+    document.getElementById('statInflowSignal').textContent = score?.flow_signal || '—';
+    document.getElementById('statEmission').textContent     = emission.toFixed(6) + ' τ/blk';
+    document.getElementById('statVsNetwork').textContent    = `${emShare}% of network`;
+    document.getElementById('statVsNetwork').className      = 'stat-delta ' + (parseFloat(emShare)>=NETWORK_AVG?'c-green':'c-yellow');
+    document.getElementById('statAlphaRatio').textContent   = alphaRatio.toFixed(2) + 'x';
+    document.getElementById('statMiners').textContent       = miners || '—';
+    document.getElementById('statAge').textContent          = ageDays ? ageDays + 'd' : '—';
 
-    const latestHist    = _hist[_hist.length-1];
-    const emissionNow   = parseFloat(latestHist?.emission||0)/RAO;
-    const totalTao      = _totalRaw/RAO;
-    const emissionShare = totalTao>0 ? (emissionNow/totalTao*100).toFixed(2) : '—';
-
-    document.getElementById('statEmission').textContent  = emissionNow.toFixed(4)+' TAO/blk';
-    document.getElementById('statVsNetwork').textContent = `${emissionShare}% of network`;
-    document.getElementById('statVsNetwork').className   = 'stat-delta '+(parseFloat(emissionShare)>=NETWORK_AVG_PCT?'c-green':'c-yellow');
-
-    const f1d = live?parseInt(live.flow_1d||0):0;
-    const f7d = live?parseInt(live.flow_7d||0):0;
-    const f30 = live?parseInt(live.flow_30d||0):0;
-    document.getElementById('statFlow1d').innerHTML  = `<span class="${f1d>=0?'c-green':'c-red'}">${fmtTao(f1d)}</span>`;
-    document.getElementById('statFlow7d').innerHTML  = `<span class="${f7d>=0?'c-green':'c-red'}">${fmtTao(f7d)}</span>`;
-    document.getElementById('statFlow30d').innerHTML = `<span class="${f30>=0?'c-green':'c-red'}">${fmtTao(f30)}</span>`;
-    document.getElementById('statMiners').textContent = live?.miners??'—';
-
-    const firstDate = _hist[0]?.timestamp?.slice(0,10);
-    if (firstDate) document.getElementById('statAge').textContent = Math.floor((Date.now()-new Date(firstDate))/86400000)+' days';
-
+    // Signal details
     document.getElementById('signalDetails').innerHTML = [
-      ['Flow Momentum',     combined?.flow_signal],
-      ['Recycled 24h',      combined?.recycled_signal],
-      ['Alpha Price',       combined?.price_signal],
-      ['Vs Network Avg',    combined?.vs_network_signal],
-      ['Emission Velocity', combined?.emission_velocity_signal],
-      ['GitHub Activity',   combined?.github_signal],
-      ['Emission Quality',  combined?.emission_quality||quality?.emission_signal],
-      ['Miner Activity',    combined?.miner_quality||quality?.miner_signal],
-      ['30d Flow Trend',    combined?.flow_trend_quality||quality?.flow_trend_signal],
-      ['Subnet Age',        combined?.age_quality||quality?.age_signal],
+      ['Flow Momentum',     score?.flow_signal],
+      ['Price vs EMA',      score?.price_vs_ema_signal],
+      ['Vs Network Avg',    score?.vs_network_signal],
+      ['Emission Velocity', score?.emission_velocity_signal],
+      ['Emission Quality',  score?.emission_quality || qual?.emission_signal],
+      ['Neuron Activity',   score?.miner_quality || qual?.miner_signal],
+      ['30d Flow Trend',    score?.flow_trend_quality || qual?.flow_trend_signal],
+      ['Subnet Age',        score?.age_quality || qual?.age_signal],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
 
-    document.getElementById('signalHistoryPanel').innerHTML = buildSignalHistory(_hist);
-
-    document.getElementById('subnetInfo').innerHTML = [
-      ['Netuid',      `SN${NETUID}`],
-      ['Symbol',      symbol||'—'],
-      ['First Record',firstDate||'—'],
-      ['Total TAO',   latestPool?.total_tao?(parseFloat(latestPool.total_tao)/RAO).toFixed(0)+' TAO':'—'],
-      ['Alpha Staked',latestPool?.alpha_staked?(parseFloat(latestPool.alpha_staked)/1e9).toFixed(0)+'M α':'—'],
-      ['Market Cap',  latestPool?.market_cap?'$'+(parseFloat(latestPool.market_cap)/1e9).toFixed(2)+'B':'—'],
+    // Chain data
+    document.getElementById('chainInfo').innerHTML = [
+      ['EMA Inflow',   (inflow>=0?'+':'')+inflow.toFixed(6)+' TAO/blk'],
+      ['Alpha Ratio',  alphaRatio.toFixed(3)+'x (staked/pool)'],
+      ['TAO in Pool',  live?.tao_in?live.tao_in.toFixed(0)+' TAO':'—'],
+      ['Alpha in Pool',live?.alpha_in?live.alpha_in.toFixed(0)+' α':'—'],
+      ['Alpha Staked', live?.alpha_out?live.alpha_out.toFixed(0)+' α':'—'],
+      ['Volume',       live?.subnet_volume?live.subnet_volume.toFixed(0)+' α':'—'],
+      ['Moving Price', movPrice.toFixed(6)+' TAO'],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
 
-    buildPriceChart();
-    buildEmissionChart();
-    buildFlowChart();
+    // Subnet info
+    document.getElementById('subnetInfo').innerHTML = [
+      ['Netuid',  `SN${NETUID}`],
+      ['Symbol',  symbol||'—'],
+      ['GitHub',  live?.github?`<a href="${live.github}" style="color:var(--cyan);font-size:10px" target="_blank">View repo</a>`:'—'],
+      ['Website', live?.url?`<a href="https://${live.url}" style="color:var(--cyan);font-size:10px" target="_blank">${live.url}</a>`:'—'],
+      ['Age',     ageDays?ageDays+' days post-dTAO':'—'],
+      ['Block',   block?block.toLocaleString():'—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Now load chain history for charts
+    await loadChainHistory();
 
   } catch(e) {
     document.getElementById('subnetName').textContent = `Error: ${e.message}`;
@@ -797,12 +597,66 @@ async function loadData() {
   }
 }
 
+async function loadChainHistory() {
+  const today = new Date();
+  const records = [];
+  const batchSize = 30;
+  const dates = [];
+
+  for (let i = 400; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0,10));
+  }
+
+  for (let i = 0; i < dates.length; i += batchSize) {
+    const batch = dates.slice(i, i+batchSize);
+    const results = await Promise.allSettled(
+      batch.map(date =>
+        fetch(`data/chain_history/${date}.json`)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+      )
+    );
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value) {
+        const data   = result.value;
+        const subnet = data.subnets?.find(s => s.netuid === NETUID);
+        if (subnet) {
+          records.push({
+            date:           data.date,
+            price:          subnet.price || 0,
+            moving_price:   subnet.moving_price || 0,
+            emission_tao:   subnet.emission_tao || 0,
+            ema_tao_inflow: subnet.ema_tao_inflow || 0,
+            alpha_ratio:    subnet.alpha_ratio || 0,
+            subnet_volume:  subnet.subnet_volume || 0,
+            tao_in:         subnet.tao_in || 0,
+            alpha_in:       subnet.alpha_in || 0,
+            alpha_out:      subnet.alpha_out || 0,
+          });
+        }
+      }
+    });
+  }
+
+  records.sort((a,b) => a.date.localeCompare(b.date));
+  _history = records;
+
+  if (!_history.length) {
+    ['priceBody','emissionBody','flowBody'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="loading-charts"><span style="color:var(--red)">No chain history data</span></div>';
+    });
+    return;
+  }
+
+  buildPriceChart();
+  buildEmissionChart();
+  buildFlowChart();
+  buildSignalHistory();
+}
+
 loadData();
 </script>
-<div style="border-top:1px solid var(--border);padding:16px 24px;margin-top:20px;background:var(--surface)">
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6;max-width:900px">
-    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions.
-  </div>
-</div>
 </body>
 </html>
