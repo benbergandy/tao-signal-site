@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAO Signal — Subnet Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #050709;
+    --surface:   #0a0e12;
+    --surface2:  #0f1419;
+    --border:    #1a2230;
+    --border2:   #243040;
+    --text:      #c8d8e8;
+    --muted:     #445566;
+    --dim:       #2a3a4a;
+    --cyan:      #00d4ff;
+    --cyan-dim:  rgba(0,212,255,0.08);
+    --green:     #00ff88;
+    --green-dim: rgba(0,255,136,0.08);
+    --yellow:    #ffd000;
+    --yellow-dim:rgba(255,208,0,0.08);
+    --orange:    #ff8800;
+    --red:       #ff3355;
+    --red-dim:   rgba(255,51,85,0.08);
+    --purple:    #9966ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.5; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
+  .wrap { max-width:1600px; margin:0 auto; padding:0 20px; }
+
+  .topbar { border-bottom:1px solid var(--border); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:100; }
+  .topbar-left { display:flex; align-items:center; gap:24px; }
+  .logo { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; letter-spacing:0.05em; color:var(--cyan); }
+  .logo span { color:var(--text); }
+  .nav-tabs { display:flex; height:48px; }
+  .nav-tab { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0 16px; height:48px; display:flex; align-items:center; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; }
+  .nav-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+  .nav-tab:hover { color:var(--text); }
+  .topbar-right { display:flex; align-items:center; gap:16px; }
+  .last-updated { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+  .last-updated strong { color:var(--text); }
+  .live-indicator { display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--green); }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .refresh-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:5px 12px; cursor:pointer; transition:all 0.15s; text-transform:uppercase; }
+  .refresh-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+
+  .stats-row { display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--border); background:var(--surface); }
+  .stat-cell { padding:12px 16px; border-right:1px solid var(--border); }
+  .stat-cell:last-child { border-right:none; }
+  .stat-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .stat-value { font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; letter-spacing:-0.02em; line-height:1; }
+  .stat-sub { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
+  .c-cyan{color:var(--cyan)} .c-green{color:var(--green)} .c-yellow{color:var(--yellow)} .c-red{color:var(--red)} .c-purple{color:var(--purple)} .c-orange{color:var(--orange)}
+
+  .main { padding:20px; display:flex; flex-direction:column; gap:20px; }
+  .section { animation:fadeUp 0.4s ease both; }
+  .section:nth-child(1){animation-delay:0.05s} .section:nth-child(2){animation-delay:0.10s} .section:nth-child(3){animation-delay:0.15s} .section:nth-child(4){animation-delay:0.20s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .section-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text); font-weight:500; white-space:nowrap; }
+  .section-line { flex:1; height:1px; background:var(--border); }
+  .section-badge { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; padding:3px 8px; border:1px solid var(--border2); color:var(--muted); text-transform:uppercase; white-space:nowrap; }
+  .section-badge.chain { border-color:var(--green); color:var(--green); }
+
+  .filter-row { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; align-items:center; }
+  .filter-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .filter-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:4px 10px; cursor:pointer; transition:all 0.15s; }
+  .filter-btn:hover,.filter-btn.active { border-color:var(--cyan); color:var(--cyan); }
+
+  .table-wrap { border:1px solid var(--border); overflow-x:auto; background:var(--surface); }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:var(--surface2); border-bottom:1px solid var(--border2); }
+  th { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:10px 12px; text-align:left; white-space:nowrap; font-weight:400; cursor:pointer; user-select:none; transition:color 0.15s; }
+  th:hover { color:var(--text); }
+  th.sorted { color:var(--cyan); }
+  th.chain-col { color:rgba(0,255,136,0.6); }
+  th.chain-col:hover { color:var(--green); }
+  th.chain-col.sorted { color:var(--green); }
+  th.no-sort { cursor:default; }
+  th.no-sort:hover { color:var(--muted); }
+  tbody tr { border-bottom:1px solid rgba(26,34,48,0.8); transition:background 0.1s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(0,212,255,0.03); }
+  td { padding:10px 12px; white-space:nowrap; vertical-align:middle; }
+  .td-rank { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); width:32px; }
+  .td-netuid { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); width:40px; }
+  .td-name { font-weight:600; font-size:13px; color:var(--text); min-width:140px; }
+  .td-mono { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+
+  .score-display { display:flex; align-items:center; gap:7px; }
+  .score-bar { width:40px; height:3px; background:var(--dim); position:relative; overflow:hidden; flex-shrink:0; }
+  .score-bar-fill { position:absolute; left:0; top:0; bottom:0; }
+  .score-num { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; min-width:32px; }
+  .score-high{color:var(--green)} .score-mid{color:var(--yellow)} .score-low{color:var(--red)}
+  .bar-high{background:var(--green)} .bar-mid{background:var(--yellow)} .bar-low{background:var(--red)}
+
+  .badge { display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; padding:3px 7px; border:1px solid; font-weight:500; white-space:nowrap; }
+  .badge-dot { width:4px; height:4px; border-radius:50%; background:currentColor; flex-shrink:0; }
+  .sig-green  { color:var(--green);  border-color:var(--green);  background:var(--green-dim); }
+  .sig-cyan   { color:var(--cyan);   border-color:var(--cyan);   background:var(--cyan-dim); }
+  .sig-yellow { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
+  .sig-red    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
+  .sig-muted  { color:var(--muted);  border-color:var(--border2);background:transparent; }
+  .sig-purple { color:var(--purple); border-color:var(--purple); background:rgba(153,102,255,0.08); }
+  .sig-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
+
+  .methodology { border:1px solid var(--border); background:var(--surface); padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+  .method-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .method-item { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); }
+  .method-item:last-child { border-bottom:none; }
+  .method-name { font-size:12px; color:var(--text); }
+  .method-weight { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--cyan); }
+  .method-stat { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+  .method-coming { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--purple); opacity:0.8; }
+  .method-chain { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--green); }
+
+  .state-msg { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); padding:48px; text-align:center; }
+  .state-msg.error { color:var(--red); }
+
+  ::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-track{background:var(--surface)} ::-webkit-scrollbar-thumb{background:var(--border2)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">TAO<span> Signal</span></div>
+    <nav class="nav-tabs">
+      <div class="nav-tab active">Combined</div>
+      <div class="nav-tab">Opportunity</div>
+      <div class="nav-tab">Quality</div>
+    <a href="performance.html" class="nav-tab" style="text-decoration:none">Performance</a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <div class="live-indicator"><div class="live-dot"></div>CHAIN NATIVE</div>
+    <div class="last-updated" id="lastUpdated">—</div>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-label">Subnets Scored</div>
+    <div class="stat-value c-cyan" id="statTotal">—</div>
+    <div class="stat-sub">128 total network</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Strong Flow</div>
+    <div class="stat-value c-green" id="statStrong">—</div>
+    <div class="stat-sub">positive EMA inflow</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Top Combined</div>
+    <div class="stat-value c-cyan" id="statTopCombined" style="font-size:16px">—</div>
+    <div class="stat-sub" id="statTopName">—</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Top Opportunity</div>
+    <div class="stat-value c-yellow" id="statTopOpp" style="font-size:16px">—</div>
+    <div class="stat-sub" id="statTopOppName">—</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Top Quality</div>
+    <div class="stat-value c-green" id="statTopQual" style="font-size:16px">—</div>
+    <div class="stat-sub" id="statTopQualName">—</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Network Emission</div>
+    <div class="stat-value c-yellow" id="statEmission" style="font-size:16px">—</div>
+    <div class="stat-sub">TAO/block (halved)</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Current Block</div>
+    <div class="stat-value c-purple" id="statBlock" style="font-size:14px">—</div>
+    <div class="stat-sub">direct from chain ⛓</div>
+  </div>
+</div>
+
+<div class="main wrap">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">⚡ Combined Score Leaderboard</div>
+      <div class="section-badge">Opportunity 35% · Quality 65%</div>
+      <div class="section-line"></div>
+      <div class="section-badge chain">⛓ Chain Native — No Taostats</div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('strong',this)">Strong Flow</button>
+      <button class="filter-btn" onclick="setFilter('quality',this)">High Quality (>65)</button>
+      <button class="filter-btn" onclick="setFilter('opportunity',this)">High Opportunity (>70)</button>
+      <button class="filter-btn" onclick="setFilter('established',this)">Established Only</button>
+      <button class="filter-btn" onclick="setFilter('oversold',this)">Oversold Price</button>
+    </div>
+    <div class="table-wrap" id="tableCombined"><div class="state-msg">Loading...</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📐 Signal Methodology</div>
+      <div class="section-line"></div>
+      <div class="section-badge chain">Walk-forward validated · Nov 2025 holdout</div>
+    </div>
+    <div class="methodology">
+      <div>
+        <div class="method-title">Opportunity Score (35% of Combined)</div>
+        <div class="method-item"><span class="method-name">Flow Momentum</span><span class="method-weight">35%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
+        <div class="method-item"><span class="method-name">Price vs EMA</span><span class="method-weight">30%</span><span class="method-chain">⛓ moving_price</span></div>
+        <div class="method-item"><span class="method-name">Emission vs Network</span><span class="method-weight">20%</span><span class="method-stat c-green">62.2% win rate</span></div>
+        <div class="method-item"><span class="method-name">Emission Velocity</span><span class="method-weight">15%</span><span class="method-stat c-green">54.3% win rate</span></div>
+      </div>
+      <div>
+        <div class="method-title">Quality Score (65% of Combined)</div>
+        <div class="method-item"><span class="method-name">Emission Share</span><span class="method-weight">35%</span><span class="method-chain">⛓ tao_in_emission</span></div>
+        <div class="method-item"><span class="method-name">Neuron Activity</span><span class="method-weight">25%</span><span class="method-chain">⛓ subnetwork_n</span></div>
+        <div class="method-item"><span class="method-name">30d Flow Trend</span><span class="method-weight">25%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
+        <div class="method-item"><span class="method-name">Subnet Age</span><span class="method-weight">15%</span><span class="method-chain">⛓ network_registered_at</span></div>
+      </div>
+      <div>
+        <div class="method-title">Coming Soon</div>
+        <div class="method-item"><span class="method-name">Inflow Rate of Change</span><span class="method-coming">Accumulating data</span></div>
+        <div class="method-item"><span class="method-name">Alpha Ratio Signal</span><span class="method-coming">Backtesting</span></div>
+        <div class="method-item"><span class="method-name">Volume Momentum</span><span class="method-coming">Backtesting</span></div>
+        <div class="method-item"><span class="method-name">Weight Optimizer</span><span class="method-coming">In development</span></div>
+        <div class="method-item"><span class="method-name">Live Track Record</span><span class="method-coming">Accumulating...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🎯 Opportunity Score — Top Contrarian Plays</div>
+      <div class="section-badge">Mean reversion · contrarian</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="table-wrap" id="tableOpportunity"><div class="state-msg">Loading...</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🛡 Quality Score — Safest Subnets</div>
+      <div class="section-badge">Fundamental health · safety filter</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="table-wrap" id="tableQuality"><div class="state-msg">Loading...</div></div>
+  </div>
+
+</div>
+
+<script>
+const RAO = 1_000_000_000;
+let allScores    = [];
+let currentFilter = 'all';
+
+// ── SORT STATE ────────────────────────────────────────────────
+const sortState = {
+  combined:    { field:'combined_score',    dir:-1 },
+  opportunity: { field:'opportunity_score', dir:-1 },
+  quality:     { field:'quality_score',     dir:-1 },
+};
+
+function applySortAndFilter(scores, tableKey) {
+  const { field, dir } = sortState[tableKey];
+  const filtered = applyFilter(scores);
+  return [...filtered].sort((a,b) => {
+    const av = typeof a[field] === 'string' ? a[field] : (a[field] ?? 0);
+    const bv = typeof b[field] === 'string' ? b[field] : (b[field] ?? 0);
+    if (typeof av === 'string') return dir * av.localeCompare(bv);
+    return dir * (bv - av);
+  });
+}
+
+function handleSort(tableKey, field, th) {
+  const state = sortState[tableKey];
+  if (state.field === field) {
+    state.dir *= -1;
+  } else {
+    state.field = field;
+    state.dir   = -1;
+  }
+  // Update header highlights
+  const wrap = th.closest('table');
+  if (wrap) wrap.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+  th.classList.add('sorted');
+  // Add sort indicator
+  const arrow = state.dir === -1 ? ' ↓' : ' ↑';
+  wrap.querySelectorAll('th').forEach(t => {
+    t.textContent = t.textContent.replace(' ↓','').replace(' ↑','');
+  });
+  th.textContent = th.textContent + arrow;
+
+  rebuildTable(tableKey);
+}
+
+function rebuildTable(tableKey) {
+  const sorted = applySortAndFilter(allScores, tableKey);
+  const idMap  = { combined:'tableCombined', opportunity:'tableOpportunity', quality:'tableQuality' };
+  renderTable(idMap[tableKey], sorted, tableKey);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function scoreColor(s) { return s>=65?'score-high':s>=45?'score-mid':'score-low'; }
+function barColor(s)   { return s>=65?'bar-high':s>=45?'bar-mid':'bar-low'; }
+
+function scoreDisplay(score) {
+  const pct = Math.min(score/100*100,100);
+  return `<div class="score-display">
+    <div class="score-bar"><div class="score-bar-fill ${barColor(score)}" style="width:${pct}%"></div></div>
+    <span class="score-num ${scoreColor(score)}">${score.toFixed(1)}</span>
+  </div>`;
+}
+
+function badgeClass(signal) {
+  if (!signal) return 'sig-muted';
+  const s = signal.toLowerCase();
+  if (['strong','dominant','thriving','collapsing','active','strong_inflow',
+       'veteran','well_below','below','slight_below','deeply_oversold'].some(v=>s.includes(v))) return 'sig-green';
+  if (['turning','moderate','declining','inflow','established','slight_above',
+       'falling'].some(v=>s.includes(v))) return 'sig-cyan';
+  if (['slowing','low','slight_inflow','growing','young','quiet',
+       'above','rising'].some(v=>s.includes(v))) return 'sig-yellow';
+  if (['weak','zero','none','heavy_outflow','well_above','far_above'].some(v=>s.includes(v))) return 'sig-red';
+  if (['bleeding','minimal_emission','zero_emission'].some(v=>s.includes(v))) return 'sig-orange';
+  if (['surging'].some(v=>s.includes(v))) return 'sig-purple';
+  return 'sig-muted';
+}
+
+function badge(signal) {
+  if (!signal || signal==='UNKNOWN') return '<span class="badge sig-muted">—</span>';
+  return `<span class="badge ${badgeClass(signal)}"><span class="badge-dot"></span>${signal}</span>`;
+}
+
+function fmtInflow(val) {
+  if (val === null || val === undefined) return '—';
+  const sign = val >= 0 ? '+' : '';
+  if (Math.abs(val) >= 1) return `${sign}${val.toFixed(2)}`;
+  if (Math.abs(val) >= 0.001) return `${sign}${val.toFixed(4)}`;
+  return `${sign}${val.toFixed(6)}`;
+}
+
+function fmtRatio(val) {
+  if (!val && val !== 0) return '—';
+  return val.toFixed(2) + 'x';
+}
+
+// ── FILTER ────────────────────────────────────────────────────
+function applyFilter(scores) {
+  switch(currentFilter) {
+    case 'strong':      return scores.filter(s => s.flow_signal === 'STRONG');
+    case 'quality':     return scores.filter(s => s.quality_score >= 65);
+    case 'opportunity': return scores.filter(s => s.opportunity_score >= 70);
+    case 'established': return scores.filter(s => ['DOMINANT','STRONG','MODERATE'].includes(s.emission_quality));
+    case 'oversold':    return scores.filter(s => ['COLLAPSING','DEEPLY_OVERSOLD','FALLING'].includes(s.price_vs_ema_signal || s.price_signal));
+    default:            return scores;
+  }
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rebuildTable('combined');
+}
+
+// ── TABLE BUILDERS ────────────────────────────────────────────
+function buildTable(scores, type) {
+  if (!scores.length) return '<div class="state-msg">No data matching filter</div>';
+
+  const th = (label, field, tableKey, cls='') =>
+    `<th class="${cls}" onclick="handleSort('${tableKey}','${field}',this)">${label}</th>`;
+  const thNoSort = (label, cls='') =>
+    `<th class="no-sort ${cls}">${label}</th>`;
+
+  if (type === 'combined') {
+    return `<table><thead><tr>
+      ${thNoSort('#')}
+      ${thNoSort('SN')}
+      ${thNoSort('Name')}
+      ${th('Combined ↓','combined_score','combined','sorted')}
+      ${th('Opportunity','opportunity_score','combined')}
+      ${th('Quality','quality_score','combined')}
+      ${th('Flow Signal','ema_tao_inflow','combined')}
+      ${th('Price vs EMA','price_vs_ema','combined')}
+      ${th('⛓ EMA Inflow','ema_tao_inflow','combined','chain-col')}
+      ${th('⛓ Alpha Ratio','alpha_ratio','combined','chain-col')}
+      ${th('Emission Quality','emission_quality_score','combined')}
+      ${th('Neurons','miner_quality_score','combined')}
+    </tr></thead><tbody>
+    ${scores.map((s,i) => `<tr>
+      <td class="td-rank">${i+1}</td>
+      <td class="td-netuid">${s.netuid}</td>
+      <td class="td-name"><a href="subnet.html?id=${s.netuid}" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">${s.name}</a></td>
+      <td>${scoreDisplay(s.combined_score)}</td>
+      <td>${scoreDisplay(s.opportunity_score)}</td>
+      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${badge(s.flow_signal)}</td>
+      <td>${badge(s.price_vs_ema_signal || s.price_signal)}</td>
+      <td class="td-mono" style="color:${(s.ema_tao_inflow||0)>=0?'var(--green)':'var(--red)'}">
+        ${fmtInflow(s.ema_tao_inflow)} TAO
+      </td>
+      <td class="td-mono" style="color:var(--cyan)">${fmtRatio(s.alpha_ratio)}</td>
+      <td>${badge(s.emission_quality)}</td>
+      <td>${badge(s.miner_quality)}</td>
+    </tr>`).join('')}
+    </tbody></table>`;
+  }
+
+  if (type === 'opportunity') {
+    return `<table><thead><tr>
+      ${thNoSort('#')}
+      ${thNoSort('SN')}
+      ${thNoSort('Name')}
+      ${th('Opportunity ↓','opportunity_score','opportunity','sorted')}
+      ${th('Flow','flow_score','opportunity')}
+      ${th('Price vs EMA','price_vs_ema','opportunity')}
+      ${th('Vs Network','vs_network_score','opportunity')}
+      ${th('Em. Velocity','emission_velocity_score','opportunity')}
+      ${th('⛓ EMA Inflow','ema_tao_inflow','opportunity','chain-col')}
+      ${th('Quality','quality_score','opportunity')}
+    </tr></thead><tbody>
+    ${scores.map((s,i) => `<tr>
+      <td class="td-rank">${i+1}</td>
+      <td class="td-netuid">${s.netuid}</td>
+      <td class="td-name"><a href="subnet.html?id=${s.netuid}" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">${s.name}</a></td>
+      <td>${scoreDisplay(s.opportunity_score)}</td>
+      <td>${badge(s.flow_signal)}</td>
+      <td>${badge(s.price_vs_ema_signal || s.price_signal)}</td>
+      <td>${badge(s.vs_network_signal)}</td>
+      <td>${badge(s.emission_velocity_signal)}</td>
+      <td class="td-mono" style="color:${(s.ema_tao_inflow||0)>=0?'var(--green)':'var(--red)'}">
+        ${fmtInflow(s.ema_tao_inflow)} TAO
+      </td>
+      <td>${scoreDisplay(s.quality_score)}</td>
+    </tr>`).join('')}
+    </tbody></table>`;
+  }
+
+  if (type === 'quality') {
+    return `<table><thead><tr>
+      ${thNoSort('#')}
+      ${thNoSort('SN')}
+      ${thNoSort('Name')}
+      ${th('Quality ↓','quality_score','quality','sorted')}
+      ${th('Emission Share','emission_quality_score','quality')}
+      ${th('Neurons','miner_quality_score','quality')}
+      ${th('30d Flow Trend','flow_trend_quality_score','quality')}
+      ${th('Age','age_quality_score','quality')}
+      ${th('⛓ Alpha Ratio','alpha_ratio','quality','chain-col')}
+      ${th('Opportunity','opportunity_score','quality')}
+    </tr></thead><tbody>
+    ${scores.map((s,i) => `<tr>
+      <td class="td-rank">${i+1}</td>
+      <td class="td-netuid">${s.netuid}</td>
+      <td class="td-name"><a href="subnet.html?id=${s.netuid}" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">${s.name}</a></td>
+      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${badge(s.emission_quality)}</td>
+      <td>${badge(s.miner_quality)}</td>
+      <td>${badge(s.flow_trend_quality)}</td>
+      <td>${badge(s.age_quality)}</td>
+      <td class="td-mono" style="color:var(--cyan)">${fmtRatio(s.alpha_ratio)}</td>
+      <td>${scoreDisplay(s.opportunity_score)}</td>
+    </tr>`).join('')}
+    </tbody></table>`;
+  }
+}
+
+function renderTable(id, scores, type) {
+  document.getElementById(id).innerHTML = buildTable(scores, type);
+}
+
+// ── DATA LOAD ─────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const [combinedRes, qualityRes, chainRes] = await Promise.all([
+      fetch('data/combined_scores.json?t=' + Date.now()),
+      fetch('data/quality_scores.json?t=' + Date.now()),
+      fetch('data/chain_data.json?t=' + Date.now()),
+    ]);
+
+    if (!combinedRes.ok) throw new Error('Could not load data — run: python src/fetch_chain.py && python src/combined_scores.py');
+
+    const combined = await combinedRes.json();
+    const quality  = await qualityRes.json();
+    const chain    = chainRes.ok ? await chainRes.json() : null;
+
+    const qualityMap = {};
+    (quality.scores || []).forEach(q => { qualityMap[q.netuid] = q; });
+
+    const chainMap = {};
+    if (chain) (chain.subnets || []).forEach(s => { chainMap[s.netuid] = s; });
+
+    allScores = (combined.scores || []).map(s => ({
+      ...s,
+      emission_quality:        qualityMap[s.netuid]?.emission_signal     || 'UNKNOWN',
+      miner_quality:           qualityMap[s.netuid]?.miner_signal        || 'UNKNOWN',
+      flow_trend_quality:      qualityMap[s.netuid]?.flow_trend_signal   || 'UNKNOWN',
+      age_quality:             qualityMap[s.netuid]?.age_signal          || 'UNKNOWN',
+      emission_quality_score:  qualityMap[s.netuid]?.emission_score      || 0,
+      miner_quality_score:     qualityMap[s.netuid]?.miner_score         || 0,
+      flow_trend_quality_score:qualityMap[s.netuid]?.flow_trend_score    || 0,
+      age_quality_score:       qualityMap[s.netuid]?.age_score           || 0,
+      alpha_ratio:             s.alpha_ratio ?? chainMap[s.netuid]?.alpha_ratio ?? 0,
+      ema_tao_inflow:          s.ema_tao_inflow ?? chainMap[s.netuid]?.ema_tao_inflow ?? 0,
+      subnet_volume:           s.subnet_volume ?? chainMap[s.netuid]?.subnet_volume ?? 0,
+      flow_score:              s.flow_score ?? 0,
+      vs_network_score:        s.vs_network_score ?? 0,
+      emission_velocity_score: s.emission_velocity_score ?? 0,
+    }));
+
+    // Stats
+    document.getElementById('lastUpdated').innerHTML = `Updated: <strong>${combined.generated_at || '—'}</strong>`;
+    const strong = allScores.filter(s => s.flow_signal === 'STRONG').length;
+    document.getElementById('statTotal').textContent  = allScores.length;
+    document.getElementById('statStrong').textContent = strong;
+
+    const topC = allScores[0];
+    document.getElementById('statTopCombined').textContent = topC?.combined_score?.toFixed(1) || '—';
+    document.getElementById('statTopName').textContent     = topC ? `SN${topC.netuid} ${topC.name}` : '—';
+
+    const topO = [...allScores].sort((a,b) => b.opportunity_score - a.opportunity_score)[0];
+    document.getElementById('statTopOpp').textContent     = topO?.opportunity_score?.toFixed(1) || '—';
+    document.getElementById('statTopOppName').textContent = topO ? `SN${topO.netuid} ${topO.name}` : '—';
+
+    const topQ = [...allScores].sort((a,b) => b.quality_score - a.quality_score)[0];
+    document.getElementById('statTopQual').textContent     = topQ?.quality_score?.toFixed(1) || '—';
+    document.getElementById('statTopQualName').textContent = topQ ? `SN${topQ.netuid} ${topQ.name}` : '—';
+
+    if (chain) {
+      document.getElementById('statEmission').textContent = chain.total_emission_tao?.toFixed(4) || '—';
+      document.getElementById('statBlock').textContent    = chain.block?.toLocaleString() || '—';
+    }
+
+    // Render all tables
+    rebuildTable('combined');
+    rebuildTable('opportunity');
+    rebuildTable('quality');
+
+  } catch(e) {
+    const msg = `<div class="state-msg error">⚠ ${e.message}</div>`;
+    ['tableCombined','tableOpportunity','tableQuality'].forEach(id => {
+      document.getElementById(id).innerHTML = msg;
+    });
+    document.getElementById('lastUpdated').textContent = 'Error loading data';
+  }
+}
+
+loadData();
+</script>
+<div style="border-top:1px solid var(--border);padding:20px;margin-top:20px;background:var(--surface)">
+  <div class="wrap" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
+    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions. By using this platform you acknowledge that you are solely responsible for any financial decisions you make.
+  </div>
+</div>
+</body>
+</html>

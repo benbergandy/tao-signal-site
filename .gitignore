@@ -1,0 +1,5 @@
+data/warehouse/
+data/chain_history/
+data/chain_history_failed.txt
+data/signal_leaderboard.json
+.env

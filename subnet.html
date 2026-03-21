@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAO Signal — Subnet Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:        #050709;
+    --surface:   #0a0e12;
+    --surface2:  #0f1419;
+    --border:    #1a2230;
+    --border2:   #243040;
+    --text:      #c8d8e8;
+    --muted:     #445566;
+    --dim:       #1a2530;
+    --cyan:      #00d4ff;
+    --cyan-dim:  rgba(0,212,255,0.08);
+    --green:     #00ff88;
+    --green-dim: rgba(0,255,136,0.10);
+    --yellow:    #ffd000;
+    --yellow-dim:rgba(255,208,0,0.08);
+    --red:       #ff3355;
+    --red-dim:   rgba(255,51,85,0.08);
+    --purple:    #9966ff;
+    --orange:    #ff8800;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.5; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px); pointer-events:none; z-index:999; }
+
+  .topbar { border-bottom:1px solid var(--border); padding:0 24px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:100; }
+  .topbar-left { display:flex; align-items:center; gap:20px; }
+  .back-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color 0.15s; }
+  .back-btn:hover { color:var(--cyan); }
+  .breadcrumb { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+  .breadcrumb span { color:var(--text); }
+  .netuid-badge { font-family:'IBM Plex Mono',monospace; font-size:11px; background:var(--surface2); border:1px solid var(--border2); padding:4px 10px; color:var(--muted); }
+
+  .hero { padding:24px 24px 0; display:grid; grid-template-columns:1fr auto; gap:24px; align-items:start; }
+  .subnet-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .subnet-name { font-size:30px; font-weight:700; letter-spacing:-0.02em; color:var(--text); line-height:1; margin-bottom:10px; }
+  .subnet-name .symbol { color:var(--cyan); font-family:'IBM Plex Mono',monospace; font-size:16px; margin-left:8px; }
+  .signal-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .hero-right { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); min-width:400px; }
+  .score-cell { background:var(--surface); padding:14px 18px; text-align:center; }
+  .score-cell-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .score-cell-value { font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; line-height:1; }
+  .score-cell-sub { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); margin-top:4px; }
+
+  .suppression-warning { margin:10px 24px 0; padding:9px 14px; background:rgba(255,136,0,0.06); border:1px solid var(--orange); display:flex; align-items:center; gap:10px; }
+  .suppression-warning.hidden { display:none; }
+  .suppression-text { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--orange); }
+
+  .stats-strip { display:grid; grid-template-columns:repeat(7,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-top:18px; background:var(--surface); }
+  .stat-item { padding:11px 14px; border-right:1px solid var(--border); }
+  .stat-item:last-child { border-right:none; }
+  .stat-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .stat-val { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; }
+  .stat-delta { font-family:'IBM Plex Mono',monospace; font-size:10px; margin-top:2px; }
+
+  .main { padding:18px 24px; display:grid; grid-template-columns:1fr 290px; gap:18px; }
+  .chart-section { display:flex; flex-direction:column; gap:14px; }
+
+  .chart-card { background:var(--surface); border:1px solid var(--border); overflow:hidden; }
+  .chart-header { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; border-bottom:1px solid var(--border); gap:8px; flex-wrap:wrap; }
+  .chart-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); font-weight:500; white-space:nowrap; }
+  .chart-controls { display:flex; gap:4px; align-items:center; flex-wrap:wrap; }
+  .ctrl-divider { width:1px; height:14px; background:var(--border2); margin:0 2px; }
+
+  .toggle-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:3px 7px; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+  .toggle-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+  .toggle-btn.t-green.active  { color:var(--green);  border-color:var(--green);  background:var(--green-dim); }
+  .toggle-btn.t-cyan.active   { color:var(--cyan);   border-color:var(--cyan);   background:var(--cyan-dim); }
+  .toggle-btn.t-yellow.active { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
+  .toggle-btn.t-orange.active { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
+  .toggle-btn.t-purple.active { color:var(--purple); border-color:var(--purple); background:rgba(153,102,255,0.08); }
+  .toggle-btn.t-red.active    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
+  /* Range buttons */
+  .range-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:3px 7px; cursor:pointer; transition:all 0.15s; }
+  .range-btn:hover { border-color:var(--text); color:var(--text); }
+  .range-btn.active { border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim); }
+
+  .chart-body { padding:14px 16px; }
+
+  .chart-legend { display:flex; gap:12px; padding:7px 16px 10px; flex-wrap:wrap; border-top:1px solid var(--border); }
+  .legend-item { display:flex; align-items:center; gap:5px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
+  .legend-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .legend-line { width:14px; height:2px; flex-shrink:0; }
+  .legend-dash { width:14px; height:0; border-top:2px dashed; flex-shrink:0; }
+
+  .sidebar { display:flex; flex-direction:column; gap:14px; }
+  .info-card { background:var(--surface); border:1px solid var(--border); }
+  .info-card-header { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+  .info-card-body { padding:10px 14px; }
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid rgba(26,34,48,0.5); }
+  .info-row:last-child { border-bottom:none; }
+  .info-key { font-size:11px; color:var(--muted); }
+  .info-val { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+
+  .signal-day { display:flex; align-items:center; gap:7px; padding:4px 0; border-bottom:1px solid rgba(26,34,48,0.4); }
+  .signal-day:last-child { border-bottom:none; }
+  .signal-date { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); width:70px; flex-shrink:0; }
+  .signal-bar { flex:1; height:3px; border-radius:2px; }
+
+  .badge { display:inline-flex; align-items:center; gap:3px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; padding:2px 6px; border:1px solid; font-weight:500; white-space:nowrap; }
+  .badge-dot { width:4px; height:4px; border-radius:50%; background:currentColor; flex-shrink:0; }
+  .b-green  { color:var(--green);  border-color:var(--green);  background:var(--green-dim); }
+  .b-cyan   { color:var(--cyan);   border-color:var(--cyan);   background:var(--cyan-dim); }
+  .b-yellow { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
+  .b-red    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
+  .b-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
+  .b-muted  { color:var(--muted);  border-color:var(--border2);background:transparent; }
+
+  .c-green{color:var(--green)} .c-cyan{color:var(--cyan)} .c-yellow{color:var(--yellow)} .c-red{color:var(--red)} .c-orange{color:var(--orange)}
+
+  .loading { display:flex; align-items:center; justify-content:center; height:100px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease both; }
+  ::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-track{background:var(--surface)} ::-webkit-scrollbar-thumb{background:var(--border2)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Back</a>
+    <div class="breadcrumb">TAO Signal / <span id="breadcrumbName">Loading...</span></div>
+  </div>
+  <div class="topbar-right">
+    <div class="netuid-badge" id="netuidBadge">SN—</div>
+  </div>
+</div>
+
+<div class="hero fade-in">
+  <div class="hero-left">
+    <div class="subnet-eyebrow">Subnet Intelligence</div>
+    <div class="subnet-name" id="subnetName">Loading... <span class="symbol" id="subnetSymbol"></span></div>
+    <div class="signal-row" id="signalRow"></div>
+  </div>
+  <div class="hero-right">
+    <div class="score-cell">
+      <div class="score-cell-label">Combined</div>
+      <div class="score-cell-value c-cyan" id="scoreCombined">—</div>
+      <div class="score-cell-sub">overall signal</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-cell-label">Opportunity</div>
+      <div class="score-cell-value c-yellow" id="scoreOpportunity">—</div>
+      <div class="score-cell-sub" id="scoreOppSub">contrarian</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-cell-label">Quality</div>
+      <div class="score-cell-value c-green" id="scoreQuality">—</div>
+      <div class="score-cell-sub">fundamental</div>
+    </div>
+  </div>
+</div>
+
+<div class="suppression-warning hidden" id="suppressionWarning">
+  <div class="suppression-text" id="suppressionText">—</div>
+</div>
+
+<div class="stats-strip fade-in">
+  <div class="stat-item"><div class="stat-label">Alpha Price</div><div class="stat-val" id="statPrice">—</div><div class="stat-delta" id="statPriceDelta">—</div></div>
+  <div class="stat-item"><div class="stat-label">Emission Share</div><div class="stat-val" id="statEmission">—</div><div class="stat-delta" id="statVsNetwork">—</div></div>
+  <div class="stat-item"><div class="stat-label">Flow 1D</div><div class="stat-val" id="statFlow1d">—</div></div>
+  <div class="stat-item"><div class="stat-label">Flow 7D</div><div class="stat-val" id="statFlow7d">—</div></div>
+  <div class="stat-item"><div class="stat-label">Flow 30D</div><div class="stat-val" id="statFlow30d">—</div></div>
+  <div class="stat-item"><div class="stat-label">Active Miners</div><div class="stat-val" id="statMiners">—</div></div>
+  <div class="stat-item"><div class="stat-label">Age (post-dTAO)</div><div class="stat-val" id="statAge">—</div></div>
+</div>
+
+<div class="main">
+  <div class="chart-section">
+
+    <!-- PRICE CHART -->
+    <div class="chart-card fade-in">
+      <div class="chart-header">
+        <div class="chart-title">📈 Alpha Token Price</div>
+        <div class="chart-controls">
+          <!-- Range -->
+          <button class="range-btn" id="range1m" onclick="setRange('1m')">1M</button>
+          <button class="range-btn" id="range3m" onclick="setRange('3m')">3M</button>
+          <button class="range-btn active" id="range6m" onclick="setRange('6m')">6M</button>
+          <button class="range-btn" id="rangeAll" onclick="setRange('all')">ALL</button>
+          <div class="ctrl-divider"></div>
+          <!-- Scale -->
+          <select onchange="setScale(this.value)" style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--surface2);border:1px solid var(--border2);color:var(--cyan);padding:3px 6px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;">
+            <option value="log" selected>LOG</option>
+            <option value="linear">LINEAR</option>
+          </select>
+          <div class="ctrl-divider"></div>
+          <!-- Overlays -->
+          <button class="toggle-btn t-green active" id="btnEma7" onclick="toggleOverlay('ema7')">EMA 7</button>
+          <button class="toggle-btn t-cyan active" id="btnEma30" onclick="toggleOverlay('ema30')">EMA 30</button>
+          <button class="toggle-btn t-purple active" id="btnEvents" onclick="toggleOverlay('events')">Events</button>
+        </div>
+      </div>
+      <div class="chart-body"><canvas id="priceChart" height="260"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Bullish (EMA7 > EMA30)</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--red)"></div>Bearish (EMA7 < EMA30)</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:var(--green)"></div>EMA 7</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:var(--cyan)"></div>EMA 30</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>dTAO</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Taoflow</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Halving</div>
+      </div>
+    </div>
+
+    <!-- EMISSION CHART -->
+    <div class="chart-card fade-in">
+      <div class="chart-header">
+        <div class="chart-title">⚡ Emission Share vs Network</div>
+        <div class="chart-controls">
+          <!-- Range -->
+          <button class="range-btn" id="erange1m" onclick="setEmissionRange('1m')">1M</button>
+          <button class="range-btn" id="erange3m" onclick="setEmissionRange('3m')">3M</button>
+          <button class="range-btn active" id="erange6m" onclick="setEmissionRange('6m')">6M</button>
+          <button class="range-btn" id="erangeAll" onclick="setEmissionRange('all')">ALL</button>
+          <div class="ctrl-divider"></div>
+          <button class="toggle-btn t-yellow active" id="btnEma7e" onclick="toggleEmission('ema7e')">EMA 7</button>
+          <button class="toggle-btn t-orange active" id="btnNetAvg" onclick="toggleEmission('netavg')">Avg Line</button>
+          <button class="toggle-btn t-purple active" id="btnEventsE" onclick="toggleEmission('eventsE')">Events</button>
+        </div>
+      </div>
+      <div class="chart-body"><canvas id="emissionChart" height="190"></canvas></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-line" style="background:var(--yellow)"></div>Below avg → mean reversion signal (62.2% win rate)</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Above avg → already priced in</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:var(--orange)"></div>Network avg (~0.78%)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Signal fired</div>
+      </div>
+    </div>
+
+    <!-- FLOW CHART -->
+    <div class="chart-card fade-in">
+      <div class="chart-header">
+        <div class="chart-title">🌊 Recycled TAO Flow</div>
+        <div class="chart-controls">
+          <button class="range-btn" id="frange1m" onclick="setFlowRange('1m')">1M</button>
+          <button class="range-btn" id="frange3m" onclick="setFlowRange('3m')">3M</button>
+          <button class="range-btn active" id="frange6m" onclick="setFlowRange('6m')">6M</button>
+          <button class="range-btn" id="frangeAll" onclick="setFlowRange('all')">ALL</button>
+          <div class="ctrl-divider"></div>
+          <button class="toggle-btn t-cyan active" id="btnFlow1d" onclick="toggleFlow('flow1d')">1D Flow</button>
+          <button class="toggle-btn t-yellow active" id="btnFlow7d" onclick="toggleFlow('flow7d')">7D Trend</button>
+        </div>
+      </div>
+      <div class="chart-body"><canvas id="flowChart" height="160"></canvas></div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="info-card fade-in">
+      <div class="info-card-header">Current Signals</div>
+      <div class="info-card-body" id="signalDetails"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header">Signal History (14d)</div>
+      <div class="info-card-body" id="signalHistoryPanel"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header">Subnet Info</div>
+      <div class="info-card-body" id="subnetInfo"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RAO = 1_000_000_000;
+const NETWORK_AVG_PCT = 100 / 128;
+const params = new URLSearchParams(window.location.search);
+const NETUID = parseInt(params.get('id') || '3');
+
+let priceChart = null, emissionChart = null, flowChart = null;
+let overlays   = { ema7:true, ema30:true, events:true };
+let emOverlays = { ema7e:true, netavg:true, eventsE:true };
+let flowVis    = { flow1d:true, flow7d:true };
+let logScale   = true;
+let priceRange = '6m';
+let emRange    = '6m';
+let flowRange  = '6m';
+
+let _pool = null, _hist = null, _totalRaw = 0;
+
+const PROTOCOL_EVENTS = [
+  { date:'2025-02-14', color:'#00d4ff' },
+  { date:'2025-11-01', color:'#ff8800' },
+  { date:'2025-12-14', color:'#9966ff' },
+];
+
+// ── HELPERS ───────────────────────────────────────────────────
+function calcEMA(data, period) {
+  const k = 2/(period+1);
+  const ema = [data[0]||0];
+  for (let i=1; i<data.length; i++) ema.push((data[i]||0)*k + ema[i-1]*(1-k));
+  return ema;
+}
+
+function filterByRange(labels, data, range) {
+  if (range === 'all') return { labels, data };
+  const days = range==='1m'?30 : range==='3m'?90 : 180;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  const cutStr = cutoff.toISOString().slice(0,10);
+  const idx = labels.findIndex(l => l >= cutStr);
+  if (idx < 0) return { labels, data };
+  return {
+    labels: labels.slice(idx),
+    data: Array.isArray(data[0]) ? data.map(d => d.slice(idx)) : data.slice(idx),
+  };
+}
+
+function fmtTao(rao) {
+  const t = rao/RAO;
+  return Math.abs(t) >= 1000 ? (t/1000).toFixed(1)+'k' : t.toFixed(1);
+}
+
+function fmtPct(v, d=2) { return `${v>=0?'+':''}${v.toFixed(d)}%`; }
+
+function badgeClass(signal) {
+  if (!signal) return 'b-muted';
+  const s = signal.toLowerCase();
+  if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran','well_below','below','slight_below'].some(v=>s.includes(v))) return 'b-green';
+  if (['turning','moderate','declining','inflow','established','slight_above'].some(v=>s.includes(v))) return 'b-cyan';
+  if (['slowing','low','falling','few','slight_inflow','growing','young','quiet','above'].some(v=>s.includes(v))) return 'b-yellow';
+  if (['weak','zero','none','heavy_outflow','well_above'].some(v=>s.includes(v))) return 'b-red';
+  if (['bleeding','minimal_emission','zero_emission'].some(v=>s.includes(v))) return 'b-orange';
+  return 'b-muted';
+}
+
+function badge(signal) {
+  if (!signal || signal==='UNKNOWN') return '<span class="badge b-muted">—</span>';
+  return `<span class="badge ${badgeClass(signal)}"><span class="badge-dot"></span>${signal}</span>`;
+}
+
+function signalFromFlows(f1d, f7d) {
+  if (f1d>0&&f7d>0) return { label:'STRONG',  color:'#00ff88' };
+  if (f1d>0&&f7d<=0) return { label:'TURNING', color:'#00d4ff' };
+  if (f1d<=0&&f7d>0) return { label:'SLOWING', color:'#ffd000' };
+  return                    { label:'WEAK',    color:'#ff3355' };
+}
+
+const TTip = {
+  backgroundColor:'rgba(10,14,18,0.95)', borderColor:'#243040', borderWidth:1,
+  titleColor:'#445566', bodyColor:'#c8d8e8',
+  titleFont:{family:'IBM Plex Mono',size:10}, bodyFont:{family:'IBM Plex Mono',size:11}, padding:10,
+};
+
+const XScale = {
+  grid:{color:'rgba(26,34,48,0.5)',drawTicks:false},
+  ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8,maxRotation:0},
+  border:{color:'#1a2230'},
+};
+
+function yScale(label, color='#445566', isLog=false) {
+  console.log('yScale called, isLog=', isLog, 'logScale=', logScale);
+  return {
+    type: isLog ? 'logarithmic' : 'linear',
+    position:'left',
+    grid:{color:'rgba(26,34,48,0.5)',drawTicks:false},
+    ticks:{
+      color, font:{family:'IBM Plex Mono',size:9},
+      callback: v => {
+        if (isLog) {
+          // Show clean log labels
+          const log = Math.log10(v);
+          if (Math.abs(log - Math.round(log)) < 0.01) return v < 0.001 ? v.toExponential(0) : v.toFixed(v<1?4:2);
+          return '';
+        }
+        return v.toFixed(4);
+      }
+    },
+    border:{color:'#1a2230'},
+    title:{display:true,text:label,color,font:{family:'IBM Plex Mono',size:8}},
+  };
+}
+
+// ── PRICE CHART ───────────────────────────────────────────────
+function buildPriceChart() {
+  if (!_pool) return;
+  const ctx = document.getElementById('priceChart').getContext('2d');
+
+  const allLabels = _pool.map(r => r.timestamp?.slice(0,10));
+  const allPrices = _pool.map(r => parseFloat(r.price||0));
+
+  // Filter zeros for log scale
+  const safePrices = allPrices.map(v => (logScale && v <= 0) ? 0.000001 : v);
+
+  const { labels, data: [prices, ema7raw, ema30raw] } = filterByRange(
+    allLabels,
+    [safePrices, calcEMA(allPrices, 7), calcEMA(allPrices, 30)],
+    priceRange
+  );
+
+  // EMA crossover coloring
+  const segs = [];
+  let bull = ema7raw[0] >= ema30raw[0], start = 0;
+  for (let i=1; i<ema7raw.length; i++) {
+    const nowBull = ema7raw[i] >= ema30raw[i];
+    if (nowBull !== bull) { segs.push({start,end:i,bull}); start=i; bull=nowBull; }
+  }
+  segs.push({start,end:ema7raw.length-1,bull});
+
+  // Event annotations as vertical lines
+  const eventPluginData = overlays.events ? PROTOCOL_EVENTS.map(ev => {
+    const idx = labels.findIndex(l => l >= ev.date);
+    return idx >= 0 ? { idx, color: ev.color } : null;
+  }).filter(Boolean) : [];
+
+  if (priceChart) {
+  priceChart.destroy();
+  priceChart = null;
+}
+// Also force destroy any existing chart on the canvas
+Chart.getChart('priceChart')?.destroy();
+  priceChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Price',
+          data:prices,
+          borderWidth:1.5, pointRadius:0, tension:0.3, fill:false,
+          segment:{ borderColor: ctx => {
+            const i = ctx.p1DataIndex;
+            const seg = segs.find(s => i>=s.start && i<=s.end);
+            return seg?.bull ? 'rgba(0,255,136,0.9)':'rgba(255,51,85,0.85)';
+          }}
+        },
+        {
+          label:'EMA 7',
+          data: overlays.ema7 ? ema7raw : Array(prices.length).fill(null),
+          borderColor:'rgba(0,255,136,0.4)', borderWidth:1, borderDash:[3,3],
+          pointRadius:0, tension:0.3, fill:false,
+        },
+        {
+          label:'EMA 30',
+          data: overlays.ema30 ? ema30raw : Array(prices.length).fill(null),
+          borderColor:'rgba(0,212,255,0.4)', borderWidth:1, borderDash:[3,3],
+          pointRadius:0, tension:0.3, fill:false,
+        },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TTip, callbacks:{
+          label:ctx=>{
+            if(ctx.dataset.label==='Price') return ` Price: ${ctx.parsed.y?.toFixed(6)||'—'} TAO`;
+            if(ctx.dataset.label.startsWith('EMA')) return ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(6)||'—'}`;
+            return '';
+          }
+        }},
+      },
+      scales:{ x:XScale, y:yScale('ALPHA PRICE (TAO)', '#445566', logScale) },
+      // Draw event lines as a custom plugin
+      animation: { onComplete: function() {
+        const chart = this;
+        const ctx2 = chart.ctx;
+        eventPluginData.forEach(ev => {
+          const x = chart.scales.x.getPixelForValue(ev.idx);
+          ctx2.save();
+          ctx2.strokeStyle = ev.color;
+          ctx2.lineWidth = 1;
+          ctx2.setLineDash([4,4]);
+          ctx2.globalAlpha = 0.7;
+          ctx2.beginPath();
+          ctx2.moveTo(x, chart.chartArea.top);
+          ctx2.lineTo(x, chart.chartArea.bottom);
+          ctx2.stroke();
+          ctx2.restore();
+        });
+      }}
+    }
+  });
+}
+
+// ── EMISSION CHART ────────────────────────────────────────────
+function buildEmissionChart() {
+  if (!_hist) return;
+  const ctx = document.getElementById('emissionChart').getContext('2d');
+
+  const allLabels = _hist.map(r => r.timestamp?.slice(0,10));
+  const allRaw    = _hist.map(r => parseFloat(r.emission||0)/RAO);
+  const networkAvg = _totalRaw > 0 ? _totalRaw/RAO/128 : 0;
+
+  const { labels, data: [raw, ema7e] } = filterByRange(
+    allLabels, [allRaw, calcEMA(allRaw,7)], emRange
+  );
+
+  const avgLine   = emOverlays.netavg ? raw.map(()=>networkAvg) : Array(raw.length).fill(null);
+  const signalDots = raw.map((v,i) => {
+    if (i===0) return null;
+    return (raw[i-1]>=networkAvg && v<networkAvg) ? v : null;
+  });
+
+  const eventPluginData = emOverlays.eventsE ? PROTOCOL_EVENTS.map(ev => {
+    const idx = labels.findIndex(l => l >= ev.date);
+    return idx >= 0 ? { idx, color: ev.color } : null;
+  }).filter(Boolean) : [];
+
+  if (emissionChart) emissionChart.destroy();
+  emissionChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Emission',
+          data:raw,
+          borderWidth:1.5, pointRadius:0, tension:0.3,
+          fill:true, backgroundColor:'rgba(255,208,0,0.04)',
+          segment:{ borderColor: ctx => {
+            const i = ctx.p1DataIndex;
+            return raw[i] < networkAvg ? 'rgba(255,208,0,0.9)':'rgba(0,255,136,0.7)';
+          }}
+        },
+        {
+          label:'EMA 7',
+          data: emOverlays.ema7e ? ema7e : Array(raw.length).fill(null),
+          borderColor:'rgba(255,208,0,0.4)', borderWidth:1, borderDash:[3,3],
+          pointRadius:0, tension:0.3, fill:false,
+        },
+        {
+          label:'Avg',
+          data:avgLine,
+          borderColor:'rgba(255,136,0,0.65)', borderWidth:1, borderDash:[6,3],
+          pointRadius:0, tension:0, fill:false,
+        },
+        {
+          label:'Signal',
+          data:signalDots,
+          borderColor:'transparent', backgroundColor:'rgba(0,255,136,0.9)',
+          pointRadius:5, pointHoverRadius:7, showLine:false, fill:false,
+        },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TTip, callbacks:{
+          label:ctx=>{
+            if(ctx.dataset.label==='Emission') return ` Emission: ${ctx.parsed.y?.toFixed(4)||'—'} TAO/blk`;
+            if(ctx.dataset.label==='Avg') return ` Network avg: ${ctx.parsed.y?.toFixed(4)||'—'}`;
+            if(ctx.dataset.label==='Signal') return ` ← Mean reversion signal fired`;
+            if(ctx.dataset.label==='EMA 7') return ` EMA7: ${ctx.parsed.y?.toFixed(4)||'—'}`;
+            return '';
+          }
+        }},
+      },
+      scales:{ x:XScale, y:yScale('EMISSION (TAO/BLOCK)','rgba(255,208,0,0.5)') },
+      animation:{ onComplete: function() {
+        const chart = this; const ctx2 = chart.ctx;
+        eventPluginData.forEach(ev => {
+          const x = chart.scales.x.getPixelForValue(ev.idx);
+          ctx2.save(); ctx2.strokeStyle=ev.color; ctx2.lineWidth=1;
+          ctx2.setLineDash([4,4]); ctx2.globalAlpha=0.7;
+          ctx2.beginPath(); ctx2.moveTo(x,chart.chartArea.top); ctx2.lineTo(x,chart.chartArea.bottom); ctx2.stroke(); ctx2.restore();
+        });
+      }}
+    }
+  });
+}
+
+// ── FLOW CHART ────────────────────────────────────────────────
+function buildFlowChart() {
+  if (!_hist) return;
+  const ctx = document.getElementById('flowChart').getContext('2d');
+
+  const allLabels  = _hist.map(r => r.timestamp?.slice(0,10));
+  const allLifetime = _hist.map(r => parseFloat(r.recycled_lifetime||0));
+  const allFlow1d  = allLifetime.map((v,i) => i>0?(v-allLifetime[i-1])/RAO:0);
+  const allFlow7d  = allLifetime.map((v,i) => i>=7?(v-allLifetime[i-7])/RAO/7:0);
+
+  const { labels, data:[flow1d, flow7d] } = filterByRange(allLabels, [allFlow1d, allFlow7d], flowRange);
+
+  if (flowChart) flowChart.destroy();
+  flowChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'1D Flow',
+          data: flowVis.flow1d ? flow1d : Array(flow1d.length).fill(null),
+          backgroundColor: flow1d.map(v=>v>=0?'rgba(0,255,136,0.6)':'rgba(255,51,85,0.6)'),
+          borderWidth:0, barPercentage:0.8,
+        },
+        {
+          label:'7D Trend',
+          data: flowVis.flow7d ? flow7d : Array(flow7d.length).fill(null),
+          borderColor:'rgba(0,212,255,0.6)', borderWidth:1.5,
+          pointRadius:0, tension:0.3, fill:false, type:'line',
+        },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TTip, callbacks:{
+          label:ctx=>{
+            if(ctx.dataset.label==='1D Flow') return ` 1D: ${ctx.parsed.y?.toFixed(1)||'—'} TAO`;
+            if(ctx.dataset.label==='7D Trend') return ` 7D avg: ${ctx.parsed.y?.toFixed(1)||'—'} TAO/day`;
+            return '';
+          }
+        }},
+      },
+      scales:{ x:XScale, y:{...yScale('RECYCLED TAO'), ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9}}} }
+    }
+  });
+}
+
+// ── TOGGLE HANDLERS ───────────────────────────────────────────
+function setScale(val) {
+  logScale = (val === 'log');
+  buildPriceChart();
+}
+
+function toggleOverlay(key) {
+  overlays[key] = !overlays[key];
+  document.getElementById({ema7:'btnEma7',ema30:'btnEma30',events:'btnEvents'}[key])?.classList.toggle('active',overlays[key]);
+  buildPriceChart();
+}
+
+function toggleEmission(key) {
+  emOverlays[key] = !emOverlays[key];
+  document.getElementById({ema7e:'btnEma7e',netavg:'btnNetAvg',eventsE:'btnEventsE'}[key])?.classList.toggle('active',emOverlays[key]);
+  buildEmissionChart();
+}
+
+function toggleFlow(key) {
+  flowVis[key] = !flowVis[key];
+  document.getElementById({flow1d:'btnFlow1d',flow7d:'btnFlow7d'}[key])?.classList.toggle('active',flowVis[key]);
+  buildFlowChart();
+}
+
+function setRange(r) {
+  priceRange = r;
+  ['1m','3m','6m','all'].forEach(x => document.getElementById(`range${x}`)?.classList.toggle('active', x===r));
+  buildPriceChart();
+}
+
+function setEmissionRange(r) {
+  emRange = r;
+  ['1m','3m','6m','all'].forEach(x => document.getElementById(`erange${x}`)?.classList.toggle('active', x===r));
+  buildEmissionChart();
+}
+
+function setFlowRange(r) {
+  flowRange = r;
+  ['1m','3m','6m','all'].forEach(x => document.getElementById(`frange${x}`)?.classList.toggle('active', x===r));
+  buildFlowChart();
+}
+
+// ── SIGNAL HISTORY ────────────────────────────────────────────
+function buildSignalHistory(hist) {
+  const recent = hist.slice(-14);
+  const lifetime = recent.map(r => parseFloat(r.recycled_lifetime||0));
+  const flow1d = lifetime.map((v,i) => i>0?v-lifetime[i-1]:0);
+  const flow7d = recent.map((r,i) => {
+    const idx = hist.length-14+i-7;
+    const prev = idx>=0 ? parseFloat(hist[idx].recycled_lifetime||0) : parseFloat(recent[0].recycled_lifetime||0);
+    return parseFloat(r.recycled_lifetime||0)-prev;
+  });
+  return recent.map((r,i) => {
+    const sig = signalFromFlows(flow1d[i], flow7d[i]);
+    return `<div class="signal-day">
+      <div class="signal-date">${r.timestamp?.slice(0,10)||'—'}</div>
+      <div class="signal-bar" style="background:${sig.color};opacity:0.7"></div>
+      <span class="badge" style="font-size:8px;padding:2px 5px;color:${sig.color};border-color:${sig.color};background:transparent">${sig.label}</span>
+    </div>`;
+  }).reverse().join('');
+}
+
+// ── MAIN LOAD ─────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const [poolRes, histRes, combinedRes, qualityRes, subnetsRes] = await Promise.all([
+      fetch(`data/warehouse/pool_history/sn${NETUID}.json?t=${Date.now()}`),
+      fetch(`data/warehouse/subnet_history/sn${NETUID}.json?t=${Date.now()}`),
+      fetch(`data/combined_scores.json?t=${Date.now()}`),
+      fetch(`data/quality_scores.json?t=${Date.now()}`),
+      fetch(`data/subnets.json?t=${Date.now()}`),
+    ]);
+
+    if (!poolRes.ok) throw new Error(`No pool history for SN${NETUID}`);
+
+    _pool     = await poolRes.json();
+    _hist     = await histRes.json();
+    const combined = (await combinedRes.json()).scores?.find(s=>s.netuid===NETUID);
+    const quality  = (await qualityRes.json()).scores?.find(s=>s.netuid===NETUID);
+    const subnets  = await subnetsRes.json();
+    const live     = subnets.subnets?.find(s=>s.netuid===NETUID);
+    _totalRaw = subnets.subnets?.reduce((a,s)=>a+parseInt(s.emission||0),0)||0;
+
+    const name   = combined?.name || live?.name || `SN${NETUID}`;
+    const symbol = _pool[0]?.symbol || '';
+
+    document.title = `TAO Signal — ${name}`;
+    document.getElementById('breadcrumbName').textContent = name;
+    document.getElementById('netuidBadge').textContent = `SN${NETUID}`;
+    document.getElementById('subnetName').innerHTML = `${name} <span class="symbol">${symbol}</span>`;
+    document.getElementById('scoreCombined').textContent    = combined?.combined_score?.toFixed(1)||'—';
+    document.getElementById('scoreOpportunity').textContent = combined?.opportunity_score?.toFixed(1)||'—';
+    document.getElementById('scoreQuality').textContent     = combined?.quality_score?.toFixed(1)||quality?.quality_score?.toFixed(1)||'—';
+
+    if (combined?.opportunity_suppressed) {
+      document.getElementById('suppressionWarning').classList.remove('hidden');
+      const msgs = {
+        ZERO_EMISSION:'⚠ Opportunity score suppressed — zero emissions. High scores here are a trap, not a signal.',
+        BLEEDING:'⚠ Opportunity score suppressed — minimal emissions AND negative 30d flow. Subnet is bleeding.',
+        MINIMAL_EMISSION:'⚠ Opportunity score capped — minimal emissions. Treat opportunity signals with caution.',
+      };
+      document.getElementById('suppressionText').textContent = msgs[combined.opportunity_suppressed]||'⚠ Suppressed';
+      document.getElementById('scoreOppSub').textContent = combined.opportunity_suppressed.replace(/_/g,' ').toLowerCase();
+    }
+
+    const signals = [combined?.flow_signal, combined?.recycled_signal, combined?.price_signal, combined?.vs_network_signal, combined?.emission_velocity_signal].filter(Boolean);
+    document.getElementById('signalRow').innerHTML = signals.map(s=>badge(s)).join('');
+
+    const latestPool = _pool[_pool.length-1];
+    const prevPool7  = _pool[_pool.length-8];
+    const priceNow   = parseFloat(latestPool?.price||0);
+    const price7d    = parseFloat(prevPool7?.price||priceNow);
+    const priceDelta = price7d>0 ? ((priceNow-price7d)/price7d*100) : 0;
+
+    document.getElementById('statPrice').textContent      = priceNow.toFixed(6)+' TAO';
+    document.getElementById('statPriceDelta').textContent = fmtPct(priceDelta)+' (7d)';
+    document.getElementById('statPriceDelta').className   = 'stat-delta '+(priceDelta>=0?'c-green':'c-red');
+
+    const latestHist    = _hist[_hist.length-1];
+    const emissionNow   = parseFloat(latestHist?.emission||0)/RAO;
+    const totalTao      = _totalRaw/RAO;
+    const emissionShare = totalTao>0 ? (emissionNow/totalTao*100).toFixed(2) : '—';
+
+    document.getElementById('statEmission').textContent  = emissionNow.toFixed(4)+' TAO/blk';
+    document.getElementById('statVsNetwork').textContent = `${emissionShare}% of network`;
+    document.getElementById('statVsNetwork').className   = 'stat-delta '+(parseFloat(emissionShare)>=NETWORK_AVG_PCT?'c-green':'c-yellow');
+
+    const f1d = live?parseInt(live.flow_1d||0):0;
+    const f7d = live?parseInt(live.flow_7d||0):0;
+    const f30 = live?parseInt(live.flow_30d||0):0;
+    document.getElementById('statFlow1d').innerHTML  = `<span class="${f1d>=0?'c-green':'c-red'}">${fmtTao(f1d)}</span>`;
+    document.getElementById('statFlow7d').innerHTML  = `<span class="${f7d>=0?'c-green':'c-red'}">${fmtTao(f7d)}</span>`;
+    document.getElementById('statFlow30d').innerHTML = `<span class="${f30>=0?'c-green':'c-red'}">${fmtTao(f30)}</span>`;
+    document.getElementById('statMiners').textContent = live?.miners??'—';
+
+    const firstDate = _hist[0]?.timestamp?.slice(0,10);
+    if (firstDate) document.getElementById('statAge').textContent = Math.floor((Date.now()-new Date(firstDate))/86400000)+' days';
+
+    document.getElementById('signalDetails').innerHTML = [
+      ['Flow Momentum',     combined?.flow_signal],
+      ['Recycled 24h',      combined?.recycled_signal],
+      ['Alpha Price',       combined?.price_signal],
+      ['Vs Network Avg',    combined?.vs_network_signal],
+      ['Emission Velocity', combined?.emission_velocity_signal],
+      ['GitHub Activity',   combined?.github_signal],
+      ['Emission Quality',  combined?.emission_quality||quality?.emission_signal],
+      ['Miner Activity',    combined?.miner_quality||quality?.miner_signal],
+      ['30d Flow Trend',    combined?.flow_trend_quality||quality?.flow_trend_signal],
+      ['Subnet Age',        combined?.age_quality||quality?.age_signal],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+
+    document.getElementById('signalHistoryPanel').innerHTML = buildSignalHistory(_hist);
+
+    document.getElementById('subnetInfo').innerHTML = [
+      ['Netuid',      `SN${NETUID}`],
+      ['Symbol',      symbol||'—'],
+      ['First Record',firstDate||'—'],
+      ['Total TAO',   latestPool?.total_tao?(parseFloat(latestPool.total_tao)/RAO).toFixed(0)+' TAO':'—'],
+      ['Alpha Staked',latestPool?.alpha_staked?(parseFloat(latestPool.alpha_staked)/1e9).toFixed(0)+'M α':'—'],
+      ['Market Cap',  latestPool?.market_cap?'$'+(parseFloat(latestPool.market_cap)/1e9).toFixed(2)+'B':'—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    buildPriceChart();
+    buildEmissionChart();
+    buildFlowChart();
+
+  } catch(e) {
+    document.getElementById('subnetName').textContent = `Error: ${e.message}`;
+    console.error(e);
+  }
+}
+
+loadData();
+</script>
+<div style="border-top:1px solid var(--border);padding:16px 24px;margin-top:20px;background:var(--surface)">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6;max-width:900px">
+    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions.
+  </div>
+</div>
+</body>
+</html>
