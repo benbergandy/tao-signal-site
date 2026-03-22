@@ -26,6 +26,7 @@
     --red:       #ff3355;
     --red-dim:   rgba(255,51,85,0.08);
     --purple:    #9966ff;
+    --purple-dim:rgba(153,102,255,0.08);
     --orange:    #ff8800;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -45,7 +46,8 @@
   .subnet-name { font-size:30px; font-weight:700; letter-spacing:-0.02em; color:var(--text); line-height:1; margin-bottom:10px; }
   .subnet-name .symbol { color:var(--cyan); font-family:'IBM Plex Mono',monospace; font-size:16px; margin-left:8px; }
   .signal-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .hero-right { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); min-width:400px; }
+
+  .hero-right { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); min-width:520px; }
   .score-cell { background:var(--surface); padding:14px 18px; text-align:center; }
   .score-cell-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
   .score-cell-value { font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; line-height:1; }
@@ -55,7 +57,7 @@
   .suppression-warning.hidden { display:none; }
   .suppression-text { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--orange); }
 
-  .stats-strip { display:grid; grid-template-columns:repeat(7,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-top:18px; background:var(--surface); }
+  .stats-strip { display:grid; grid-template-columns:repeat(8,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-top:18px; background:var(--surface); }
   .stat-item { padding:11px 14px; border-right:1px solid var(--border); }
   .stat-item:last-child { border-right:none; }
   .stat-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
@@ -70,7 +72,6 @@
   .chart-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); font-weight:500; white-space:nowrap; }
   .chart-controls { display:flex; gap:4px; align-items:center; flex-wrap:wrap; }
   .ctrl-divider { width:1px; height:14px; background:var(--border2); margin:0 2px; }
-
   .range-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:3px 7px; cursor:pointer; transition:all 0.15s; }
   .range-btn:hover { border-color:var(--text); color:var(--text); }
   .range-btn.active { border-color:var(--cyan); color:var(--cyan); background:var(--cyan-dim); }
@@ -88,6 +89,7 @@
   .sidebar { display:flex; flex-direction:column; gap:14px; }
   .info-card { background:var(--surface); border:1px solid var(--border); }
   .info-card-header { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+  .info-card-header.momentum { color:var(--purple); }
   .info-card-body { padding:10px 14px; }
   .info-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid rgba(26,34,48,0.5); }
   .info-row:last-child { border-bottom:none; }
@@ -106,8 +108,11 @@
   .b-yellow { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
   .b-red    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
   .b-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
+  .b-purple { color:var(--purple); border-color:var(--purple); background:var(--purple-dim); }
   .b-muted  { color:var(--muted);  border-color:var(--border2);background:transparent; }
-  .c-green{color:var(--green)} .c-cyan{color:var(--cyan)} .c-yellow{color:var(--yellow)} .c-red{color:var(--red)} .c-orange{color:var(--orange)}
+
+  .c-green{color:var(--green)} .c-cyan{color:var(--cyan)} .c-yellow{color:var(--yellow)}
+  .c-red{color:var(--red)} .c-orange{color:var(--orange)} .c-purple{color:var(--purple)}
 
   .loading { display:flex; align-items:center; justify-content:center; height:80px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); }
   .disclaimer { border-top:1px solid var(--border); padding:16px 24px; background:var(--surface); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); line-height:1.6; }
@@ -151,6 +156,11 @@
       <div class="score-cell-value c-green" id="scoreQuality">—</div>
       <div class="score-cell-sub">fundamental</div>
     </div>
+    <div class="score-cell">
+      <div class="score-cell-label">Momentum</div>
+      <div class="score-cell-value c-purple" id="scoreMomentum">—</div>
+      <div class="score-cell-sub" id="scoreMomentumSub">direction of travel</div>
+    </div>
   </div>
 </div>
 
@@ -164,8 +174,9 @@
   <div class="stat-item"><div class="stat-label">EMA Inflow</div><div class="stat-val" id="statInflow">—</div><div class="stat-delta" id="statInflowSignal">—</div></div>
   <div class="stat-item"><div class="stat-label">Emission Share</div><div class="stat-val" id="statEmission">—</div><div class="stat-delta" id="statVsNetwork">—</div></div>
   <div class="stat-item"><div class="stat-label">Alpha Ratio</div><div class="stat-val" id="statAlphaRatio">—</div><div class="stat-delta">staked / pool</div></div>
-  <div class="stat-item"><div class="stat-label">Active Neurons</div><div class="stat-val" id="statMiners">—</div></div>
-  <div class="stat-item"><div class="stat-label">Age (post-dTAO)</div><div class="stat-val" id="statAge">—</div></div>
+  <div class="stat-item"><div class="stat-label">Em. Momentum</div><div class="stat-val" id="statEmMomentum">—</div><div class="stat-delta">30d trend</div></div>
+  <div class="stat-item"><div class="stat-label">Inflow Momentum</div><div class="stat-val" id="statInflowMomentum">—</div><div class="stat-delta">14d trend</div></div>
+  <div class="stat-item"><div class="stat-label">Active Neurons</div><div class="stat-val" id="statMiners">—</div><div class="stat-delta" id="statAge">—</div></div>
 </div>
 
 <div class="main">
@@ -239,8 +250,16 @@
 
   <div class="sidebar">
     <div class="info-card fade-in">
-      <div class="info-card-header">Current Signals</div>
+      <div class="info-card-header">Opportunity Signals</div>
       <div class="info-card-body" id="signalDetails"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header">Quality Signals</div>
+      <div class="info-card-body" id="qualityDetails"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header momentum">🚀 Momentum Signals</div>
+      <div class="info-card-body" id="momentumDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
       <div class="info-card-header">Signal History (14d)</div>
@@ -272,9 +291,9 @@ const PROTOCOL_EVENTS = [
   { date:'2025-12-14', color:'#9966ff' },
 ];
 
-let _history = [];
-let _charts  = { price: null, emission: null, flow: null };
-let _ranges  = { price: '6m', emission: '6m', flow: '6m' };
+let _history    = [];
+let _charts     = { price: null, emission: null, flow: null };
+let _ranges     = { price: '6m', emission: '6m', flow: '6m' };
 let _priceScale = 'linear';
 
 // ── HELPERS ──────────────────────────────────────────────────
@@ -296,11 +315,15 @@ function badge(signal) {
   if (!signal || signal==='UNKNOWN') return '<span class="badge b-muted">—</span>';
   const s = signal.toLowerCase();
   let cls = 'b-muted';
-  if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran','well_below','below','slight_below','deeply_oversold'].some(v=>s.includes(v))) cls='b-green';
-  else if (['turning','moderate','declining','inflow','established','falling'].some(v=>s.includes(v))) cls='b-cyan';
-  else if (['slowing','low','slight_inflow','growing','young','rising','above'].some(v=>s.includes(v))) cls='b-yellow';
-  else if (['weak','zero','none','heavy_outflow','well_above','far_above'].some(v=>s.includes(v))) cls='b-red';
-  else if (['bleeding','minimal','surging'].some(v=>s.includes(v))) cls='b-orange';
+  if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran',
+       'well_below','below','slight_below','deeply_oversold','accumulating','turning'].some(v=>s.includes(v))) cls='b-green';
+  else if (['turning','moderate','declining','inflow','established','falling','growing',
+            'recovering','increasing'].some(v=>s.includes(v))) cls='b-cyan';
+  else if (['slowing','low','slight_inflow','young','rising','above','stable','holding'].some(v=>s.includes(v))) cls='b-yellow';
+  else if (['weak','zero','none','heavy_outflow','well_above','far_above','reversing',
+            'worsening','exiting','deteriorating'].some(v=>s.includes(v))) cls='b-red';
+  else if (['bleeding','minimal','decelerating','collapsing'].some(v=>s.includes(v))) cls='b-orange';
+  else if (['surging','accelerating'].some(v=>s.includes(v))) cls='b-purple';
   return `<span class="badge ${cls}"><span class="badge-dot"></span>${signal}</span>`;
 }
 
@@ -351,13 +374,10 @@ function ensureCanvas(bodyId, chartId, height) {
 function buildPriceChart() {
   if (!_history.length) return;
   const isLog = _priceScale === 'log';
-
   const allLabels = _history.map(r => r.date);
   const allPrices = _history.map(r => isLog && (r.price||0)<=0 ? 0.000001 : (r.price||0));
   const allEMA    = _history.map(r => r.moving_price || 0);
-
   const { labels, data: [prices, ema] } = filterRange(allLabels, [allPrices, allEMA], _ranges.price);
-
   const segs = [];
   let bull = prices[0] >= ema[0], start = 0;
   for (let i=1; i<prices.length; i++) {
@@ -365,7 +385,6 @@ function buildPriceChart() {
     if (nb !== bull) { segs.push({start,end:i,bull}); start=i; bull=nb; }
   }
   segs.push({start,end:prices.length-1,bull});
-
   const canvas = ensureCanvas('priceBody','priceChart',240);
   _charts.price = new Chart(canvas, {
     type:'line',
@@ -398,10 +417,8 @@ function buildEmissionChart() {
   const networkAvg = 0.5 / 128;
   const allLabels  = _history.map(r => r.date);
   const allEm      = _history.map(r => r.emission_tao || 0);
-
   const { labels, data: [em] } = filterRange(allLabels, [allEm], _ranges.emission);
   const avgLine = em.map(() => networkAvg);
-
   const canvas = ensureCanvas('emissionBody','emissionChart',180);
   _charts.emission = new Chart(canvas, {
     type:'line',
@@ -430,9 +447,7 @@ function buildFlowChart() {
   if (!_history.length) return;
   const allLabels = _history.map(r => r.date);
   const allFlows  = _history.map(r => r.ema_tao_inflow || 0);
-
   const { labels, data:[flows] } = filterRange(allLabels, [allFlows], _ranges.flow);
-
   const canvas = ensureCanvas('flowBody','flowChart',160);
   _charts.flow = new Chart(canvas, {
     type:'bar',
@@ -452,7 +467,6 @@ function buildFlowChart() {
   });
 }
 
-// ── RANGE / SCALE HANDLERS ────────────────────────────────────
 function setRange(btn, chartKey) {
   const range = btn.dataset.range;
   _ranges[chartKey] = range;
@@ -463,12 +477,8 @@ function setRange(btn, chartKey) {
   if (chartKey==='flow')     buildFlowChart();
 }
 
-function setPriceScale(v) {
-  _priceScale = v;
-  buildPriceChart();
-}
+function setPriceScale(v) { _priceScale = v; buildPriceChart(); }
 
-// ── SIGNAL HISTORY ────────────────────────────────────────────
 function buildSignalHistory() {
   const recent = _history.slice(-14).reverse();
   if (!recent.length) { document.getElementById('signalHistoryPanel').innerHTML = '<div class="loading">No data</div>'; return; }
@@ -487,19 +497,22 @@ function buildSignalHistory() {
 // ── MAIN LOAD ─────────────────────────────────────────────────
 async function loadData() {
   try {
-    const [combinedRes, chainRes, qualityRes] = await Promise.all([
+    const [combinedRes, chainRes, qualityRes, momentumRes] = await Promise.all([
       fetch(`data/combined_scores.json?t=${Date.now()}`),
       fetch(`data/chain_data.json?t=${Date.now()}`),
       fetch(`data/quality_scores.json?t=${Date.now()}`),
+      fetch(`data/momentum_scores.json?t=${Date.now()}`),
     ]);
 
     const combined = await combinedRes.json();
     const chain    = await chainRes.json();
     const quality  = await qualityRes.json();
+    const momentum = momentumRes.ok ? await momentumRes.json() : null;
 
     const score = combined.scores?.find(s => s.netuid===NETUID);
     const live  = chain.subnets?.find(s => s.netuid===NETUID);
     const qual  = quality.scores?.find(s => s.netuid===NETUID);
+    const mom   = momentum?.scores?.find(s => s.netuid===NETUID);
 
     const name   = score?.name || live?.name || `SN${NETUID}`;
     const symbol = live?.symbol || '';
@@ -508,9 +521,16 @@ async function loadData() {
     document.getElementById('breadcrumbName').textContent = name;
     document.getElementById('netuidBadge').textContent    = `SN${NETUID}`;
     document.getElementById('subnetName').innerHTML       = `${name} <span class="symbol">${symbol}</span>`;
+
+    // Score cards
     document.getElementById('scoreCombined').textContent    = score?.combined_score?.toFixed(1) || '—';
     document.getElementById('scoreOpportunity').textContent = score?.opportunity_score?.toFixed(1) || '—';
     document.getElementById('scoreQuality').textContent     = score?.quality_score?.toFixed(1) || qual?.quality_score?.toFixed(1) || '—';
+    document.getElementById('scoreMomentum').textContent    = mom?.momentum_score?.toFixed(1) || score?.momentum_score?.toFixed(1) || '—';
+
+    if (mom?.emission_momentum) {
+      document.getElementById('scoreMomentumSub').textContent = mom.emission_momentum.toLowerCase();
+    }
 
     if (score?.opportunity_suppressed) {
       document.getElementById('suppressionWarning').classList.remove('hidden');
@@ -553,18 +573,47 @@ async function loadData() {
     document.getElementById('statVsNetwork').className      = 'stat-delta ' + (parseFloat(emShare)>=NETWORK_AVG?'c-green':'c-yellow');
     document.getElementById('statAlphaRatio').textContent   = alphaRatio.toFixed(2) + 'x';
     document.getElementById('statMiners').textContent       = miners || '—';
-    document.getElementById('statAge').textContent          = ageDays ? ageDays + 'd' : '—';
+    document.getElementById('statAge').textContent          = ageDays ? ageDays + 'd post-dTAO' : '—';
 
-    // Signal details
+    // Momentum stats
+    const emMom     = mom?.emission_momentum || score?.emission_momentum || '—';
+    const inflowMom = mom?.inflow_momentum   || score?.inflow_momentum   || '—';
+    document.getElementById('statEmMomentum').textContent     = emMom;
+    document.getElementById('statEmMomentum').className       = 'stat-val ' + (
+      ['SURGING','GROWING'].includes(emMom) ? 'c-purple' :
+      ['STABLE'].includes(emMom) ? 'c-cyan' :
+      ['DECLINING','COLLAPSING'].includes(emMom) ? 'c-red' : ''
+    );
+    document.getElementById('statInflowMomentum').textContent = inflowMom;
+    document.getElementById('statInflowMomentum').className   = 'stat-val ' + (
+      ['ACCELERATING','INCREASING','TURNING'].includes(inflowMom) ? 'c-purple' :
+      ['STABLE'].includes(inflowMom) ? 'c-cyan' :
+      ['DECELERATING','REVERSING','WORSENING'].includes(inflowMom) ? 'c-red' : ''
+    );
+
+    // Opportunity signals
     document.getElementById('signalDetails').innerHTML = [
       ['Flow Momentum',     score?.flow_signal],
       ['Price vs EMA',      score?.price_vs_ema_signal],
       ['Vs Network Avg',    score?.vs_network_signal],
       ['Emission Velocity', score?.emission_velocity_signal],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+
+    // Quality signals
+    document.getElementById('qualityDetails').innerHTML = [
       ['Emission Quality',  score?.emission_quality || qual?.emission_signal],
       ['Neuron Activity',   score?.miner_quality || qual?.miner_signal],
       ['30d Flow Trend',    score?.flow_trend_quality || qual?.flow_trend_signal],
       ['Subnet Age',        score?.age_quality || qual?.age_signal],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+
+    // Momentum signals
+    document.getElementById('momentumDetails').innerHTML = [
+      ['Emission (30d)',    mom?.emission_momentum    || score?.emission_momentum],
+      ['Inflow (14d)',      mom?.inflow_momentum      || score?.inflow_momentum],
+      ['Price (14d)',       mom?.price_momentum       || score?.price_momentum],
+      ['Alpha Ratio (14d)', mom?.alpha_ratio_momentum || score?.alpha_ratio_momentum],
+      ['TAO Staked (30d)',  mom?.tao_staked_momentum],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
 
     // Chain data
@@ -588,7 +637,6 @@ async function loadData() {
       ['Block',   block?block.toLocaleString():'—'],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
 
-    // Now load chain history for charts
     await loadChainHistory();
 
   } catch(e) {
@@ -598,10 +646,9 @@ async function loadData() {
 }
 
 async function loadChainHistory() {
-  const today = new Date();
+  const today   = new Date();
   const records = [];
-  const batchSize = 30;
-  const dates = [];
+  const dates   = [];
 
   for (let i = 400; i >= 0; i--) {
     const d = new Date(today);
@@ -609,8 +656,9 @@ async function loadChainHistory() {
     dates.push(d.toISOString().slice(0,10));
   }
 
+  const batchSize = 30;
   for (let i = 0; i < dates.length; i += batchSize) {
-    const batch = dates.slice(i, i+batchSize);
+    const batch   = dates.slice(i, i+batchSize);
     const results = await Promise.allSettled(
       batch.map(date =>
         fetch(`data/chain_history/${date}.json`)
