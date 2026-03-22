@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-21 12:03 UTC",
+  "generated_at": "2026-03-22 12:06 UTC",
   "scores": [
     {
       "netuid": 3,
@@ -154,6 +154,19 @@
       "miner_score": 0.8,
       "flow_trend_signal": "STRONG_INFLOW",
       "flow_trend_score": 1.0,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
+      "netuid": 95,
+      "name": "nion",
+      "quality_score": 81.0,
+      "emission_signal": "MODERATE",
+      "emission_score": 0.6,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
       "age_signal": "VETERAN",
       "age_score": 1.0
     },
@@ -327,32 +340,6 @@
       "age_score": 1.0
     },
     {
-      "netuid": 44,
-      "name": "Score",
-      "quality_score": 74.0,
-      "emission_signal": "LOW",
-      "emission_score": 0.4,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "INFLOW",
-      "flow_trend_score": 0.8,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
-      "netuid": 46,
-      "name": "RESI",
-      "quality_score": 74.0,
-      "emission_signal": "LOW",
-      "emission_score": 0.4,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "INFLOW",
-      "flow_trend_score": 0.8,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
       "netuid": 49,
       "name": "Nepher Robotics",
       "quality_score": 74.0,
@@ -366,8 +353,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 54,
-      "name": "Yanez MIID",
+      "netuid": 63,
+      "name": "Quantum Innovate",
       "quality_score": 74.0,
       "emission_signal": "LOW",
       "emission_score": 0.4,
@@ -379,8 +366,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 63,
-      "name": "Quantum Innovate",
+      "netuid": 65,
+      "name": "TAO Private Network",
       "quality_score": 74.0,
       "emission_signal": "LOW",
       "emission_score": 0.4,
@@ -483,8 +470,21 @@
       "age_score": 1.0
     },
     {
+      "netuid": 91,
+      "name": "Bitstarter #1",
+      "quality_score": 74.0,
+      "emission_signal": "LOW",
+      "emission_score": 0.4,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
       "netuid": 92,
-      "name": "LUCID",
+      "name": "TensorClaw",
       "quality_score": 74.0,
       "emission_signal": "LOW",
       "emission_score": 0.4,
@@ -509,8 +509,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 95,
-      "name": "nion",
+      "netuid": 97,
+      "name": "Constantinople",
       "quality_score": 74.0,
       "emission_signal": "LOW",
       "emission_score": 0.4,
@@ -537,6 +537,19 @@
     {
       "netuid": 100,
       "name": "Pla\u03c4form",
+      "quality_score": 74.0,
+      "emission_signal": "LOW",
+      "emission_score": 0.4,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
+      "netuid": 101,
+      "name": "eni",
       "quality_score": 74.0,
       "emission_signal": "LOW",
       "emission_score": 0.4,
@@ -691,19 +704,6 @@
       "age_score": 1.0
     },
     {
-      "netuid": 91,
-      "name": "Bitstarter #1",
-      "quality_score": 69.0,
-      "emission_signal": "LOW",
-      "emission_score": 0.4,
-      "miner_signal": "ACTIVE",
-      "miner_score": 0.8,
-      "flow_trend_signal": "INFLOW",
-      "flow_trend_score": 0.8,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
       "netuid": 104,
       "name": "for sale (burn to ui",
       "quality_score": 69.0,
@@ -730,6 +730,19 @@
       "age_score": 1.0
     },
     {
+      "netuid": 23,
+      "name": "Trishool",
+      "quality_score": 67.0,
+      "emission_signal": "MINIMAL",
+      "emission_score": 0.2,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
       "netuid": 27,
       "name": "Nodexo",
       "quality_score": 67.0,
@@ -743,8 +756,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 65,
-      "name": "TAO Private Network",
+      "netuid": 46,
+      "name": "RESI",
       "quality_score": 67.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -756,8 +769,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 71,
-      "name": "Leadpoet",
+      "netuid": 54,
+      "name": "Yanez MIID",
       "quality_score": 67.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -769,8 +782,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 97,
-      "name": "Constantinople",
+      "netuid": 55,
+      "name": "NIOME",
       "quality_score": 67.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -782,8 +795,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 101,
-      "name": "eni",
+      "netuid": 61,
+      "name": "RedTeam",
       "quality_score": 67.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -821,6 +834,32 @@
       "age_score": 1.0
     },
     {
+      "netuid": 123,
+      "name": "MANTIS",
+      "quality_score": 67.0,
+      "emission_signal": "MINIMAL",
+      "emission_score": 0.2,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
+      "netuid": 128,
+      "name": "ByteLeap",
+      "quality_score": 67.0,
+      "emission_signal": "MINIMAL",
+      "emission_score": 0.2,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "INFLOW",
+      "flow_trend_score": 0.8,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
       "netuid": 76,
       "name": "nun",
       "quality_score": 64.0,
@@ -834,21 +873,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 128,
-      "name": "ByteLeap",
-      "quality_score": 64.0,
-      "emission_signal": "MINIMAL",
-      "emission_score": 0.2,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "INFLOW",
-      "flow_trend_score": 0.8,
-      "age_signal": "MATURE",
-      "age_score": 0.8
-    },
-    {
-      "netuid": 23,
-      "name": "Trishool",
+      "netuid": 25,
+      "name": "Mainframe",
       "quality_score": 62.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -873,21 +899,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 55,
-      "name": "NIOME",
-      "quality_score": 62.0,
-      "emission_signal": "MINIMAL",
-      "emission_score": 0.2,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "SLIGHT_INFLOW",
-      "flow_trend_score": 0.6,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
-      "netuid": 61,
-      "name": "RedTeam",
+      "netuid": 71,
+      "name": "Leadpoet",
       "quality_score": 62.0,
       "emission_signal": "MINIMAL",
       "emission_score": 0.2,
@@ -1003,6 +1016,19 @@
       "age_score": 1.0
     },
     {
+      "netuid": 37,
+      "name": "Aurelius",
+      "quality_score": 50.0,
+      "emission_signal": "ZERO",
+      "emission_score": 0.0,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "SLIGHT_OUTFLOW",
+      "flow_trend_score": 0.4,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
       "netuid": 43,
       "name": "Graphite",
       "quality_score": 50.0,
@@ -1029,8 +1055,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 57,
-      "name": "Sparket.AI",
+      "netuid": 59,
+      "name": "Babelbit",
       "quality_score": 50.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1081,8 +1107,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 102,
-      "name": "Vocence",
+      "netuid": 79,
+      "name": "MVTRX",
       "quality_score": 50.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1224,19 +1250,6 @@
       "age_score": 1.0
     },
     {
-      "netuid": 25,
-      "name": "Mainframe",
-      "quality_score": 45.0,
-      "emission_signal": "ZERO",
-      "emission_score": 0.0,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "OUTFLOW",
-      "flow_trend_score": 0.2,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
       "netuid": 26,
       "name": "Kinitro",
       "quality_score": 45.0,
@@ -1315,8 +1328,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 37,
-      "name": "Aurelius",
+      "netuid": 42,
+      "name": "Gopher",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1328,8 +1341,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 42,
-      "name": "Gopher",
+      "netuid": 44,
+      "name": "Score",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1380,6 +1393,19 @@
       "age_score": 1.0
     },
     {
+      "netuid": 57,
+      "name": "Sparket.AI",
+      "quality_score": 45.0,
+      "emission_signal": "ZERO",
+      "emission_score": 0.0,
+      "miner_signal": "THRIVING",
+      "miner_score": 1.0,
+      "flow_trend_signal": "OUTFLOW",
+      "flow_trend_score": 0.2,
+      "age_signal": "VETERAN",
+      "age_score": 1.0
+    },
+    {
       "netuid": 58,
       "name": "Handshake",
       "quality_score": 45.0,
@@ -1393,8 +1419,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 59,
-      "name": "Babelbit",
+      "netuid": 60,
+      "name": "Bitsec.ai",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1406,8 +1432,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 60,
-      "name": "Bitsec.ai",
+      "netuid": 62,
+      "name": "Ridges",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1445,8 +1471,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 79,
-      "name": "MVTRX",
+      "netuid": 82,
+      "name": "Hermes",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1458,8 +1484,8 @@
       "age_score": 1.0
     },
     {
-      "netuid": 82,
-      "name": "Hermes",
+      "netuid": 102,
+      "name": "Vocence",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1525,19 +1551,6 @@
     {
       "netuid": 122,
       "name": "Bitrecs",
-      "quality_score": 45.0,
-      "emission_signal": "ZERO",
-      "emission_score": 0.0,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "OUTFLOW",
-      "flow_trend_score": 0.2,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
-      "netuid": 123,
-      "name": "MANTIS",
       "quality_score": 45.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,
@@ -1616,19 +1629,6 @@
     {
       "netuid": 56,
       "name": "Gradients",
-      "quality_score": 40.0,
-      "emission_signal": "ZERO",
-      "emission_score": 0.0,
-      "miner_signal": "THRIVING",
-      "miner_score": 1.0,
-      "flow_trend_signal": "HEAVY_OUTFLOW",
-      "flow_trend_score": 0.0,
-      "age_signal": "VETERAN",
-      "age_score": 1.0
-    },
-    {
-      "netuid": 62,
-      "name": "Ridges",
       "quality_score": 40.0,
       "emission_signal": "ZERO",
       "emission_score": 0.0,

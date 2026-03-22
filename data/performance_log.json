@@ -243,6 +243,128 @@
           "avg_emission_share": 1.3157894736842106
         }
       }
+    },
+    {
+      "date": "2026-03-22",
+      "total_emission": 307232003,
+      "strategies": {
+        "top5_emission": {
+          "netuids": [
+            3,
+            4,
+            75,
+            9,
+            120
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "emission_share": 13.820366,
+              "alpha_price": 0.062457429
+            },
+            {
+              "netuid": 4,
+              "emission_share": 8.163651,
+              "alpha_price": 0.050263248
+            },
+            {
+              "netuid": 75,
+              "emission_share": 5.662887,
+              "alpha_price": 0.038797046
+            },
+            {
+              "netuid": 9,
+              "emission_share": 4.710265,
+              "alpha_price": 0.028119713
+            },
+            {
+              "netuid": 120,
+              "emission_share": 4.48577,
+              "alpha_price": 0.07893712
+            }
+          ],
+          "avg_emission_share": 7.368587835558264
+        },
+        "top5_flow": {
+          "netuids": [
+            3,
+            4,
+            24,
+            68,
+            75
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "emission_share": 13.820366,
+              "alpha_price": 0.062457429
+            },
+            {
+              "netuid": 4,
+              "emission_share": 8.163651,
+              "alpha_price": 0.050263248
+            },
+            {
+              "netuid": 24,
+              "emission_share": 2.601857,
+              "alpha_price": 0.011179313
+            },
+            {
+              "netuid": 68,
+              "emission_share": 2.83853,
+              "alpha_price": 0.017115656
+            },
+            {
+              "netuid": 75,
+              "emission_share": 5.662887,
+              "alpha_price": 0.038797046
+            }
+          ],
+          "avg_emission_share": 6.617458207958888
+        },
+        "top5_combined": {
+          "netuids": [
+            120,
+            3,
+            4,
+            9,
+            75
+          ],
+          "holdings": [
+            {
+              "netuid": 120,
+              "emission_share": 4.48577,
+              "alpha_price": 0.07893712
+            },
+            {
+              "netuid": 3,
+              "emission_share": 13.820366,
+              "alpha_price": 0.062457429
+            },
+            {
+              "netuid": 4,
+              "emission_share": 8.163651,
+              "alpha_price": 0.050263248
+            },
+            {
+              "netuid": 9,
+              "emission_share": 4.710265,
+              "alpha_price": 0.028119713
+            },
+            {
+              "netuid": 75,
+              "emission_share": 5.662887,
+              "alpha_price": 0.038797046
+            }
+          ],
+          "avg_emission_share": 7.368587835558264
+        },
+        "network_avg": {
+          "netuids": [],
+          "holdings": [],
+          "avg_emission_share": 1.2820512820512822
+        }
+      }
     }
   ],
   "performance": []
