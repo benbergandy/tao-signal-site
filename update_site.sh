@@ -13,3 +13,4 @@ cp /Users/benbergandy/Documents/tao-dashboard/data/chain_history/${TODAY}.json d
 git add .
 git commit -m "daily update ${TODAY}" --allow-empty
 git push
+cp /Users/benbergandy/Documents/tao-dashboard/data/momentum_scores.json data/
