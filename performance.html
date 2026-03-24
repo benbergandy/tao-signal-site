@@ -62,7 +62,6 @@
   .section-line { flex:1; height:1px; background:var(--border); }
   .section-badge { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; padding:3px 8px; border:1px solid var(--border2); color:var(--muted); text-transform:uppercase; white-space:nowrap; }
 
-  /* STRATEGY CARDS */
   .strategy-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
   .strategy-card { background:var(--surface); border:1px solid var(--border); padding:18px; position:relative; overflow:hidden; }
   .strategy-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
@@ -83,7 +82,6 @@
   .acc-text { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* CHART */
   .chart-card { background:var(--surface); border:1px solid var(--border); padding:20px; }
   .chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
   .chart-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); }
@@ -91,7 +89,6 @@
   .legend-item { display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
   .legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
-  /* PORTFOLIO TABLE */
   .portfolio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
   .portfolio-card { background:var(--surface); border:1px solid var(--border); }
   .portfolio-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
@@ -105,7 +102,6 @@
   .portfolio-emission { font-family:'IBM Plex Mono',monospace; font-size:10px; }
   .portfolio-price { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
 
-  /* TIMELINE */
   .timeline { background:var(--surface); border:1px solid var(--border); padding:20px; }
   .timeline-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
   .timeline-track { display:flex; align-items:center; gap:0; position:relative; }
@@ -119,7 +115,6 @@
   .timeline-date { font-family:'IBM Plex Mono',monospace; font-size:8px; color:var(--border2); text-align:center; margin-top:2px; }
   .timeline-dot.active + .timeline-label { color:var(--cyan); }
 
-  /* METHODOLOGY */
   .method-box { background:var(--surface); border:1px solid var(--border); padding:20px; }
   .method-box-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
   .method-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
@@ -190,7 +185,6 @@
 
 <div class="main">
 
-  <!-- STRATEGY CARDS -->
   <div class="fade-in">
     <div class="section-header">
       <div class="section-title">📊 Portfolio Strategies</div>
@@ -202,7 +196,6 @@
     </div>
   </div>
 
-  <!-- PERFORMANCE CHART -->
   <div class="fade-in">
     <div class="section-header">
       <div class="section-title">📈 Emission Share Over Time</div>
@@ -225,7 +218,6 @@
     </div>
   </div>
 
-  <!-- EVALUATION TIMELINE -->
   <div class="fade-in">
     <div class="section-header">
       <div class="section-title">🗓 Evaluation Timeline</div>
@@ -237,7 +229,6 @@
     </div>
   </div>
 
-  <!-- CURRENT PORTFOLIOS -->
   <div class="fade-in">
     <div class="section-header">
       <div class="section-title">🗂 Current Portfolio Holdings</div>
@@ -249,7 +240,6 @@
     </div>
   </div>
 
-  <!-- METHODOLOGY -->
   <div class="fade-in">
     <div class="section-header">
       <div class="section-title">📐 Methodology</div>
@@ -306,18 +296,13 @@ const STRATEGIES = {
 };
 
 const SUBNET_NAMES = {
-  3:'τemplar', 4:'Targon', 9:'iota', 19:'blockmachine', 24:'Quasar',
-  39:'basilica', 44:'Score', 68:'NOVA', 75:'Hippius', 85:'Vidaio',
-  93:'Bitcast', 120:'Affine', 124:'Swarm'
+  3:'τemplar', 4:'Targon', 7:'subvortex', 9:'iota', 19:'blockmachine', 24:'Quasar',
+  39:'basilica', 44:'Score', 55:'NIOME', 68:'NOVA', 74:'Gittensor', 75:'Hippius',
+  84:'ChipForge', 85:'Vidaio', 93:'Bitcast', 97:'Constantinople', 120:'Affine', 124:'Swarm'
 };
 
 function getName(netuid) {
   return SUBNET_NAMES[netuid] || `SN${netuid}`;
-}
-
-function fmtPct(v, d=2) {
-  if (v === null || v === undefined) return '—';
-  return `${v>=0?'+':''}${v.toFixed(d)}%`;
 }
 
 function fmtDate(dateStr) {
@@ -337,46 +322,36 @@ function daysBetween(d1, d2) {
 
 let perfChart = null;
 
-function buildStrategyCards(snapshots, performance) {
-  const first   = snapshots[0];
-  const latest  = snapshots[snapshots.length - 1];
-  const today   = new Date().toISOString().slice(0,10);
+function buildStrategyCards(snapshots) {
+  const first  = snapshots[0];
+  const latest = snapshots[snapshots.length - 1];
 
   const cards = ['top5_combined','top5_emission','top5_flow','network_avg'].map(key => {
-    const cfg      = STRATEGIES[key];
+    const cfg       = STRATEGIES[key];
     const isNetwork = key === 'network_avg';
-
-    // Get emission share from latest snapshot
     const latestShare = latest.strategies[key]?.avg_emission_share ?? 0;
-    const firstShare  = first.strategies[key]?.avg_emission_share ?? 0;
     const networkAvg  = latest.strategies.network_avg?.avg_emission_share ?? (100/128);
-    const vs_network  = isNetwork ? null : ((latestShare / networkAvg) - 1) * 100;
-
-    // Holdings from first snapshot (locked positions)
-    const holdings = first.strategies[key]?.holdings || [];
-    const netuids  = first.strategies[key]?.netuids || [];
+    const multiple    = isNetwork ? null : (latestShare / networkAvg);
+    const holdings    = first.strategies[key]?.holdings || [];
 
     const holdingRows = holdings.map(h => `
       <div class="holding-row">
         <span class="holding-name">SN${h.netuid} ${getName(h.netuid)}</span>
-        <span class="holding-val" style="color:var(--cyan)">${h.emission_share.toFixed(2)}%</span>
+        <span class="holding-val" style="color:${cfg.color}">${h.emission_share.toFixed(2)}%</span>
       </div>
     `).join('') || '<div class="holding-row"><span class="holding-name" style="color:var(--muted)">All 128 subnets equally weighted</span></div>';
 
-    const multiple    = isNetwork ? null : (latestShare / networkAvg);
-const returnColor = isNetwork ? 'var(--muted)' : 'var(--cyan)';
-const returnVal   = `${latestShare.toFixed(3)}%`;
-const returnLabel = isNetwork ? 'avg emission share' : 'current emission share';
-const returnSub   = isNetwork ? '' : `<div style="font-family:monospace;font-size:12px;color:var(--green);margin-top:4px">${multiple.toFixed(2)}x network avg</div>`;
+    const returnColor = isNetwork ? 'var(--muted)' : 'var(--cyan)';
+    const returnLabel = isNetwork ? 'avg emission share' : 'current emission share';
+    const returnSub   = isNetwork ? '' : `<div style="font-family:monospace;font-size:12px;color:var(--green);margin-top:4px">${multiple.toFixed(2)}x network avg</div>`;
 
     return `
     <div class="strategy-card ${key.replace('top5_','').replace('_avg','')}">
       <div class="strategy-label">${isNetwork ? 'Baseline' : 'Portfolio'}</div>
       <div class="strategy-name" style="color:${cfg.color}">${cfg.label}</div>
-      <div class="strategy-return" style="color:${returnColor}">${returnVal}</div>
+      <div class="strategy-return" style="color:${returnColor}">${latestShare.toFixed(3)}%</div>
       <div class="strategy-sub">${returnLabel}</div>
       ${returnSub}
-      <div class="strategy-sub" style="margin-top:4px">Latest emission share: <span style="color:${cfg.color}">${latestShare.toFixed(3)}%</span></div>
       <div class="strategy-holdings">
         <div style="font-family:monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">
           ${isNetwork ? 'Benchmark' : 'Holdings (locked day 1)'}
@@ -394,72 +369,46 @@ const returnSub   = isNetwork ? '' : `<div style="font-family:monospace;font-siz
 }
 
 function buildChart(snapshots) {
-  const labels = snapshots.map(s => s.date);
+  const labels   = snapshots.map(s => s.date);
   const datasets = [
     { key:'top5_combined', label:'TAO Signal Combined', color:'#00d4ff', width:2.5 },
     { key:'top5_emission', label:'Top Emission',        color:'#ffd000', width:1.5 },
     { key:'top5_flow',     label:'Top Flow',            color:'#00ff88', width:1.5 },
-    { key:'network_avg',   label:'Network Average',     color:'#445566', width:1,   dash:[4,4] },
+    { key:'network_avg',   label:'Network Average',     color:'#445566', width:1, dash:[4,4] },
   ].map(d => ({
-    label:           d.label,
-    data:            snapshots.map(s => s.strategies[d.key]?.avg_emission_share ?? null),
-    borderColor:     d.color,
-    borderWidth:     d.width,
-    borderDash:      d.dash || [],
-    pointRadius:     snapshots.length <= 7 ? 4 : 2,
-    pointBackgroundColor: d.color,
-    tension:         0.3,
-    fill:            false,
+    label:d.label, data:snapshots.map(s=>s.strategies[d.key]?.avg_emission_share??null),
+    borderColor:d.color, borderWidth:d.width, borderDash:d.dash||[],
+    pointRadius:snapshots.length<=7?4:2, pointBackgroundColor:d.color,
+    tension:0.3, fill:false,
   }));
 
   const ctx = document.getElementById('performanceChart').getContext('2d');
   if (perfChart) perfChart.destroy();
 
-  // If only 2 data points show a message overlay
   if (snapshots.length < 3) {
     const parent = ctx.canvas.parentElement;
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none';
-    overlay.innerHTML = `<span style="font-family:monospace;font-size:11px;color:var(--muted);background:var(--surface);padding:6px 12px;border:1px solid var(--border)">Chart builds as data accumulates — check back daily</span>`;
     parent.style.position = 'relative';
-    parent.appendChild(overlay);
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none';
+    ov.innerHTML = `<span style="font-family:monospace;font-size:11px;color:var(--muted);background:var(--surface);padding:6px 12px;border:1px solid var(--border)">Chart builds as data accumulates — check back daily</span>`;
+    parent.appendChild(ov);
   }
 
   perfChart = new Chart(ctx, {
-    type:'line',
-    data:{ labels, datasets },
+    type:'line', data:{ labels, datasets },
     options:{
-      responsive:true,
-      maintainAspectRatio:true,
+      responsive:true, maintainAspectRatio:true,
       interaction:{ mode:'index', intersect:false },
-      plugins:{
-        legend:{ display:false },
-        tooltip:{
-          backgroundColor:'rgba(10,14,18,0.95)',
-          borderColor:'#243040',
-          borderWidth:1,
-          titleColor:'#445566',
-          bodyColor:'#c8d8e8',
-          titleFont:{ family:'IBM Plex Mono', size:10 },
-          bodyFont:{ family:'IBM Plex Mono', size:11 },
-          padding:10,
-          callbacks:{
-            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(3) ?? '—'}%`
-          }
-        }
-      },
+      plugins:{ legend:{display:false}, tooltip:{
+        backgroundColor:'rgba(10,14,18,0.95)', borderColor:'#243040', borderWidth:1,
+        titleColor:'#445566', bodyColor:'#c8d8e8',
+        titleFont:{family:'IBM Plex Mono',size:10}, bodyFont:{family:'IBM Plex Mono',size:11}, padding:10,
+        callbacks:{ label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(3)??'—'}%` }
+      }},
       scales:{
-        x:{
-          grid:{ color:'rgba(26,34,48,0.5)', drawTicks:false },
-          ticks:{ color:'#445566', font:{ family:'IBM Plex Mono', size:9 }, maxRotation:0 },
-          border:{ color:'#1a2230' },
-        },
-        y:{
-          grid:{ color:'rgba(26,34,48,0.5)', drawTicks:false },
-          ticks:{ color:'#445566', font:{ family:'IBM Plex Mono', size:9 }, callback: v => v.toFixed(1) + '%' },
-          border:{ color:'#1a2230' },
-          title:{ display:true, text:'Emission Share %', color:'#445566', font:{ family:'IBM Plex Mono', size:8 } }
-        }
+        x:{ grid:{color:'rgba(26,34,48,0.5)',drawTicks:false}, ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9},maxRotation:0}, border:{color:'#1a2230'} },
+        y:{ grid:{color:'rgba(26,34,48,0.5)',drawTicks:false}, ticks:{color:'#445566',font:{family:'IBM Plex Mono',size:9},callback:v=>v.toFixed(1)+'%'}, border:{color:'#1a2230'},
+            title:{display:true,text:'Emission Share %',color:'#445566',font:{family:'IBM Plex Mono',size:8}} }
       }
     }
   });
@@ -468,94 +417,74 @@ function buildChart(snapshots) {
 function buildTimeline(snapshots) {
   const first = snapshots[0]?.date;
   if (!first) return;
-
   const windows = [
-    { days:0,  label:'Day 1',    desc:'Track start' },
-    { days:7,  label:'7 Days',   desc:'First results' },
-    { days:14, label:'14 Days',  desc:'Mid evaluation' },
-    { days:30, label:'30 Days',  desc:'Full picture' },
-    { days:60, label:'60 Days',  desc:'Validated signal' },
-    { days:90, label:'90 Days',  desc:'Statistical significance' },
+    {days:0,  label:'Day 1',   desc:'Track start'},
+    {days:7,  label:'7 Days',  desc:'First results'},
+    {days:14, label:'14 Days', desc:'Mid evaluation'},
+    {days:30, label:'30 Days', desc:'Full picture'},
+    {days:60, label:'60 Days', desc:'Validated signal'},
+    {days:90, label:'90 Days', desc:'Statistical significance'},
   ];
-
   const today = new Date().toISOString().slice(0,10);
-
-  const points = windows.map(w => {
-    const targetDate = addDays(first, w.days);
-    const isPast    = today >= targetDate;
-    const isActive  = today === targetDate || (w.days === 0 && snapshots.length > 0);
-    const daysLeft  = daysBetween(today, targetDate);
-
+  document.getElementById('timelineTrack').innerHTML = windows.map(w => {
+    const target   = addDays(first, w.days);
+    const isPast   = today >= target;
+    const daysLeft = daysBetween(today, target);
     return `
     <div class="timeline-point">
-      <div class="timeline-dot ${isPast ? 'done' : isActive ? 'active' : 'pending'}"></div>
-      <div class="timeline-label" style="color:${isPast ? 'var(--green)' : isActive ? 'var(--cyan)' : 'var(--muted)'}">
-        ${w.label}
-      </div>
-      <div class="timeline-date">${fmtDate(targetDate)}</div>
+      <div class="timeline-dot ${isPast?'done':'pending'}"></div>
+      <div class="timeline-label" style="color:${isPast?'var(--green)':'var(--muted)'}">${w.label}</div>
+      <div class="timeline-date">${fmtDate(target)}</div>
       <div style="font-family:monospace;font-size:8px;color:var(--muted);margin-top:2px;text-align:center">
-        ${isPast ? '✓ passed' : daysLeft === 0 ? 'today' : `${daysLeft}d`}
+        ${isPast?'✓ passed':daysLeft===0?'today':`${daysLeft}d`}
       </div>
     </div>`;
-  });
-
-  document.getElementById('timelineTrack').innerHTML = points.join('');
+  }).join('');
 }
 
 function buildPortfolioGrid(snapshots) {
   const first = snapshots[0];
   if (!first) return;
-
   const portfolios = [
-    { key:'top5_combined', title:'TAO Signal Combined', color:'var(--cyan)' },
-    { key:'top5_emission', title:'Top Emission',        color:'var(--yellow)' },
-    { key:'top5_flow',     title:'Top Flow',            color:'var(--green)' },
+    {key:'top5_combined',title:'TAO Signal Combined',color:'var(--cyan)'},
+    {key:'top5_emission',title:'Top Emission',       color:'var(--yellow)'},
+    {key:'top5_flow',    title:'Top Flow',            color:'var(--green)'},
   ];
-
-  const cards = portfolios.map(p => {
-    const holdings = first.strategies[p.key]?.holdings || [];
-    const rows = holdings.map((h, i) => `
+  document.getElementById('portfolioGrid').innerHTML = portfolios.map(p => {
+    const holdings   = first.strategies[p.key]?.holdings || [];
+    const avg        = first.strategies[p.key]?.avg_emission_share ?? 0;
+    const networkAvg = first.strategies.network_avg?.avg_emission_share ?? (100/128);
+    const multiple   = (avg/networkAvg).toFixed(2);
+    const rows = holdings.map((h,i)=>`
       <div class="portfolio-row">
         <span class="portfolio-rank">${i+1}</span>
         <span class="portfolio-netuid">SN${h.netuid}</span>
         <span class="portfolio-name">${getName(h.netuid)}</span>
         <span class="portfolio-emission" style="color:${p.color}">${h.emission_share.toFixed(2)}%</span>
         <span class="portfolio-price">${h.alpha_price.toFixed(4)} τ</span>
-      </div>
-    `).join('');
-
-    const avg = first.strategies[p.key]?.avg_emission_share ?? 0;
-    const networkAvg = first.strategies.network_avg?.avg_emission_share ?? (100/128);
-    const multiple = (avg / networkAvg).toFixed(2);
-
+      </div>`).join('');
     return `
     <div class="portfolio-card">
       <div class="portfolio-header">
         <div class="portfolio-title" style="color:${p.color}">${p.title}</div>
-        <span style="font-family:monospace;font-size:10px;color:var(--muted)">
-          ${multiple}x network avg
-        </span>
+        <span style="font-family:monospace;font-size:10px;color:var(--muted)">${multiple}x network avg</span>
       </div>
       <div class="portfolio-body">${rows}</div>
       <div style="padding:10px 16px;border-top:1px solid var(--border);font-family:monospace;font-size:10px;color:var(--muted)">
-        Avg emission: <span style="color:${p.color}">${avg.toFixed(3)}%</span> · 
+        Avg emission: <span style="color:${p.color}">${avg.toFixed(3)}%</span> ·
         Entry date: <span style="color:var(--text)">${fmtDate(first.date)}</span>
       </div>
     </div>`;
-  });
-
-  document.getElementById('portfolioGrid').innerHTML = cards.join('');
+  }).join('');
 }
 
 function buildStats(snapshots, performance) {
   const first = snapshots[0]?.date;
   const today = new Date().toISOString().slice(0,10);
   const days  = first ? daysBetween(first, today) + 1 : 0;
-  const firstResult = first ? fmtDate(addDays(first, 7)) : '—';
-
   document.getElementById('statStartDate').textContent   = first ? fmtDate(first) : '—';
   document.getElementById('statDays').textContent        = days;
-  document.getElementById('statFirstResult').textContent = firstResult;
+  document.getElementById('statFirstResult').textContent = first ? fmtDate(addDays(first,7)) : '—';
   document.getElementById('statPeriods').textContent     = performance?.length ?? 0;
 }
 
@@ -564,10 +493,8 @@ async function loadData() {
     const res = await fetch('data/performance_log.json?t=' + Date.now());
     if (!res.ok) throw new Error('Could not load performance_log.json');
     const data = await res.json();
-
     const snapshots   = data.snapshots || [];
     const performance = data.performance || [];
-
     if (!snapshots.length) {
       document.getElementById('strategyGrid').innerHTML = `
         <div style="grid-column:1/-1" class="pending-overlay">
@@ -577,21 +504,16 @@ async function loadData() {
         </div>`;
       return;
     }
-
     document.getElementById('lastUpdated').innerHTML =
-      `Updated: <strong>${snapshots[snapshots.length-1]?.date || '—'}</strong>`;
-
+      `Updated: <strong>${snapshots[snapshots.length-1]?.date||'—'}</strong>`;
     buildStats(snapshots, performance);
-    buildStrategyCards(snapshots, performance);
+    buildStrategyCards(snapshots);
     buildChart(snapshots);
     buildTimeline(snapshots);
     buildPortfolioGrid(snapshots);
-
   } catch(e) {
     document.getElementById('strategyGrid').innerHTML = `
-      <div style="grid-column:1/-1;padding:48px;text-align:center;font-family:monospace;color:var(--red)">
-        ⚠ ${e.message}
-      </div>`;
+      <div style="grid-column:1/-1;padding:48px;text-align:center;font-family:monospace;color:var(--red)">⚠ ${e.message}</div>`;
   }
 }
 

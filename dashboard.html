@@ -116,6 +116,8 @@
   .sig-purple { color:var(--purple); border-color:var(--purple); background:rgba(153,102,255,0.08); }
   .sig-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
 
+  .quality-warn { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--orange); margin-left:4px; opacity:0.9; }
+
   .methodology { border:1px solid var(--border); background:var(--surface); padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:24px; }
   .method-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
   .method-item { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); }
@@ -202,7 +204,7 @@
   <div class="section">
     <div class="section-header">
       <div class="section-title">⚡ Combined Score Leaderboard</div>
-      <div class="section-badge">Opportunity 40% · Quality 35% · Momentum 25%</div>
+      <div class="section-badge">Opportunity 55% · Quality 25% · Momentum 20%</div>
       <div class="section-line"></div>
       <div class="section-badge chain">⛓ Chain Native — No Taostats</div>
     </div>
@@ -224,37 +226,37 @@
     <div class="section-header">
       <div class="section-title">📐 Signal Methodology</div>
       <div class="section-line"></div>
-      <div class="section-badge chain">Walk-forward validated · Nov 2025 holdout</div>
+      <div class="section-badge chain">Walk-forward validated · Nov 2025 holdout · 68.4% combined win rate</div>
     </div>
     <div class="methodology">
       <div>
-        <div class="method-title">Opportunity Score (40% of Combined)</div>
-        <div class="method-item"><span class="method-name">Flow Momentum</span><span class="method-weight">35%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
-        <div class="method-item"><span class="method-name">Price vs EMA</span><span class="method-weight">10%</span><span class="method-chain">⛓ moving_price</span></div>
-        <div class="method-item"><span class="method-name">Emission vs Network</span><span class="method-weight">30%</span><span class="method-stat c-green">62.2% win rate</span></div>
-        <div class="method-item"><span class="method-name">Emission Velocity</span><span class="method-weight">25%</span><span class="method-stat c-green">54.3% win rate</span></div>
+        <div class="method-title">Opportunity Score (55% of Combined)</div>
+        <div class="method-item"><span class="method-name">Emission Velocity</span><span class="method-weight">75%</span><span class="method-stat c-green">65.9% win rate</span></div>
+        <div class="method-item"><span class="method-name">Price vs EMA</span><span class="method-weight">15%</span><span class="method-chain">⛓ moving_price</span></div>
+        <div class="method-item"><span class="method-name">Emission vs Network</span><span class="method-weight">5%</span><span class="method-chain">⛓ emission_share_pct</span></div>
+        <div class="method-item"><span class="method-name">Flow Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
       </div>
       <div>
-        <div class="method-title">Quality Score (35% of Combined)</div>
-        <div class="method-item"><span class="method-name">Emission Share</span><span class="method-weight">35%</span><span class="method-chain">⛓ tao_in_emission</span></div>
-        <div class="method-item"><span class="method-name">Neuron Activity</span><span class="method-weight">25%</span><span class="method-chain">⛓ subnetwork_n</span></div>
-        <div class="method-item"><span class="method-name">30d Flow Trend</span><span class="method-weight">25%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
-        <div class="method-item"><span class="method-name">Subnet Age</span><span class="method-weight">15%</span><span class="method-chain">⛓ network_registered_at</span></div>
+        <div class="method-title">Quality Score (25% of Combined) — Sortino v3</div>
+        <div class="method-item"><span class="method-name">Emission Stability</span><span class="method-weight">60%</span><span class="method-stat c-green">57.9% downside win</span></div>
+        <div class="method-item"><span class="method-name">Flow Persistence</span><span class="method-weight">20%</span><span class="method-chain">⛓ 30d inflow days</span></div>
+        <div class="method-item"><span class="method-name">Rank Consistency</span><span class="method-weight">15%</span><span class="method-chain">⛓ emission percentile</span></div>
+        <div class="method-item"><span class="method-name">Validator Retention</span><span class="method-weight">5%</span><span class="method-chain">⛓ miners z-score</span></div>
       </div>
       <div>
-        <div class="method-title">Momentum Score (25% of Combined)</div>
-        <div class="method-item"><span class="method-name">Emission Momentum</span><span class="method-weight">30%</span><span class="method-chain">⛓ 30d trend</span></div>
-        <div class="method-item"><span class="method-name">Inflow Momentum</span><span class="method-weight">30%</span><span class="method-chain">⛓ 14d trend</span></div>
-        <div class="method-item"><span class="method-name">Price Momentum</span><span class="method-weight">20%</span><span class="method-chain">⛓ 14d trend</span></div>
-        <div class="method-item"><span class="method-name">Alpha Ratio Momentum</span><span class="method-weight">10%</span><span class="method-chain">⛓ 14d trend</span></div>
-        <div class="method-item"><span class="method-name">TAO Staked Momentum</span><span class="method-weight">10%</span><span class="method-chain">⛓ 30d trend</span></div>
+        <div class="method-title">Momentum Score (20% of Combined)</div>
+        <div class="method-item"><span class="method-name">Inflow Momentum</span><span class="method-weight">75%</span><span class="method-stat c-green">57.8% win rate</span></div>
+        <div class="method-item"><span class="method-name">Price Momentum</span><span class="method-weight">10%</span><span class="method-chain">⛓ 14d trend</span></div>
+        <div class="method-item"><span class="method-name">Emission Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 30d trend</span></div>
+        <div class="method-item"><span class="method-name">Alpha Ratio Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 14d trend</span></div>
+        <div class="method-item"><span class="method-name">TAO Staked Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 30d trend</span></div>
       </div>
       <div>
         <div class="method-title">Research Pipeline</div>
-        <div class="method-item"><span class="method-name">Weight Optimizer</span><span class="method-live">✓ Live</span></div>
-        <div class="method-item"><span class="method-name">Alpha Ratio Signal</span><span class="method-coming">Backtesting</span></div>
-        <div class="method-item"><span class="method-name">Volume Anomaly</span><span class="method-coming">Backtesting</span></div>
-        <div class="method-item"><span class="method-name">Validator Concentration</span><span class="method-coming">In research</span></div>
+        <div class="method-item"><span class="method-name">Weight Optimizer v3</span><span class="method-live">✓ Complete</span></div>
+        <div class="method-item"><span class="method-name">Rotation Intelligence</span><span class="method-coming">In development</span></div>
+        <div class="method-item"><span class="method-name">Emission Acceleration</span><span class="method-coming">In development</span></div>
+        <div class="method-item"><span class="method-name">Alpha Ratio Divergence</span><span class="method-coming">In development</span></div>
         <div class="method-item"><span class="method-name">Live Track Record</span><span class="method-coming">Accumulating...</span></div>
       </div>
     </div>
@@ -264,7 +266,7 @@
   <div class="section">
     <div class="section-header">
       <div class="section-title">🎯 Opportunity Score — Top Contrarian Plays</div>
-      <div class="section-badge">Mean reversion · contrarian</div>
+      <div class="section-badge">Mean reversion · contrarian · 65.9% validated</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableOpportunity"><div class="state-msg">Loading...</div></div>
@@ -273,8 +275,8 @@
   <!-- QUALITY -->
   <div class="section">
     <div class="section-header">
-      <div class="section-title">🛡 Quality Score — Safest Subnets</div>
-      <div class="section-badge">Fundamental health · safety filter</div>
+      <div class="section-title">🛡 Quality Score — Structural Stability</div>
+      <div class="section-badge">Sortino downside protection · 60-day survivability · 57.9% validated</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableQuality"><div class="state-msg">Loading...</div></div>
@@ -284,7 +286,7 @@
   <div class="section">
     <div class="section-header">
       <div class="section-title">🚀 Momentum Score — Improving Subnets</div>
-      <div class="section-badge momentum">Direction of travel · 14-30d windows</div>
+      <div class="section-badge momentum">Direction of travel · 14-30d windows · 57.8% validated</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableMomentum"><div class="state-msg">Loading...</div></div>
@@ -345,13 +347,14 @@ function rebuildTable(tableKey) {
 function scoreColor(s)  { return s>=65?'score-high':s>=45?'score-mid':'score-low'; }
 function barColor(s)    { return s>=65?'bar-high':s>=45?'bar-mid':'bar-low'; }
 
-function scoreDisplay(score, isMomentum=false) {
+function scoreDisplay(score, isMomentum=false, showWarn=false) {
   const pct = Math.min(score/100*100,100);
   const numCls = isMomentum ? 'score-momentum' : scoreColor(score);
   const barCls = isMomentum ? 'bar-momentum'   : barColor(score);
+  const warn   = showWarn && score < 42.4 ? '<span class="quality-warn" title="High collapse risk">⚠</span>' : '';
   return `<div class="score-display">
     <div class="score-bar"><div class="score-bar-fill ${barCls}" style="width:${pct}%"></div></div>
-    <span class="score-num ${numCls}">${score.toFixed(1)}</span>
+    <span class="score-num ${numCls}">${score.toFixed(1)}</span>${warn}
   </div>`;
 }
 
@@ -360,14 +363,14 @@ function badgeClass(signal) {
   const s = signal.toLowerCase();
   if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran',
        'well_below','below','slight_below','deeply_oversold','surging','accelerating',
-       'accumulating','turning'].some(v=>s.includes(v))) return 'sig-green';
+       'accumulating','turning','highly_persistent','very_stable','very_consistent'].some(v=>s.includes(v))) return 'sig-green';
   if (['turning','moderate','declining','inflow','established','slight_above','falling',
-       'growing','recovering','increasing'].some(v=>s.includes(v))) return 'sig-cyan';
+       'growing','recovering','increasing','persistent','consistent','stable'].some(v=>s.includes(v))) return 'sig-cyan';
   if (['slowing','low','slight_inflow','young','quiet','above','rising',
-       'stable','holding'].some(v=>s.includes(v))) return 'sig-yellow';
+       'holding','sporadic'].some(v=>s.includes(v))) return 'sig-yellow';
   if (['weak','zero','none','heavy_outflow','well_above','far_above','reversing',
-       'worsening','exiting','deteriorating'].some(v=>s.includes(v))) return 'sig-red';
-  if (['bleeding','minimal_emission','zero_emission','collapsing','decelerating'].some(v=>s.includes(v))) return 'sig-orange';
+       'worsening','exiting','deteriorating','inconsistent','absent','exodus'].some(v=>s.includes(v))) return 'sig-red';
+  if (['bleeding','minimal_emission','zero_emission','volatile'].some(v=>s.includes(v))) return 'sig-orange';
   if (['surging','accelerating','accumulating'].some(v=>s.includes(v))) return 'sig-purple';
   return 'sig-muted';
 }
@@ -443,7 +446,7 @@ function buildTable(scores, type) {
       <td class="td-name">${nameLink(s)}</td>
       <td>${scoreDisplay(s.combined_score)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
-      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${scoreDisplay(s.quality_score, false, true)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
       <td>${badge(s.flow_signal)}</td>
       <td>${badge(s.price_vs_ema_signal || s.price_signal)}</td>
@@ -481,7 +484,7 @@ function buildTable(scores, type) {
       <td class="td-mono" style="color:${(s.ema_tao_inflow||0)>=0?'var(--green)':'var(--red)'}">
         ${fmtInflow(s.ema_tao_inflow)} TAO
       </td>
-      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${scoreDisplay(s.quality_score, false, true)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
     </tr>`).join('')}
     </tbody></table>`;
@@ -491,10 +494,10 @@ function buildTable(scores, type) {
     return `<table><thead><tr>
       ${thN('#')}${thN('SN')}${thN('Name')}
       ${th('Quality ↓','quality_score','quality','sorted')}
-      ${th('Emission Share','emission_quality_score','quality')}
-      ${th('Neurons','miner_quality_score','quality')}
-      ${th('30d Flow Trend','flow_trend_quality_score','quality')}
-      ${th('Age','age_quality_score','quality')}
+      ${th('Em. Stability','emission_stability_score','quality')}
+      ${th('Flow Persistence','flow_persistence_score','quality')}
+      ${th('Rank Consistency','rank_consistency_score','quality')}
+      ${th('Validator Retention','validator_retention_score','quality')}
       ${th('⛓ Alpha Ratio','alpha_ratio','quality','chain-col')}
       ${th('Opportunity','opportunity_score','quality')}
       ${th('Momentum','momentum_score','quality','momentum-col')}
@@ -503,11 +506,11 @@ function buildTable(scores, type) {
       <td class="td-rank">${i+1}</td>
       <td class="td-netuid">${s.netuid}</td>
       <td class="td-name">${nameLink(s)}</td>
-      <td>${scoreDisplay(s.quality_score)}</td>
-      <td>${badge(s.emission_quality)}</td>
-      <td>${badge(s.miner_quality)}</td>
-      <td>${badge(s.flow_trend_quality)}</td>
-      <td>${badge(s.age_quality)}</td>
+      <td>${scoreDisplay(s.quality_score, false, true)}</td>
+      <td>${badge(s.emission_stability_signal)}</td>
+      <td>${badge(s.flow_persistence_signal)}</td>
+      <td>${badge(s.rank_consistency_signal)}</td>
+      <td>${badge(s.validator_retention_signal)}</td>
       <td class="td-mono" style="color:var(--cyan)">${fmtRatio(s.alpha_ratio)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
@@ -537,7 +540,7 @@ function buildTable(scores, type) {
       <td>${badge(s.price_momentum)}</td>
       <td>${badge(s.alpha_ratio_momentum)}</td>
       <td>${scoreDisplay(s.combined_score)}</td>
-      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${scoreDisplay(s.quality_score, false, true)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
     </tr>`).join('')}
     </tbody></table>`;
@@ -564,6 +567,7 @@ async function loadData() {
     const chain     = chainRes.ok ? await chainRes.json() : null;
     const momentum  = momentumRes.ok ? await momentumRes.json() : null;
 
+    // v3 quality fields keyed by netuid
     const qualityMap  = {};
     (quality.scores || []).forEach(q => { qualityMap[q.netuid] = q; });
 
@@ -573,36 +577,39 @@ async function loadData() {
     const momentumMap = {};
     if (momentum) (momentum.scores || []).forEach(m => { momentumMap[m.netuid] = m; });
 
-    allScores = (combined.scores || []).map(s => ({
-      ...s,
-      // Quality signals
-      emission_quality:             qualityMap[s.netuid]?.emission_signal       || s.emission_quality    || 'UNKNOWN',
-      miner_quality:                qualityMap[s.netuid]?.miner_signal          || s.miner_quality       || 'UNKNOWN',
-      flow_trend_quality:           qualityMap[s.netuid]?.flow_trend_signal     || s.flow_trend_quality  || 'UNKNOWN',
-      age_quality:                  qualityMap[s.netuid]?.age_signal            || s.age_quality         || 'UNKNOWN',
-      emission_quality_score:       qualityMap[s.netuid]?.emission_score        || s.emission_quality_score  || 0,
-      miner_quality_score:          qualityMap[s.netuid]?.miner_score           || s.miner_quality_score     || 0,
-      flow_trend_quality_score:     qualityMap[s.netuid]?.flow_trend_score      || s.flow_trend_quality_score|| 0,
-      age_quality_score:            qualityMap[s.netuid]?.age_score             || s.age_quality_score       || 0,
-      // Chain metrics
-      alpha_ratio:                  s.alpha_ratio    ?? chainMap[s.netuid]?.alpha_ratio    ?? 0,
-      ema_tao_inflow:               s.ema_tao_inflow ?? chainMap[s.netuid]?.ema_tao_inflow ?? 0,
-      subnet_volume:                s.subnet_volume  ?? chainMap[s.netuid]?.subnet_volume  ?? 0,
-      // Opportunity scores
-      flow_score:                   s.flow_score              ?? 0,
-      vs_network_score:             s.vs_network_score        ?? 0,
-      emission_velocity_score:      s.emission_velocity_score ?? 0,
-      // Momentum
-      momentum_score:               s.momentum_score ?? momentumMap[s.netuid]?.momentum_score ?? 0,
-      emission_momentum:            s.emission_momentum    || momentumMap[s.netuid]?.emission_momentum    || 'UNKNOWN',
-      inflow_momentum:              s.inflow_momentum      || momentumMap[s.netuid]?.inflow_momentum      || 'UNKNOWN',
-      price_momentum:               s.price_momentum       || momentumMap[s.netuid]?.price_momentum       || 'UNKNOWN',
-      alpha_ratio_momentum:         s.alpha_ratio_momentum || momentumMap[s.netuid]?.alpha_ratio_momentum || 'UNKNOWN',
-      emission_momentum_score:      momentumMap[s.netuid]?.emission_momentum_score  ?? 0,
-      inflow_momentum_score:        momentumMap[s.netuid]?.inflow_momentum_score    ?? 0,
-      price_momentum_score:         momentumMap[s.netuid]?.price_momentum_score     ?? 0,
-      alpha_ratio_momentum_score:   momentumMap[s.netuid]?.alpha_ratio_momentum_score ?? 0,
-    }));
+    allScores = (combined.scores || []).map(s => {
+      const q = qualityMap[s.netuid] || {};
+      return {
+        ...s,
+        // Quality v3 signals
+        emission_stability_signal:   q.emission_stability_signal  || 'UNKNOWN',
+        flow_persistence_signal:     q.flow_persistence_signal    || 'UNKNOWN',
+        rank_consistency_signal:     q.rank_consistency_signal    || 'UNKNOWN',
+        validator_retention_signal:  q.validator_retention_signal || 'UNKNOWN',
+        emission_stability_score:    q.emission_stability_score   ?? 0,
+        flow_persistence_score:      q.flow_persistence_score     ?? 0,
+        rank_consistency_score:      q.rank_consistency_score     ?? 0,
+        validator_retention_score:   q.validator_retention_score  ?? 0,
+        // Chain metrics
+        alpha_ratio:    s.alpha_ratio    ?? chainMap[s.netuid]?.alpha_ratio    ?? 0,
+        ema_tao_inflow: s.ema_tao_inflow ?? chainMap[s.netuid]?.ema_tao_inflow ?? 0,
+        subnet_volume:  s.subnet_volume  ?? chainMap[s.netuid]?.subnet_volume  ?? 0,
+        // Opportunity scores
+        flow_score:              s.flow_score              ?? 0,
+        vs_network_score:        s.vs_network_score        ?? 0,
+        emission_velocity_score: s.emission_velocity_score ?? 0,
+        // Momentum
+        momentum_score:               s.momentum_score ?? momentumMap[s.netuid]?.momentum_score ?? 0,
+        emission_momentum:            s.emission_momentum    || momentumMap[s.netuid]?.emission_momentum    || 'UNKNOWN',
+        inflow_momentum:              s.inflow_momentum      || momentumMap[s.netuid]?.inflow_momentum      || 'UNKNOWN',
+        price_momentum:               s.price_momentum       || momentumMap[s.netuid]?.price_momentum       || 'UNKNOWN',
+        alpha_ratio_momentum:         s.alpha_ratio_momentum || momentumMap[s.netuid]?.alpha_ratio_momentum || 'UNKNOWN',
+        emission_momentum_score:      momentumMap[s.netuid]?.emission_momentum_score      ?? 0,
+        inflow_momentum_score:        momentumMap[s.netuid]?.inflow_momentum_score        ?? 0,
+        price_momentum_score:         momentumMap[s.netuid]?.price_momentum_score         ?? 0,
+        alpha_ratio_momentum_score:   momentumMap[s.netuid]?.alpha_ratio_momentum_score   ?? 0,
+      };
+    });
 
     // Stats
     document.getElementById('lastUpdated').innerHTML = `Updated: <strong>${combined.generated_at || '—'}</strong>`;

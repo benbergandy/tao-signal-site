@@ -154,7 +154,7 @@
     <div class="score-cell">
       <div class="score-cell-label">Quality</div>
       <div class="score-cell-value c-green" id="scoreQuality">—</div>
-      <div class="score-cell-sub">fundamental</div>
+      <div class="score-cell-sub">survivability</div>
     </div>
     <div class="score-cell">
       <div class="score-cell-label">Momentum</div>
@@ -224,7 +224,7 @@
         <div class="loading-charts"><span>Loading chain history...</span></div>
       </div>
       <div class="chart-legend">
-        <div class="legend-item"><div class="legend-line" style="background:var(--yellow)"></div>Below avg → mean reversion signal (62.2% win rate)</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--yellow)"></div>Below avg → mean reversion signal</div>
         <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>Above avg → already priced in</div>
         <div class="legend-item"><div class="legend-dash" style="border-color:var(--orange)"></div>Network avg</div>
       </div>
@@ -254,7 +254,7 @@
       <div class="info-card-body" id="signalDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
-      <div class="info-card-header">Quality Signals</div>
+      <div class="info-card-header">Quality Signals — Sortino v3</div>
       <div class="info-card-body" id="qualityDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
@@ -316,13 +316,15 @@ function badge(signal) {
   const s = signal.toLowerCase();
   let cls = 'b-muted';
   if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran',
-       'well_below','below','slight_below','deeply_oversold','accumulating','turning'].some(v=>s.includes(v))) cls='b-green';
+       'well_below','below','slight_below','deeply_oversold','accumulating','turning',
+       'highly_persistent','very_stable','very_consistent'].some(v=>s.includes(v))) cls='b-green';
   else if (['turning','moderate','declining','inflow','established','falling','growing',
-            'recovering','increasing'].some(v=>s.includes(v))) cls='b-cyan';
-  else if (['slowing','low','slight_inflow','young','rising','above','stable','holding'].some(v=>s.includes(v))) cls='b-yellow';
+            'recovering','increasing','persistent','consistent','stable'].some(v=>s.includes(v))) cls='b-cyan';
+  else if (['slowing','low','slight_inflow','young','rising','above','holding',
+            'sporadic'].some(v=>s.includes(v))) cls='b-yellow';
   else if (['weak','zero','none','heavy_outflow','well_above','far_above','reversing',
-            'worsening','exiting','deteriorating'].some(v=>s.includes(v))) cls='b-red';
-  else if (['bleeding','minimal','decelerating','collapsing'].some(v=>s.includes(v))) cls='b-orange';
+            'worsening','exiting','deteriorating','inconsistent','absent','exodus'].some(v=>s.includes(v))) cls='b-red';
+  else if (['bleeding','minimal','decelerating','volatile','zero_emission'].some(v=>s.includes(v))) cls='b-orange';
   else if (['surging','accelerating'].some(v=>s.includes(v))) cls='b-purple';
   return `<span class="badge ${cls}"><span class="badge-dot"></span>${signal}</span>`;
 }
@@ -386,6 +388,7 @@ function buildPriceChart() {
   }
   segs.push({start,end:prices.length-1,bull});
   const canvas = ensureCanvas('priceBody','priceChart',240);
+  if (_charts.price) _charts.price.destroy();
   _charts.price = new Chart(canvas, {
     type:'line',
     data:{ labels, datasets:[
@@ -420,6 +423,7 @@ function buildEmissionChart() {
   const { labels, data: [em] } = filterRange(allLabels, [allEm], _ranges.emission);
   const avgLine = em.map(() => networkAvg);
   const canvas = ensureCanvas('emissionBody','emissionChart',180);
+  if (_charts.emission) _charts.emission.destroy();
   _charts.emission = new Chart(canvas, {
     type:'line',
     data:{ labels, datasets:[
@@ -449,6 +453,7 @@ function buildFlowChart() {
   const allFlows  = _history.map(r => r.ema_tao_inflow || 0);
   const { labels, data:[flows] } = filterRange(allLabels, [allFlows], _ranges.flow);
   const canvas = ensureCanvas('flowBody','flowChart',160);
+  if (_charts.flow) _charts.flow.destroy();
   _charts.flow = new Chart(canvas, {
     type:'bar',
     data:{ labels, datasets:[{
@@ -546,7 +551,7 @@ async function loadData() {
     const signals = [score?.flow_signal, score?.price_vs_ema_signal, score?.vs_network_signal, score?.emission_velocity_signal].filter(Boolean);
     document.getElementById('signalRow').innerHTML = signals.map(s=>badge(s)).join('');
 
-    // Stats
+    // Stats strip
     const price      = live?.alpha_price_tao || 0;
     const movPrice   = live?.moving_price || 0;
     const priceVsEma = live?.price_vs_ema || 1;
@@ -591,7 +596,7 @@ async function loadData() {
       ['DECELERATING','REVERSING','WORSENING'].includes(inflowMom) ? 'c-red' : ''
     );
 
-    // Opportunity signals
+    // Opportunity signals sidebar
     document.getElementById('signalDetails').innerHTML = [
       ['Flow Momentum',     score?.flow_signal],
       ['Price vs EMA',      score?.price_vs_ema_signal],
@@ -599,15 +604,15 @@ async function loadData() {
       ['Emission Velocity', score?.emission_velocity_signal],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
 
-    // Quality signals
+    // Quality signals sidebar — v3 Sortino fields
     document.getElementById('qualityDetails').innerHTML = [
-      ['Emission Quality',  score?.emission_quality || qual?.emission_signal],
-      ['Neuron Activity',   score?.miner_quality || qual?.miner_signal],
-      ['30d Flow Trend',    score?.flow_trend_quality || qual?.flow_trend_signal],
-      ['Subnet Age',        score?.age_quality || qual?.age_signal],
+      ['Em. Stability',      qual?.emission_stability_signal],
+      ['Flow Persistence',   qual?.flow_persistence_signal],
+      ['Rank Consistency',   qual?.rank_consistency_signal],
+      ['Validator Retention',qual?.validator_retention_signal],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
 
-    // Momentum signals
+    // Momentum signals sidebar
     document.getElementById('momentumDetails').innerHTML = [
       ['Emission (30d)',    mom?.emission_momentum    || score?.emission_momentum],
       ['Inflow (14d)',      mom?.inflow_momentum      || score?.inflow_momentum],
@@ -616,7 +621,7 @@ async function loadData() {
       ['TAO Staked (30d)',  mom?.tao_staked_momentum],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
 
-    // Chain data
+    // Chain data sidebar
     document.getElementById('chainInfo').innerHTML = [
       ['EMA Inflow',   (inflow>=0?'+':'')+inflow.toFixed(6)+' TAO/blk'],
       ['Alpha Ratio',  alphaRatio.toFixed(3)+'x (staked/pool)'],
@@ -627,7 +632,7 @@ async function loadData() {
       ['Moving Price', movPrice.toFixed(6)+' TAO'],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
 
-    // Subnet info
+    // Subnet info sidebar
     document.getElementById('subnetInfo').innerHTML = [
       ['Netuid',  `SN${NETUID}`],
       ['Symbol',  symbol||'—'],
