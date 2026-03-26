@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAO Signal — Subnet Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:        #050709;
@@ -32,10 +32,10 @@
   body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
   .wrap { max-width:1600px; margin:0 auto; padding:0 20px; }
 
+  /* ── TOPBAR ─────────────────────────────────────────────── */
   .topbar { border-bottom:1px solid var(--border); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:100; }
   .topbar-left { display:flex; align-items:center; gap:24px; }
-  .logo { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; letter-spacing:0.05em; color:var(--cyan); }
-  .logo span { color:var(--text); }
+  .logo-canvas { display:block; cursor:default; }
   .nav-tabs { display:flex; height:48px; }
   .nav-tab { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0 16px; height:48px; display:flex; align-items:center; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; }
   .nav-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
@@ -49,17 +49,22 @@
   .refresh-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:5px 12px; cursor:pointer; transition:all 0.15s; text-transform:uppercase; }
   .refresh-btn:hover { border-color:var(--cyan); color:var(--cyan); }
 
+  /* ── STATS ROW ──────────────────────────────────────────── */
   .stats-row { display:grid; grid-template-columns:repeat(8,1fr); border-bottom:1px solid var(--border); background:var(--surface); }
   .stat-cell { padding:12px 16px; border-right:1px solid var(--border); }
   .stat-cell:last-child { border-right:none; }
   .stat-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
   .stat-value { font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; letter-spacing:-0.02em; line-height:1; }
   .stat-sub { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
-  .c-cyan{color:var(--cyan)} .c-green{color:var(--green)} .c-yellow{color:var(--yellow)} .c-red{color:var(--red)} .c-purple{color:var(--purple)} .c-orange{color:var(--orange)}
+  .c-cyan{color:var(--cyan)} .c-green{color:var(--green)} .c-yellow{color:var(--yellow)}
+  .c-red{color:var(--red)} .c-purple{color:var(--purple)} .c-orange{color:var(--orange)}
 
+  /* ── LAYOUT ─────────────────────────────────────────────── */
   .main { padding:20px; display:flex; flex-direction:column; gap:20px; }
   .section { animation:fadeUp 0.4s ease both; }
-  .section:nth-child(1){animation-delay:0.05s} .section:nth-child(2){animation-delay:0.10s} .section:nth-child(3){animation-delay:0.15s} .section:nth-child(4){animation-delay:0.20s} .section:nth-child(5){animation-delay:0.25s}
+  .section:nth-child(1){animation-delay:0.05s} .section:nth-child(2){animation-delay:0.10s}
+  .section:nth-child(3){animation-delay:0.15s} .section:nth-child(4){animation-delay:0.20s}
+  .section:nth-child(5){animation-delay:0.25s}
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
   .section-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
@@ -68,12 +73,15 @@
   .section-badge { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; padding:3px 8px; border:1px solid var(--border2); color:var(--muted); text-transform:uppercase; white-space:nowrap; }
   .section-badge.chain { border-color:var(--green); color:var(--green); }
   .section-badge.momentum { border-color:var(--purple); color:var(--purple); }
+  .section-badge.live { border-color:var(--cyan); color:var(--cyan); }
 
+  /* ── FILTERS ────────────────────────────────────────────── */
   .filter-row { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; align-items:center; }
   .filter-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
   .filter-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:4px 10px; cursor:pointer; transition:all 0.15s; }
   .filter-btn:hover,.filter-btn.active { border-color:var(--cyan); color:var(--cyan); }
 
+  /* ── TABLE ──────────────────────────────────────────────── */
   .table-wrap { border:1px solid var(--border); overflow-x:auto; background:var(--surface); }
   table { width:100%; border-collapse:collapse; }
   thead tr { background:var(--surface2); border-bottom:1px solid var(--border2); }
@@ -116,18 +124,21 @@
   .sig-purple { color:var(--purple); border-color:var(--purple); background:rgba(153,102,255,0.08); }
   .sig-orange { color:var(--orange); border-color:var(--orange); background:rgba(255,136,0,0.08); }
 
-  .quality-warn { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--orange); margin-left:4px; opacity:0.9; }
-
-  .methodology { border:1px solid var(--border); background:var(--surface); padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:24px; }
-  .method-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
-  .method-item { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); }
-  .method-item:last-child { border-bottom:none; }
-  .method-name { font-size:12px; color:var(--text); }
-  .method-weight { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--cyan); }
-  .method-stat { font-family:'IBM Plex Mono',monospace; font-size:11px; }
-  .method-coming { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--purple); opacity:0.8; }
-  .method-chain { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--green); }
-  .method-live { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); }
+  /* ── METHODOLOGY ────────────────────────────────────────── */
+  .methodology { border:1px solid var(--border); background:var(--surface); padding:24px; display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .method-col { display:flex; flex-direction:column; gap:20px; }
+  .method-block { }
+  .method-block-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .method-block-title.opp  { color:var(--yellow); }
+  .method-block-title.qual { color:var(--green); }
+  .method-block-title.mom  { color:var(--purple); }
+  .method-block-title.val  { color:var(--cyan); }
+  .method-desc { font-size:12px; color:var(--muted); line-height:1.7; }
+  .method-desc strong { color:var(--text); }
+  .method-stat-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(26,34,48,0.5); }
+  .method-stat-row:last-child { border-bottom:none; }
+  .method-stat-label { font-size:12px; color:var(--text); }
+  .method-stat-value { font-family:'IBM Plex Mono',monospace; font-size:11px; }
 
   .state-msg { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); padding:48px; text-align:center; }
   .state-msg.error { color:var(--red); }
@@ -139,13 +150,13 @@
 
 <div class="topbar">
   <div class="topbar-left">
-    <div class="logo">TAO<span> Signal</span></div>
+    <canvas id="logo-canvas" class="logo-canvas" width="180" height="44"></canvas>
     <nav class="nav-tabs">
-      <div class="nav-tab active">Combined</div>
-      <div class="nav-tab">Opportunity</div>
-      <div class="nav-tab">Quality</div>
-      <div class="nav-tab">Momentum</div>
-      <a href="performance.html" class="nav-tab" style="text-decoration:none">Performance</a>
+      <a class="nav-tab active" href="#section-combined" onclick="smoothTo('section-combined')">Combined</a>
+      <a class="nav-tab" href="#section-opportunity" onclick="smoothTo('section-opportunity')">Opportunity</a>
+      <a class="nav-tab" href="#section-quality" onclick="smoothTo('section-quality')">Quality</a>
+      <a class="nav-tab" href="#section-momentum" onclick="smoothTo('section-momentum')">Momentum</a>
+      <a href="performance.html" class="nav-tab">Performance</a>
     </nav>
   </div>
   <div class="topbar-right">
@@ -162,9 +173,9 @@
     <div class="stat-sub">128 total network</div>
   </div>
   <div class="stat-cell">
-    <div class="stat-label">Strong Flow</div>
+    <div class="stat-label">Positive Inflow</div>
     <div class="stat-value c-green" id="statStrong">—</div>
-    <div class="stat-sub">positive EMA inflow</div>
+    <div class="stat-sub">net capital inflow</div>
   </div>
   <div class="stat-cell">
     <div class="stat-label">Top Combined</div>
@@ -201,22 +212,22 @@
 <div class="main wrap">
 
   <!-- COMBINED -->
-  <div class="section">
+  <div class="section" id="section-combined">
     <div class="section-header">
       <div class="section-title">⚡ Combined Score Leaderboard</div>
-      <div class="section-badge">Opportunity 55% · Quality 25% · Momentum 20%</div>
+      <div class="section-badge live">Walk-forward validated · 68.6% dual win rate</div>
       <div class="section-line"></div>
       <div class="section-badge chain">⛓ Chain Native — No Taostats</div>
     </div>
     <div class="filter-row">
       <span class="filter-label">Filter:</span>
       <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setFilter('strong',this)">Strong Flow</button>
+      <button class="filter-btn" onclick="setFilter('strong',this)">Positive Inflow</button>
       <button class="filter-btn" onclick="setFilter('quality',this)">High Quality (>65)</button>
       <button class="filter-btn" onclick="setFilter('opportunity',this)">High Opportunity (>70)</button>
       <button class="filter-btn" onclick="setFilter('momentum',this)">High Momentum (>75)</button>
-      <button class="filter-btn" onclick="setFilter('established',this)">Established Only</button>
-      <button class="filter-btn" onclick="setFilter('oversold',this)">Oversold Price</button>
+      <button class="filter-btn" onclick="setFilter('stable',this)">Stable Emission</button>
+      <button class="filter-btn" onclick="setFilter('oversold',this)">Price Below EMA</button>
     </div>
     <div class="table-wrap" id="tableCombined"><div class="state-msg">Loading...</div></div>
   </div>
@@ -226,67 +237,95 @@
     <div class="section-header">
       <div class="section-title">📐 Signal Methodology</div>
       <div class="section-line"></div>
-      <div class="section-badge chain">Walk-forward validated · Nov 2025 holdout · 68.4% combined win rate</div>
+      <div class="section-badge chain">Walk-forward validated · Nov 2025 holdout</div>
     </div>
     <div class="methodology">
-      <div>
-        <div class="method-title">Opportunity Score (55% of Combined)</div>
-        <div class="method-item"><span class="method-name">Emission Velocity</span><span class="method-weight">75%</span><span class="method-stat c-green">65.9% win rate</span></div>
-        <div class="method-item"><span class="method-name">Price vs EMA</span><span class="method-weight">15%</span><span class="method-chain">⛓ moving_price</span></div>
-        <div class="method-item"><span class="method-name">Emission vs Network</span><span class="method-weight">5%</span><span class="method-chain">⛓ emission_share_pct</span></div>
-        <div class="method-item"><span class="method-name">Flow Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ ema_tao_inflow</span></div>
+      <div class="method-col">
+        <div class="method-block">
+          <div class="method-block-title val">The Model</div>
+          <div class="method-desc">
+            TAO Signal uses a <strong>proprietary quantitative model</strong> trained on 14+ months
+            of on-chain Bittensor data. It produces a single composite score per subnet,
+            updated daily at market open. No Taostats. No third-party APIs. Every signal
+            is derived directly from chain data.
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-block-title val">Validation</div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Combined win rate</span>
+            <span class="method-stat-value c-cyan">68.6%</span>
+          </div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Emission prediction</span>
+            <span class="method-stat-value c-green">67.5%</span>
+          </div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Price prediction</span>
+            <span class="method-stat-value c-green">69.8%</span>
+          </div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Holdout period</span>
+            <span class="method-stat-value" style="color:var(--muted)">Feb–Mar 2026</span>
+          </div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Methodology</span>
+            <span class="method-stat-value" style="color:var(--muted)">Walk-forward · no look-ahead</span>
+          </div>
+          <div class="method-stat-row">
+            <span class="method-stat-label">Live track record</span>
+            <span class="method-stat-value" style="color:var(--cyan)">→ Performance tab</span>
+          </div>
+        </div>
       </div>
-      <div>
-        <div class="method-title">Quality Score (25% of Combined) — Sortino v3</div>
-        <div class="method-item"><span class="method-name">Emission Stability</span><span class="method-weight">60%</span><span class="method-stat c-green">57.9% downside win</span></div>
-        <div class="method-item"><span class="method-name">Flow Persistence</span><span class="method-weight">20%</span><span class="method-chain">⛓ 30d inflow days</span></div>
-        <div class="method-item"><span class="method-name">Rank Consistency</span><span class="method-weight">15%</span><span class="method-chain">⛓ emission percentile</span></div>
-        <div class="method-item"><span class="method-name">Validator Retention</span><span class="method-weight">5%</span><span class="method-chain">⛓ miners z-score</span></div>
-      </div>
-      <div>
-        <div class="method-title">Momentum Score (20% of Combined)</div>
-        <div class="method-item"><span class="method-name">Inflow Momentum</span><span class="method-weight">75%</span><span class="method-stat c-green">57.8% win rate</span></div>
-        <div class="method-item"><span class="method-name">Price Momentum</span><span class="method-weight">10%</span><span class="method-chain">⛓ 14d trend</span></div>
-        <div class="method-item"><span class="method-name">Emission Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 30d trend</span></div>
-        <div class="method-item"><span class="method-name">Alpha Ratio Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 14d trend</span></div>
-        <div class="method-item"><span class="method-name">TAO Staked Momentum</span><span class="method-weight">5%</span><span class="method-chain">⛓ 30d trend</span></div>
-      </div>
-      <div>
-        <div class="method-title">Research Pipeline</div>
-        <div class="method-item"><span class="method-name">Weight Optimizer v3</span><span class="method-live">✓ Complete</span></div>
-        <div class="method-item"><span class="method-name">Rotation Intelligence</span><span class="method-coming">In development</span></div>
-        <div class="method-item"><span class="method-name">Emission Acceleration</span><span class="method-coming">In development</span></div>
-        <div class="method-item"><span class="method-name">Alpha Ratio Divergence</span><span class="method-coming">In development</span></div>
-        <div class="method-item"><span class="method-name">Live Track Record</span><span class="method-coming">Accumulating...</span></div>
+      <div class="method-col">
+        <div class="method-block">
+          <div class="method-block-title opp">What It Predicts</div>
+          <div class="method-desc">
+            The model is optimized against <strong>two simultaneous objectives</strong> — emission
+            share capture and alpha price appreciation in TAO terms. Both matter to a real
+            staker. Emission yield compounds with price appreciation multiplicatively;
+            optimizing for one while ignoring the other leaves returns on the table.
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-block-title qual">No Look-Ahead Bias</div>
+          <div class="method-desc">
+            All weights were determined on a training period ending January 31, 2026.
+            The holdout validation period — February through March 2026 — was never
+            touched during model development. The live track record started March 26, 2026
+            with positions locked using only data available at that moment.
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- OPPORTUNITY -->
-  <div class="section">
+  <div class="section" id="section-opportunity">
     <div class="section-header">
-      <div class="section-title">🎯 Opportunity Score — Top Contrarian Plays</div>
-      <div class="section-badge">Mean reversion · contrarian · 65.9% validated</div>
+      <div class="section-title">🎯 Opportunity Score — Best Entry Points</div>
+      <div class="section-badge">Mean reversion · contrarian · dual-objective</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableOpportunity"><div class="state-msg">Loading...</div></div>
   </div>
 
   <!-- QUALITY -->
-  <div class="section">
+  <div class="section" id="section-quality">
     <div class="section-header">
-      <div class="section-title">🛡 Quality Score — Structural Stability</div>
-      <div class="section-badge">Sortino downside protection · 60-day survivability · 57.9% validated</div>
+      <div class="section-title">🛡 Quality Score — Downside Protection</div>
+      <div class="section-badge">Collapse predictor · Sortino principle · validator intelligence</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableQuality"><div class="state-msg">Loading...</div></div>
   </div>
 
   <!-- MOMENTUM -->
-  <div class="section">
+  <div class="section" id="section-momentum">
     <div class="section-header">
-      <div class="section-title">🚀 Momentum Score — Improving Subnets</div>
-      <div class="section-badge momentum">Direction of travel · 14-30d windows · 57.8% validated</div>
+      <div class="section-title">🚀 Momentum Score — Direction of Travel</div>
+      <div class="section-badge momentum">Rolling z-scores · 14-30d windows · self-calibrating</div>
       <div class="section-line"></div>
     </div>
     <div class="table-wrap" id="tableMomentum"><div class="state-msg">Loading...</div></div>
@@ -294,9 +333,15 @@
 
 </div>
 
+<div style="border-top:1px solid var(--border);padding:20px;margin-top:20px;background:var(--surface)">
+  <div class="wrap" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
+    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions. By using this platform you acknowledge that you are solely responsible for any financial decisions you make.
+  </div>
+</div>
+
 <script>
 const RAO = 1_000_000_000;
-let allScores    = [];
+let allScores     = [];
 let currentFilter = 'all';
 
 const sortState = {
@@ -305,6 +350,17 @@ const sortState = {
   quality:     { field:'quality_score',     dir:-1 },
   momentum:    { field:'momentum_score',    dir:-1 },
 };
+
+function smoothTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  // Update active tab
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  return false;
+}
 
 function applySortAndFilter(scores, tableKey) {
   const { field, dir } = sortState[tableKey];
@@ -347,14 +403,13 @@ function rebuildTable(tableKey) {
 function scoreColor(s)  { return s>=65?'score-high':s>=45?'score-mid':'score-low'; }
 function barColor(s)    { return s>=65?'bar-high':s>=45?'bar-mid':'bar-low'; }
 
-function scoreDisplay(score, isMomentum=false, showWarn=false) {
-  const pct = Math.min(score/100*100,100);
+function scoreDisplay(score, isMomentum=false) {
+  const pct    = Math.min(score/100*100, 100);
   const numCls = isMomentum ? 'score-momentum' : scoreColor(score);
   const barCls = isMomentum ? 'bar-momentum'   : barColor(score);
-  const warn   = showWarn && score < 42.4 ? '<span class="quality-warn" title="High collapse risk">⚠</span>' : '';
   return `<div class="score-display">
     <div class="score-bar"><div class="score-bar-fill ${barCls}" style="width:${pct}%"></div></div>
-    <span class="score-num ${numCls}">${score.toFixed(1)}</span>${warn}
+    <span class="score-num ${numCls}">${score.toFixed(1)}</span>
   </div>`;
 }
 
@@ -363,14 +418,14 @@ function badgeClass(signal) {
   const s = signal.toLowerCase();
   if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran',
        'well_below','below','slight_below','deeply_oversold','surging','accelerating',
-       'accumulating','turning','highly_persistent','very_stable','very_consistent'].some(v=>s.includes(v))) return 'sig-green';
+       'accumulating','turning','very_stable','highly_persistent','very_consistent'].some(v=>s.includes(v))) return 'sig-green';
   if (['turning','moderate','declining','inflow','established','slight_above','falling',
        'growing','recovering','increasing','persistent','consistent','stable'].some(v=>s.includes(v))) return 'sig-cyan';
   if (['slowing','low','slight_inflow','young','quiet','above','rising',
        'holding','sporadic'].some(v=>s.includes(v))) return 'sig-yellow';
   if (['weak','zero','none','heavy_outflow','well_above','far_above','reversing',
-       'worsening','exiting','deteriorating','inconsistent','absent','exodus'].some(v=>s.includes(v))) return 'sig-red';
-  if (['bleeding','minimal_emission','zero_emission','volatile'].some(v=>s.includes(v))) return 'sig-orange';
+       'worsening','exiting','deteriorating','exodus','absent','inconsistent'].some(v=>s.includes(v))) return 'sig-red';
+  if (['bleeding','minimal_emission','zero_emission','decelerating','volatile'].some(v=>s.includes(v))) return 'sig-orange';
   if (['surging','accelerating','accumulating'].some(v=>s.includes(v))) return 'sig-purple';
   return 'sig-muted';
 }
@@ -395,12 +450,12 @@ function fmtRatio(val) {
 
 function applyFilter(scores) {
   switch(currentFilter) {
-    case 'strong':      return scores.filter(s => s.flow_signal === 'STRONG');
+    case 'strong':      return scores.filter(s => (s.ema_tao_inflow || 0) > 0);
     case 'quality':     return scores.filter(s => s.quality_score >= 65);
     case 'opportunity': return scores.filter(s => s.opportunity_score >= 70);
     case 'momentum':    return scores.filter(s => (s.momentum_score || 0) >= 75);
-    case 'established': return scores.filter(s => ['DOMINANT','STRONG','MODERATE'].includes(s.emission_quality));
-    case 'oversold':    return scores.filter(s => ['COLLAPSING','DEEPLY_OVERSOLD','FALLING'].includes(s.price_vs_ema_signal || s.price_signal));
+    case 'stable':      return scores.filter(s => ['VERY_STABLE','STABLE'].includes(s.emission_stability_signal || ''));
+    case 'oversold':    return scores.filter(s => ['COLLAPSING','FALLING','DEEPLY_OVERSOLD'].includes(s.price_vs_ema_signal || ''));
     default:            return scores;
   }
 }
@@ -424,7 +479,7 @@ function thN(label, cls='') {
 }
 
 function buildTable(scores, type) {
-  if (!scores.length) return '<div class="state-msg">No data matching filter</div>';
+  if (!scores.length) return '<div class="state-msg">No subnets match this filter</div>';
 
   if (type === 'combined') {
     return `<table><thead><tr>
@@ -446,12 +501,12 @@ function buildTable(scores, type) {
       <td class="td-name">${nameLink(s)}</td>
       <td>${scoreDisplay(s.combined_score)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
-      <td>${scoreDisplay(s.quality_score, false, true)}</td>
+      <td>${scoreDisplay(s.quality_score)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
       <td>${badge(s.flow_signal)}</td>
-      <td>${badge(s.price_vs_ema_signal || s.price_signal)}</td>
+      <td>${badge(s.price_vs_ema_signal)}</td>
       <td class="td-mono" style="color:${(s.ema_tao_inflow||0)>=0?'var(--green)':'var(--red)'}">
-        ${fmtInflow(s.ema_tao_inflow)} TAO
+        ${fmtInflow(s.ema_tao_inflow)} τ
       </td>
       <td class="td-mono" style="color:var(--cyan)">${fmtRatio(s.alpha_ratio)}</td>
       <td>${badge(s.emission_momentum)}</td>
@@ -478,13 +533,13 @@ function buildTable(scores, type) {
       <td class="td-name">${nameLink(s)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
       <td>${badge(s.flow_signal)}</td>
-      <td>${badge(s.price_vs_ema_signal || s.price_signal)}</td>
+      <td>${badge(s.price_vs_ema_signal)}</td>
       <td>${badge(s.vs_network_signal)}</td>
       <td>${badge(s.emission_velocity_signal)}</td>
       <td class="td-mono" style="color:${(s.ema_tao_inflow||0)>=0?'var(--green)':'var(--red)'}">
-        ${fmtInflow(s.ema_tao_inflow)} TAO
+        ${fmtInflow(s.ema_tao_inflow)} τ
       </td>
-      <td>${scoreDisplay(s.quality_score, false, true)}</td>
+      <td>${scoreDisplay(s.quality_score)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
     </tr>`).join('')}
     </tbody></table>`;
@@ -506,11 +561,11 @@ function buildTable(scores, type) {
       <td class="td-rank">${i+1}</td>
       <td class="td-netuid">${s.netuid}</td>
       <td class="td-name">${nameLink(s)}</td>
-      <td>${scoreDisplay(s.quality_score, false, true)}</td>
-      <td>${badge(s.emission_stability_signal)}</td>
-      <td>${badge(s.flow_persistence_signal)}</td>
-      <td>${badge(s.rank_consistency_signal)}</td>
-      <td>${badge(s.validator_retention_signal)}</td>
+      <td>${scoreDisplay(s.quality_score)}</td>
+      <td>${badge(s.emission_stability_signal || s.emission_quality)}</td>
+      <td>${badge(s.flow_persistence_signal  || s.flow_trend_quality)}</td>
+      <td>${badge(s.rank_consistency_signal  || s.age_quality)}</td>
+      <td>${badge(s.validator_retention_signal || s.miner_quality)}</td>
       <td class="td-mono" style="color:var(--cyan)">${fmtRatio(s.alpha_ratio)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
       <td>${scoreDisplay(s.momentum_score||0, true)}</td>
@@ -540,7 +595,7 @@ function buildTable(scores, type) {
       <td>${badge(s.price_momentum)}</td>
       <td>${badge(s.alpha_ratio_momentum)}</td>
       <td>${scoreDisplay(s.combined_score)}</td>
-      <td>${scoreDisplay(s.quality_score, false, true)}</td>
+      <td>${scoreDisplay(s.quality_score)}</td>
       <td>${scoreDisplay(s.opportunity_score)}</td>
     </tr>`).join('')}
     </tbody></table>`;
@@ -562,12 +617,11 @@ async function loadData() {
 
     if (!combinedRes.ok) throw new Error('Could not load data');
 
-    const combined  = await combinedRes.json();
-    const quality   = await qualityRes.json();
-    const chain     = chainRes.ok ? await chainRes.json() : null;
-    const momentum  = momentumRes.ok ? await momentumRes.json() : null;
+    const combined = await combinedRes.json();
+    const quality  = await qualityRes.json();
+    const chain    = chainRes.ok ? await chainRes.json() : null;
+    const momentum = momentumRes.ok ? await momentumRes.json() : null;
 
-    // v3 quality fields keyed by netuid
     const qualityMap  = {};
     (quality.scores || []).forEach(q => { qualityMap[q.netuid] = q; });
 
@@ -577,44 +631,40 @@ async function loadData() {
     const momentumMap = {};
     if (momentum) (momentum.scores || []).forEach(m => { momentumMap[m.netuid] = m; });
 
-    allScores = (combined.scores || []).map(s => {
-      const q = qualityMap[s.netuid] || {};
-      return {
-        ...s,
-        // Quality v3 signals
-        emission_stability_signal:   q.emission_stability_signal  || 'UNKNOWN',
-        flow_persistence_signal:     q.flow_persistence_signal    || 'UNKNOWN',
-        rank_consistency_signal:     q.rank_consistency_signal    || 'UNKNOWN',
-        validator_retention_signal:  q.validator_retention_signal || 'UNKNOWN',
-        emission_stability_score:    q.emission_stability_score   ?? 0,
-        flow_persistence_score:      q.flow_persistence_score     ?? 0,
-        rank_consistency_score:      q.rank_consistency_score     ?? 0,
-        validator_retention_score:   q.validator_retention_score  ?? 0,
-        // Chain metrics
-        alpha_ratio:    s.alpha_ratio    ?? chainMap[s.netuid]?.alpha_ratio    ?? 0,
-        ema_tao_inflow: s.ema_tao_inflow ?? chainMap[s.netuid]?.ema_tao_inflow ?? 0,
-        subnet_volume:  s.subnet_volume  ?? chainMap[s.netuid]?.subnet_volume  ?? 0,
-        // Opportunity scores
-        flow_score:              s.flow_score              ?? 0,
-        vs_network_score:        s.vs_network_score        ?? 0,
-        emission_velocity_score: s.emission_velocity_score ?? 0,
-        // Momentum
-        momentum_score:               s.momentum_score ?? momentumMap[s.netuid]?.momentum_score ?? 0,
-        emission_momentum:            s.emission_momentum    || momentumMap[s.netuid]?.emission_momentum    || 'UNKNOWN',
-        inflow_momentum:              s.inflow_momentum      || momentumMap[s.netuid]?.inflow_momentum      || 'UNKNOWN',
-        price_momentum:               s.price_momentum       || momentumMap[s.netuid]?.price_momentum       || 'UNKNOWN',
-        alpha_ratio_momentum:         s.alpha_ratio_momentum || momentumMap[s.netuid]?.alpha_ratio_momentum || 'UNKNOWN',
-        emission_momentum_score:      momentumMap[s.netuid]?.emission_momentum_score      ?? 0,
-        inflow_momentum_score:        momentumMap[s.netuid]?.inflow_momentum_score        ?? 0,
-        price_momentum_score:         momentumMap[s.netuid]?.price_momentum_score         ?? 0,
-        alpha_ratio_momentum_score:   momentumMap[s.netuid]?.alpha_ratio_momentum_score   ?? 0,
-      };
-    });
+    allScores = (combined.scores || []).map(s => ({
+      ...s,
+      // Quality v4 signals — prefer new names, fall back to legacy
+      emission_stability_signal:   qualityMap[s.netuid]?.emission_stability_signal || s.emission_stability_signal || s.emission_quality || 'UNKNOWN',
+      flow_persistence_signal:     qualityMap[s.netuid]?.flow_persistence_signal   || s.flow_persistence_signal   || s.flow_trend_quality || 'UNKNOWN',
+      rank_consistency_signal:     qualityMap[s.netuid]?.rank_consistency_signal   || s.rank_consistency_signal   || s.age_quality || 'UNKNOWN',
+      validator_retention_signal:  qualityMap[s.netuid]?.validator_retention_signal|| s.validator_retention_signal|| s.miner_quality || 'UNKNOWN',
+      emission_stability_score:    qualityMap[s.netuid]?.emission_stability_score  || s.emission_stability_score  || 0,
+      flow_persistence_score:      qualityMap[s.netuid]?.flow_persistence_score    || s.flow_persistence_score    || 0,
+      rank_consistency_score:      qualityMap[s.netuid]?.rank_consistency_score    || s.rank_consistency_score    || 0,
+      validator_retention_score:   qualityMap[s.netuid]?.validator_retention_score || s.validator_retention_score || 0,
+      // Chain metrics
+      alpha_ratio:                 s.alpha_ratio    ?? chainMap[s.netuid]?.alpha_ratio    ?? 0,
+      ema_tao_inflow:              s.ema_tao_inflow ?? chainMap[s.netuid]?.ema_tao_inflow ?? 0,
+      // Opportunity scores
+      flow_score:                  s.flow_score              ?? 0,
+      vs_network_score:            s.vs_network_score        ?? 0,
+      emission_velocity_score:     s.emission_velocity_score ?? 0,
+      // Momentum
+      momentum_score:              s.momentum_score ?? momentumMap[s.netuid]?.momentum_score ?? 0,
+      emission_momentum:           s.emission_momentum    || momentumMap[s.netuid]?.emission_momentum    || 'UNKNOWN',
+      inflow_momentum:             s.inflow_momentum      || momentumMap[s.netuid]?.inflow_momentum      || 'UNKNOWN',
+      price_momentum:              s.price_momentum       || momentumMap[s.netuid]?.price_momentum       || 'UNKNOWN',
+      alpha_ratio_momentum:        s.alpha_ratio_momentum || momentumMap[s.netuid]?.alpha_ratio_momentum || 'UNKNOWN',
+      emission_momentum_score:     momentumMap[s.netuid]?.emission_momentum_score    ?? 0,
+      inflow_momentum_score:       momentumMap[s.netuid]?.inflow_momentum_score      ?? 0,
+      price_momentum_score:        momentumMap[s.netuid]?.price_momentum_score       ?? 0,
+      alpha_ratio_momentum_score:  momentumMap[s.netuid]?.alpha_ratio_momentum_score ?? 0,
+    }));
 
-    // Stats
+    // Stats bar
     document.getElementById('lastUpdated').innerHTML = `Updated: <strong>${combined.generated_at || '—'}</strong>`;
     document.getElementById('statTotal').textContent  = allScores.length;
-    document.getElementById('statStrong').textContent = allScores.filter(s => s.flow_signal === 'STRONG').length;
+    document.getElementById('statStrong').textContent = allScores.filter(s => (s.ema_tao_inflow || 0) > 0).length;
 
     const topC = allScores[0];
     document.getElementById('statTopCombined').textContent = topC?.combined_score?.toFixed(1) || '—';
@@ -637,7 +687,6 @@ async function loadData() {
       document.getElementById('statBlock').textContent    = chain.block?.toLocaleString() || '—';
     }
 
-    // Pre-sort allScores by combined descending so default render is correct
     allScores.sort((a,b) => b.combined_score - a.combined_score);
     rebuildTable('combined');
     rebuildTable('opportunity');
@@ -655,11 +704,109 @@ async function loadData() {
 
 loadData();
 </script>
+<script>
+// ── TAO SIGNAL LOGO ────────────────────────────────────────────
+(function() {
+  const canvas  = document.getElementById('logo-canvas');
+  const ctx     = canvas.getContext('2d');
+  const W = canvas.width;   // 180
+  const H = canvas.height;  // 44
 
-<div style="border-top:1px solid var(--border);padding:20px;margin-top:20px;background:var(--surface)">
-  <div class="wrap" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
-    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions. By using this platform you acknowledge that you are solely responsible for any financial decisions you make.
-  </div>
-</div>
+  // Topbar is 48px — logo sized to fit with vertical padding
+  const TAO_SIZE = 38;  // Bebas Neue — tall condensed
+  const SIG_SIZE = 17;  // IBM Plex Mono — descriptor
+  const MID_Y    = 24;  // vertical center for wave
+  const AMP      = 5;   // tight amplitude — fits inside letterforms
+  const FREQ     = 0.052; // enough cycles to clearly read as sine wave
+
+  function buildWave() {
+    const pts = [];
+    for (let x = 0; x <= W; x++) {
+      pts.push([x, MID_Y + Math.sin(x * FREQ * Math.PI * 2) * AMP]);
+    }
+    return pts;
+  }
+
+  function drawLogo() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.font = `${TAO_SIZE}px "Bebas Neue"`;
+    const taoW = ctx.measureText('TAO').width;
+    ctx.font = `${SIG_SIZE}px "IBM Plex Mono"`;
+    const sigW = ctx.measureText('Signal').width;
+
+    const gap    = 6;
+    const totalW = taoW + gap + sigW;
+    const startX = Math.round((W - totalW) / 2);
+    const taoX   = startX;
+    const sigX   = startX + taoW + gap;
+
+    // Baseline: vertically center TAO, align Signal slightly lower
+    const taoBaseline = Math.round(H * 0.82);
+    const sigBaseline = taoBaseline + 1;
+
+    const wave = buildWave();
+
+    // ── Offscreen: mask wave through letter outlines ──────────
+    const off  = document.createElement('canvas');
+    off.width  = W;
+    off.height = H;
+    const oc   = off.getContext('2d');
+
+    // White letter mask
+    oc.fillStyle = '#ffffff';
+    oc.font      = `${TAO_SIZE}px "Bebas Neue"`;
+    oc.fillText('TAO', taoX, taoBaseline);
+    oc.font      = `${SIG_SIZE}px "IBM Plex Mono"`;
+    oc.fillText('Signal', sigX, sigBaseline);
+
+    // Composite only where letters exist
+    oc.globalCompositeOperation = 'source-atop';
+
+    // Soft glow — narrow, not fat
+    oc.beginPath();
+    wave.forEach(([x, y], i) => i === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y));
+    oc.strokeStyle = 'rgba(255,220,50,0.35)';
+    oc.lineWidth   = 4;
+    oc.lineCap     = 'round';
+    oc.stroke();
+
+    // Sharp wave core
+    const grad = oc.createLinearGradient(0, 0, W, 0);
+    grad.addColorStop(0,    '#5a3d00');
+    grad.addColorStop(0.12, '#FFD000');
+    grad.addColorStop(0.5,  '#FFE566');
+    grad.addColorStop(0.88, '#FFD000');
+    grad.addColorStop(1,    '#5a3d00');
+
+    oc.beginPath();
+    wave.forEach(([x, y], i) => i === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y));
+    oc.strokeStyle = grad;
+    oc.lineWidth   = 1.5;
+    oc.lineCap     = 'round';
+    oc.stroke();
+
+    // ── Main canvas: dark letters + wave overlay ──────────────
+    ctx.fillStyle = '#0d1c26';
+    ctx.font      = `${TAO_SIZE}px "Bebas Neue"`;
+    ctx.fillText('TAO', taoX, taoBaseline);
+    ctx.font      = `${SIG_SIZE}px "IBM Plex Mono"`;
+    ctx.fillText('Signal', sigX, sigBaseline);
+
+    ctx.drawImage(off, 0, 0);
+
+    // Faint ambient wave trace — barely visible between letters
+    ctx.save();
+    ctx.beginPath();
+    wave.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+    ctx.strokeStyle = 'rgba(255,208,0,0.05)';
+    ctx.lineWidth   = 1;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  document.fonts.ready.then(() => setTimeout(drawLogo, 80));
+})();
+</script>
 </body>
 </html>
