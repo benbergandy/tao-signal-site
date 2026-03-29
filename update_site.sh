@@ -1,16 +1,21 @@
 #!/bin/bash
-cd /Users/benbergandy/Documents/tao-signal-site
-
-cp /Users/benbergandy/Documents/tao-dashboard/data/chain_data.json data/
-cp /Users/benbergandy/Documents/tao-dashboard/data/combined_scores.json data/
-cp /Users/benbergandy/Documents/tao-dashboard/data/quality_scores.json data/
-cp /Users/benbergandy/Documents/tao-dashboard/data/performance_log.json data/
-cp /Users/benbergandy/Documents/tao-dashboard/data/subnets.json data/
-
-TODAY=$(date +%Y-%m-%d)
-cp /Users/benbergandy/Documents/tao-dashboard/data/chain_history/${TODAY}.json data/chain_history/
-
+set -e
+PIPELINE=/root/tao-signal-pipeline
+SITE=/root/tao-signal-site
+TODAY=$(date -u +%Y-%m-%d)
+echo "=== update_site.sh === ${TODAY}"
+cp ${PIPELINE}/data/chain_data.json ${SITE}/data/
+cp ${PIPELINE}/data/combined_scores.json ${SITE}/data/
+cp ${PIPELINE}/data/quality_scores.json ${SITE}/data/
+cp ${PIPELINE}/data/momentum_scores.json ${SITE}/data/
+cp ${PIPELINE}/data/opportunity_scores.json ${SITE}/data/
+cp ${PIPELINE}/data/performance_log.json ${SITE}/data/
+cp ${PIPELINE}/data/subnets.json ${SITE}/data/
+[ -f ${PIPELINE}/data/regime.json ] && cp ${PIPELINE}/data/regime.json ${SITE}/data/
+CHAIN_FILE=${PIPELINE}/data/chain_history/${TODAY}.json
+[ -f "$CHAIN_FILE" ] && cp "$CHAIN_FILE" ${SITE}/data/chain_history/
+cd ${SITE}
 git add .
 git commit -m "daily update ${TODAY}" --allow-empty
 git push
-cp /Users/benbergandy/Documents/tao-dashboard/data/momentum_scores.json data/
+echo "done"
