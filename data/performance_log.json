@@ -1,421 +1,61 @@
 {
   "snapshots": [
     {
-      "date": "2026-03-20",
-      "total_emission": 295285975,
-      "strategies": {
-        "top5_emission": {
-          "netuids": [
-            3,
-            4,
-            75,
-            9,
-            120
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.598735,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.301251,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 75,
-              "emission_share": 6.141436,
-              "alpha_price": 0.038797046
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.96983,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 120,
-              "emission_share": 4.101479,
-              "alpha_price": 0.07893712
-            }
-          ],
-          "avg_emission_share": 7.422546296010165
-        },
-        "top5_flow": {
-          "netuids": [
-            3,
-            4,
-            9,
-            24,
-            68
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.598735,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.301251,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.96983,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 24,
-              "emission_share": 2.076773,
-              "alpha_price": 0.011179313
-            },
-            {
-              "netuid": 68,
-              "emission_share": 3.075555,
-              "alpha_price": 0.017115656
-            }
-          ],
-          "avg_emission_share": 6.404428859176261
-        },
-        "top5_combined": {
-          "netuids": [
-            85,
-            9,
-            3,
-            4,
-            19
-          ],
-          "holdings": [
-            {
-              "netuid": 85,
-              "emission_share": 2.105695,
-              "alpha_price": 0.009689052
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.96983,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 3,
-              "emission_share": 13.598735,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.301251,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 19,
-              "emission_share": 2.779906,
-              "alpha_price": 0.015928061
-            }
-          ],
-          "avg_emission_share": 6.351083352333276
-        },
-        "network_avg": {
-          "netuids": [],
-          "holdings": [],
-          "avg_emission_share": 1.3333333333333333
-        }
-      }
-    },
-    {
-      "date": "2026-03-21",
-      "total_emission": 299752025,
-      "strategies": {
-        "top5_emission": {
-          "netuids": [
-            3,
-            4,
-            75,
-            9,
-            120
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.4491,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.214989,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 75,
-              "emission_share": 6.067569,
-              "alpha_price": 0.038797046
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.918814,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 120,
-              "emission_share": 4.400236,
-              "alpha_price": 0.07893712
-            }
-          ],
-          "avg_emission_share": 7.410141566182913
-        },
-        "top5_flow": {
-          "netuids": [
-            3,
-            4,
-            9,
-            24,
-            68
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.4491,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.214989,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.918814,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 24,
-              "emission_share": 2.281281,
-              "alpha_price": 0.011179313
-            },
-            {
-              "netuid": 68,
-              "emission_share": 3.037532,
-              "alpha_price": 0.017115656
-            }
-          ],
-          "avg_emission_share": 6.380343151977039
-        },
-        "top5_combined": {
-          "netuids": [
-            3,
-            4,
-            120,
-            93,
-            75
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.4491,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.214989,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 120,
-              "emission_share": 4.400236,
-              "alpha_price": 0.07893712
-            },
-            {
-              "netuid": 93,
-              "emission_share": 2.735515,
-              "alpha_price": 0.017752448
-            },
-            {
-              "netuid": 75,
-              "emission_share": 6.067569,
-              "alpha_price": 0.038797046
-            }
-          ],
-          "avg_emission_share": 6.973481630357627
-        },
-        "network_avg": {
-          "netuids": [],
-          "holdings": [],
-          "avg_emission_share": 1.3157894736842106
-        }
-      }
-    },
-    {
-      "date": "2026-03-22",
-      "total_emission": 307232003,
-      "strategies": {
-        "top5_emission": {
-          "netuids": [
-            3,
-            4,
-            75,
-            9,
-            120
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.820366,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.163651,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 75,
-              "emission_share": 5.662887,
-              "alpha_price": 0.038797046
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.710265,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 120,
-              "emission_share": 4.48577,
-              "alpha_price": 0.07893712
-            }
-          ],
-          "avg_emission_share": 7.368587835558264
-        },
-        "top5_flow": {
-          "netuids": [
-            3,
-            4,
-            24,
-            68,
-            75
-          ],
-          "holdings": [
-            {
-              "netuid": 3,
-              "emission_share": 13.820366,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.163651,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 24,
-              "emission_share": 2.601857,
-              "alpha_price": 0.011179313
-            },
-            {
-              "netuid": 68,
-              "emission_share": 2.83853,
-              "alpha_price": 0.017115656
-            },
-            {
-              "netuid": 75,
-              "emission_share": 5.662887,
-              "alpha_price": 0.038797046
-            }
-          ],
-          "avg_emission_share": 6.617458207958888
-        },
-        "top5_combined": {
-          "netuids": [
-            120,
-            3,
-            4,
-            9,
-            75
-          ],
-          "holdings": [
-            {
-              "netuid": 120,
-              "emission_share": 4.48577,
-              "alpha_price": 0.07893712
-            },
-            {
-              "netuid": 3,
-              "emission_share": 13.820366,
-              "alpha_price": 0.062457429
-            },
-            {
-              "netuid": 4,
-              "emission_share": 8.163651,
-              "alpha_price": 0.050263248
-            },
-            {
-              "netuid": 9,
-              "emission_share": 4.710265,
-              "alpha_price": 0.028119713
-            },
-            {
-              "netuid": 75,
-              "emission_share": 5.662887,
-              "alpha_price": 0.038797046
-            }
-          ],
-          "avg_emission_share": 7.368587835558264
-        },
-        "network_avg": {
-          "netuids": [],
-          "holdings": [],
-          "avg_emission_share": 1.2820512820512822
-        }
-      }
-    },
-    {
-      "date": "2026-03-23",
-      "total_emission": 304886809,
+      "date": "2026-03-26",
+      "total_emission": 289136971,
       "strategies": {
         "v1_top5_combined": {
           "netuids": [
             7,
-            74,
-            97,
-            55,
-            84
+            124,
+            116,
+            29,
+            49
           ],
           "holdings": [
             {
               "netuid": 7,
-              "emission_share": 0.899839,
-              "entry_combined": 80.6,
-              "entry_momentum": 81.4,
-              "entry_quality": 67.8
+              "emission_share": 0.824326,
+              "entry_combined": 72.6,
+              "entry_momentum": 64.0,
+              "entry_quality": 66.7,
+              "entry_price": 0.005157
             },
             {
-              "netuid": 74,
-              "emission_share": 0.804729,
-              "entry_combined": 80.1,
-              "entry_momentum": 75.3,
-              "entry_quality": 24.7
+              "netuid": 124,
+              "emission_share": 0.909955,
+              "entry_combined": 69.2,
+              "entry_momentum": 82.8,
+              "entry_quality": 61.8,
+              "entry_price": 0.007439
             },
             {
-              "netuid": 97,
-              "emission_share": 0.656185,
-              "entry_combined": 77.9,
-              "entry_momentum": 72.0,
-              "entry_quality": 32.7
+              "netuid": 116,
+              "emission_share": 0.225354,
+              "entry_combined": 66.3,
+              "entry_momentum": 45.6,
+              "entry_quality": 78.7,
+              "entry_price": 0.003813
             },
             {
-              "netuid": 55,
-              "emission_share": 0.242168,
-              "entry_combined": 76.5,
-              "entry_momentum": 51.5,
-              "entry_quality": 31.3
+              "netuid": 29,
+              "emission_share": 0.735744,
+              "entry_combined": 64.9,
+              "entry_momentum": 25.4,
+              "entry_quality": 77.9,
+              "entry_price": 0.014366
             },
             {
-              "netuid": 84,
-              "emission_share": 0.238743,
-              "entry_combined": 75.6,
-              "entry_momentum": 54.2,
-              "entry_quality": 47.5
+              "netuid": 49,
+              "emission_share": 0.661599,
+              "entry_combined": 64.5,
+              "entry_momentum": 59.0,
+              "entry_quality": 69.6,
+              "entry_price": 0.00841
             }
           ],
-          "avg_emission_share": 0.5683328857956593,
+          "avg_emission_share": 0.671395495804651,
+          "avg_moving_price": 0.007837236000000001,
           "version": "v1"
         },
         "v1_top5_emission": {
@@ -423,47 +63,53 @@
             3,
             4,
             9,
-            75,
-            120
+            120,
+            81
           ],
           "holdings": [
             {
               "netuid": 3,
-              "emission_share": 14.490955,
-              "entry_combined": 42.1,
-              "entry_momentum": 72.3,
-              "entry_quality": 80.7
+              "emission_share": 16.976514,
+              "entry_combined": 44.7,
+              "entry_momentum": 73.4,
+              "entry_quality": 41.5,
+              "entry_price": 0.095935
             },
             {
               "netuid": 4,
-              "emission_share": 8.391048,
-              "entry_combined": 40.8,
-              "entry_momentum": 75.8,
-              "entry_quality": 79.0
+              "emission_share": 12.105632,
+              "entry_combined": 46.9,
+              "entry_momentum": 91.6,
+              "entry_quality": 42.6,
+              "entry_price": 0.0634
             },
             {
               "netuid": 9,
-              "emission_share": 5.038162,
-              "entry_combined": 51.8,
-              "entry_momentum": 90.7,
-              "entry_quality": 74.3
-            },
-            {
-              "netuid": 75,
-              "emission_share": 4.641603,
-              "entry_combined": 52.3,
-              "entry_momentum": 19.4,
-              "entry_quality": 84.1
+              "emission_share": 5.722537,
+              "entry_combined": 53.8,
+              "entry_momentum": 86.9,
+              "entry_quality": 47.3,
+              "entry_price": 0.033079
             },
             {
               "netuid": 120,
-              "emission_share": 3.7608,
-              "entry_combined": 69.2,
-              "entry_momentum": 31.8,
-              "entry_quality": 80.9
+              "emission_share": 5.705469,
+              "entry_combined": 62.1,
+              "entry_momentum": 69.0,
+              "entry_quality": 35.0,
+              "entry_price": 0.078005
+            },
+            {
+              "netuid": 81,
+              "emission_share": 4.031078,
+              "entry_combined": 57.5,
+              "entry_momentum": 63.4,
+              "entry_quality": 68.7,
+              "entry_price": 0.023723
             }
           ],
-          "avg_emission_share": 7.2645136313522825,
+          "avg_emission_share": 8.908246050623529,
+          "avg_moving_price": 0.058828506,
           "version": "v1_benchmark"
         },
         "v1_top5_flow": {
@@ -477,149 +123,168 @@
           "holdings": [
             {
               "netuid": 3,
-              "emission_share": 14.490955,
-              "entry_combined": 42.1,
-              "entry_momentum": 72.3,
-              "entry_quality": 80.7
+              "emission_share": 16.976514,
+              "entry_combined": 44.7,
+              "entry_momentum": 73.4,
+              "entry_quality": 41.5,
+              "entry_price": 0.095935
             },
             {
               "netuid": 4,
-              "emission_share": 8.391048,
-              "entry_combined": 40.8,
-              "entry_momentum": 75.8,
-              "entry_quality": 79.0
+              "emission_share": 12.105632,
+              "entry_combined": 46.9,
+              "entry_momentum": 91.6,
+              "entry_quality": 42.6,
+              "entry_price": 0.0634
             },
             {
               "netuid": 9,
-              "emission_share": 5.038162,
-              "entry_combined": 51.8,
-              "entry_momentum": 90.7,
-              "entry_quality": 74.3
+              "emission_share": 5.722537,
+              "entry_combined": 53.8,
+              "entry_momentum": 86.9,
+              "entry_quality": 47.3,
+              "entry_price": 0.033079
             },
             {
               "netuid": 24,
-              "emission_share": 2.572497,
-              "entry_combined": 39.9,
-              "entry_momentum": 76.4,
-              "entry_quality": 69.9
+              "emission_share": 3.195757,
+              "entry_combined": 49.1,
+              "entry_momentum": 79.7,
+              "entry_quality": 55.1,
+              "entry_price": 0.018178
             },
             {
               "netuid": 68,
-              "emission_share": 2.964594,
-              "entry_combined": 38.6,
-              "entry_momentum": 64.1,
-              "entry_quality": 67.9
+              "emission_share": 3.542191,
+              "entry_combined": 45.9,
+              "entry_momentum": 74.1,
+              "entry_quality": 46.0,
+              "entry_price": 0.020729
             }
           ],
-          "avg_emission_share": 6.691451187053488,
+          "avg_emission_share": 8.308526134487312,
+          "avg_moving_price": 0.046264436,
           "version": "v1_benchmark"
         },
         "v2_top5_combined": {
           "netuids": [
             7,
-            74,
-            97,
-            55,
-            84
+            124,
+            116,
+            29,
+            49
           ],
           "holdings": [
             {
               "netuid": 7,
-              "emission_share": 0.899839,
-              "entry_combined": 80.6,
-              "entry_momentum": 81.4,
-              "entry_quality": 67.8
+              "emission_share": 0.824326,
+              "entry_combined": 72.6,
+              "entry_momentum": 64.0,
+              "entry_quality": 66.7,
+              "entry_price": 0.005157
             },
             {
-              "netuid": 74,
-              "emission_share": 0.804729,
-              "entry_combined": 80.1,
-              "entry_momentum": 75.3,
-              "entry_quality": 24.7
+              "netuid": 124,
+              "emission_share": 0.909955,
+              "entry_combined": 69.2,
+              "entry_momentum": 82.8,
+              "entry_quality": 61.8,
+              "entry_price": 0.007439
             },
             {
-              "netuid": 97,
-              "emission_share": 0.656185,
-              "entry_combined": 77.9,
-              "entry_momentum": 72.0,
-              "entry_quality": 32.7
+              "netuid": 116,
+              "emission_share": 0.225354,
+              "entry_combined": 66.3,
+              "entry_momentum": 45.6,
+              "entry_quality": 78.7,
+              "entry_price": 0.003813
             },
             {
-              "netuid": 55,
-              "emission_share": 0.242168,
-              "entry_combined": 76.5,
-              "entry_momentum": 51.5,
-              "entry_quality": 31.3
+              "netuid": 29,
+              "emission_share": 0.735744,
+              "entry_combined": 64.9,
+              "entry_momentum": 25.4,
+              "entry_quality": 77.9,
+              "entry_price": 0.014366
             },
             {
-              "netuid": 84,
-              "emission_share": 0.238743,
-              "entry_combined": 75.6,
-              "entry_momentum": 54.2,
-              "entry_quality": 47.5
+              "netuid": 49,
+              "emission_share": 0.661599,
+              "entry_combined": 64.5,
+              "entry_momentum": 59.0,
+              "entry_quality": 69.6,
+              "entry_price": 0.00841
             }
           ],
-          "avg_emission_share": 0.5683328857956593,
+          "avg_emission_share": 0.671395495804651,
+          "avg_moving_price": 0.007837236000000001,
           "version": "v2_static"
         },
         "network_avg": {
           "netuids": [],
           "holdings": [],
-          "avg_emission_share": 1.25,
+          "avg_emission_share": 1.3157894736842106,
+          "avg_moving_price": 0,
           "version": "baseline"
         }
       }
     },
     {
-      "date": "2026-03-24",
-      "total_emission": 291859049,
+      "date": "2026-03-27",
+      "total_emission": 297084230,
       "strategies": {
         "v1_top5_combined": {
           "netuids": [
-            97,
             7,
-            84,
-            74,
-            128
+            124,
+            116,
+            29,
+            49
           ],
           "holdings": [
             {
-              "netuid": 97,
-              "emission_share": 0.669417,
-              "entry_combined": 80.0,
-              "entry_momentum": 72.9,
-              "entry_quality": 32.5
-            },
-            {
               "netuid": 7,
-              "emission_share": 0.925788,
-              "entry_combined": 79.0,
-              "entry_momentum": 74.7,
-              "entry_quality": 66.7
+              "emission_share": 0.0,
+              "entry_combined": 16.8,
+              "entry_momentum": 0,
+              "entry_quality": 0.0,
+              "entry_price": 0.00351
             },
             {
-              "netuid": 84,
-              "emission_share": 0.230736,
-              "entry_combined": 76.3,
-              "entry_momentum": 51.7,
-              "entry_quality": 56.4
+              "netuid": 124,
+              "emission_share": 0.651631,
+              "entry_combined": 64.5,
+              "entry_momentum": 61.2,
+              "entry_quality": 56.3,
+              "entry_price": 0.007049
             },
             {
-              "netuid": 74,
-              "emission_share": 0.225337,
-              "entry_combined": 75.4,
-              "entry_momentum": 47.2,
-              "entry_quality": 19.4
+              "netuid": 116,
+              "emission_share": 0.185341,
+              "entry_combined": 55.2,
+              "entry_momentum": 29.2,
+              "entry_quality": 76.9,
+              "entry_price": 0.003634
             },
             {
-              "netuid": 128,
-              "emission_share": 0.290506,
-              "entry_combined": 73.2,
-              "entry_momentum": 52.0,
-              "entry_quality": 85.3
+              "netuid": 29,
+              "emission_share": 0.856331,
+              "entry_combined": 64.5,
+              "entry_momentum": 23.4,
+              "entry_quality": 74.3,
+              "entry_price": 0.014306
+            },
+            {
+              "netuid": 49,
+              "emission_share": 0.751282,
+              "entry_combined": 65.3,
+              "entry_momentum": 62.6,
+              "entry_quality": 66.9,
+              "entry_price": 0.007423
             }
           ],
-          "avg_emission_share": 0.46835683343845885,
+          "avg_emission_share": 0.48891703204845305,
+          "avg_moving_price": 0.007184488,
           "version": "v1"
         },
         "v1_top5_emission": {
@@ -627,47 +292,53 @@
             3,
             4,
             9,
-            81,
-            68
+            120,
+            81
           ],
           "holdings": [
             {
               "netuid": 3,
-              "emission_share": 16.000754,
-              "entry_combined": 39.2,
-              "entry_momentum": 72.9,
-              "entry_quality": 38.1
+              "emission_share": 13.591729,
+              "entry_combined": 42.7,
+              "entry_momentum": 61.1,
+              "entry_quality": 41.5,
+              "entry_price": 0.083911
             },
             {
               "netuid": 4,
-              "emission_share": 10.260779,
-              "entry_combined": 40.9,
-              "entry_momentum": 91.3,
-              "entry_quality": 39.3
+              "emission_share": 10.676693,
+              "entry_combined": 45.8,
+              "entry_momentum": 73.4,
+              "entry_quality": 46.2,
+              "entry_price": 0.061941
             },
             {
               "netuid": 9,
-              "emission_share": 5.615217,
-              "entry_combined": 49.2,
-              "entry_momentum": 91.2,
-              "entry_quality": 41.6
+              "emission_share": 5.284934,
+              "entry_combined": 51.4,
+              "entry_momentum": 65.0,
+              "entry_quality": 51.3,
+              "entry_price": 0.031323
+            },
+            {
+              "netuid": 120,
+              "emission_share": 11.136903,
+              "entry_combined": 67.2,
+              "entry_momentum": 87.0,
+              "entry_quality": 34.2,
+              "entry_price": 0.083611
             },
             {
               "netuid": 81,
-              "emission_share": 4.010515,
-              "entry_combined": 49.0,
-              "entry_momentum": 76.4,
-              "entry_quality": 70.5
-            },
-            {
-              "netuid": 68,
-              "emission_share": 3.573708,
-              "entry_combined": 40.1,
-              "entry_momentum": 85.8,
-              "entry_quality": 42.4
+              "emission_share": 4.432042,
+              "entry_combined": 63.0,
+              "entry_momentum": 86.8,
+              "entry_quality": 68.7,
+              "entry_price": 0.025809
             }
           ],
-          "avg_emission_share": 7.892194632622133,
+          "avg_emission_share": 9.024460167407742,
+          "avg_moving_price": 0.057318824000000004,
           "version": "v1_benchmark"
         },
         "v1_top5_flow": {
@@ -681,95 +352,813 @@
           "holdings": [
             {
               "netuid": 3,
-              "emission_share": 16.000754,
-              "entry_combined": 39.2,
-              "entry_momentum": 72.9,
-              "entry_quality": 38.1
+              "emission_share": 13.591729,
+              "entry_combined": 42.7,
+              "entry_momentum": 61.1,
+              "entry_quality": 41.5,
+              "entry_price": 0.083911
             },
             {
               "netuid": 4,
-              "emission_share": 10.260779,
-              "entry_combined": 40.9,
-              "entry_momentum": 91.3,
-              "entry_quality": 39.3
+              "emission_share": 10.676693,
+              "entry_combined": 45.8,
+              "entry_momentum": 73.4,
+              "entry_quality": 46.2,
+              "entry_price": 0.061941
             },
             {
               "netuid": 9,
-              "emission_share": 5.615217,
-              "entry_combined": 49.2,
-              "entry_momentum": 91.2,
-              "entry_quality": 41.6
+              "emission_share": 5.284934,
+              "entry_combined": 51.4,
+              "entry_momentum": 65.0,
+              "entry_quality": 51.3,
+              "entry_price": 0.031323
             },
             {
               "netuid": 24,
-              "emission_share": 2.746257,
-              "entry_combined": 38.2,
-              "entry_momentum": 73.8,
-              "entry_quality": 57.4
+              "emission_share": 2.585007,
+              "entry_combined": 42.0,
+              "entry_momentum": 64.1,
+              "entry_quality": 42.5,
+              "entry_price": 0.015186
             },
             {
               "netuid": 68,
-              "emission_share": 3.573708,
-              "entry_combined": 40.1,
-              "entry_momentum": 85.8,
-              "entry_quality": 42.4
+              "emission_share": 3.36679,
+              "entry_combined": 43.7,
+              "entry_momentum": 61.9,
+              "entry_quality": 45.6,
+              "entry_price": 0.020349
             }
           ],
-          "avg_emission_share": 7.639342989841649,
+          "avg_emission_share": 7.101030640367549,
+          "avg_moving_price": 0.042541988,
           "version": "v1_benchmark"
         },
         "v2_top5_combined": {
           "netuids": [
             7,
-            74,
-            97,
-            55,
-            84
+            124,
+            116,
+            29,
+            49
           ],
           "holdings": [
             {
               "netuid": 7,
-              "emission_share": 0.925788,
-              "entry_combined": 79.0,
-              "entry_momentum": 74.7,
-              "entry_quality": 66.7
-            },
-            {
-              "netuid": 74,
-              "emission_share": 0.225337,
-              "entry_combined": 75.4,
-              "entry_momentum": 47.2,
-              "entry_quality": 19.4
-            },
-            {
-              "netuid": 97,
-              "emission_share": 0.669417,
-              "entry_combined": 80.0,
-              "entry_momentum": 72.9,
-              "entry_quality": 32.5
-            },
-            {
-              "netuid": 55,
               "emission_share": 0.0,
-              "entry_combined": 21.2,
+              "entry_combined": 16.8,
               "entry_momentum": 0,
-              "entry_quality": 0.0
+              "entry_quality": 0.0,
+              "entry_price": 0.00351
             },
             {
-              "netuid": 84,
-              "emission_share": 0.230736,
-              "entry_combined": 76.3,
-              "entry_momentum": 51.7,
-              "entry_quality": 56.4
+              "netuid": 124,
+              "emission_share": 0.651631,
+              "entry_combined": 64.5,
+              "entry_momentum": 61.2,
+              "entry_quality": 56.3,
+              "entry_price": 0.007049
+            },
+            {
+              "netuid": 116,
+              "emission_share": 0.185341,
+              "entry_combined": 55.2,
+              "entry_momentum": 29.2,
+              "entry_quality": 76.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 29,
+              "emission_share": 0.856331,
+              "entry_combined": 64.5,
+              "entry_momentum": 23.4,
+              "entry_quality": 74.3,
+              "entry_price": 0.014306
+            },
+            {
+              "netuid": 49,
+              "emission_share": 0.751282,
+              "entry_combined": 65.3,
+              "entry_momentum": 62.6,
+              "entry_quality": 66.9,
+              "entry_price": 0.007423
             }
           ],
-          "avg_emission_share": 0.4102555682623361,
+          "avg_emission_share": 0.48891703204845305,
+          "avg_moving_price": 0.007184488,
           "version": "v2_static"
         },
         "network_avg": {
           "netuids": [],
           "holdings": [],
-          "avg_emission_share": 1.2195121951219512,
+          "avg_emission_share": 1.492537313432836,
+          "avg_moving_price": 0,
+          "version": "baseline"
+        }
+      }
+    },
+    {
+      "date": "2026-03-28",
+      "total_emission": 292737659,
+      "strategies": {
+        "v1_top5_combined": {
+          "netuids": [
+            7,
+            124,
+            116,
+            29,
+            49
+          ],
+          "holdings": [
+            {
+              "netuid": 7,
+              "emission_share": 0.0,
+              "entry_combined": 16.8,
+              "entry_momentum": 0,
+              "entry_quality": 0.0,
+              "entry_price": 0.003906
+            },
+            {
+              "netuid": 124,
+              "emission_share": 0.773038,
+              "entry_combined": 65.2,
+              "entry_momentum": 62.5,
+              "entry_quality": 57.5,
+              "entry_price": 0.007086
+            },
+            {
+              "netuid": 116,
+              "emission_share": 0.261434,
+              "entry_combined": 65.6,
+              "entry_momentum": 36.3,
+              "entry_quality": 77.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 29,
+              "emission_share": 0.953797,
+              "entry_combined": 64.9,
+              "entry_momentum": 24.1,
+              "entry_quality": 75.2,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 49,
+              "emission_share": 0.864992,
+              "entry_combined": 65.6,
+              "entry_momentum": 63.6,
+              "entry_quality": 67.1,
+              "entry_price": 0.007447
+            }
+          ],
+          "avg_emission_share": 0.5706521688075671,
+          "avg_moving_price": 0.00727223,
+          "version": "v1"
+        },
+        "v1_top5_emission": {
+          "netuids": [
+            3,
+            4,
+            9,
+            120,
+            81
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "emission_share": 13.176465,
+              "entry_combined": 36.6,
+              "entry_momentum": 28.3,
+              "entry_quality": 41.5,
+              "entry_price": 0.07885
+            },
+            {
+              "netuid": 4,
+              "emission_share": 10.672545,
+              "entry_combined": 44.4,
+              "entry_momentum": 65.5,
+              "entry_quality": 45.4,
+              "entry_price": 0.062214
+            },
+            {
+              "netuid": 9,
+              "emission_share": 5.033309,
+              "entry_combined": 51.7,
+              "entry_momentum": 60.0,
+              "entry_quality": 53.8,
+              "entry_price": 0.029818
+            },
+            {
+              "netuid": 120,
+              "emission_share": 9.9086,
+              "entry_combined": 62.2,
+              "entry_momentum": 66.2,
+              "entry_quality": 34.4,
+              "entry_price": 0.083353
+            },
+            {
+              "netuid": 81,
+              "emission_share": 4.694255,
+              "entry_combined": 63.9,
+              "entry_momentum": 87.0,
+              "entry_quality": 69.5,
+              "entry_price": 0.027079
+            }
+          ],
+          "avg_emission_share": 8.697034705739721,
+          "avg_moving_price": 0.056262978,
+          "version": "v1_benchmark"
+        },
+        "v1_top5_flow": {
+          "netuids": [
+            3,
+            4,
+            9,
+            24,
+            68
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "emission_share": 13.176465,
+              "entry_combined": 36.6,
+              "entry_momentum": 28.3,
+              "entry_quality": 41.5,
+              "entry_price": 0.07885
+            },
+            {
+              "netuid": 4,
+              "emission_share": 10.672545,
+              "entry_combined": 44.4,
+              "entry_momentum": 65.5,
+              "entry_quality": 45.4,
+              "entry_price": 0.062214
+            },
+            {
+              "netuid": 9,
+              "emission_share": 5.033309,
+              "entry_combined": 51.7,
+              "entry_momentum": 60.0,
+              "entry_quality": 53.8,
+              "entry_price": 0.029818
+            },
+            {
+              "netuid": 24,
+              "emission_share": 2.696385,
+              "entry_combined": 41.9,
+              "entry_momentum": 64.1,
+              "entry_quality": 40.9,
+              "entry_price": 0.015343
+            },
+            {
+              "netuid": 68,
+              "emission_share": 3.278998,
+              "entry_combined": 44.8,
+              "entry_momentum": 61.5,
+              "entry_quality": 47.4,
+              "entry_price": 0.019617
+            }
+          ],
+          "avg_emission_share": 6.9715402759301295,
+          "avg_moving_price": 0.041168516,
+          "version": "v1_benchmark"
+        },
+        "v2_top5_combined": {
+          "netuids": [
+            7,
+            124,
+            116,
+            29,
+            49
+          ],
+          "holdings": [
+            {
+              "netuid": 7,
+              "emission_share": 0.0,
+              "entry_combined": 16.8,
+              "entry_momentum": 0,
+              "entry_quality": 0.0,
+              "entry_price": 0.003906
+            },
+            {
+              "netuid": 124,
+              "emission_share": 0.773038,
+              "entry_combined": 65.2,
+              "entry_momentum": 62.5,
+              "entry_quality": 57.5,
+              "entry_price": 0.007086
+            },
+            {
+              "netuid": 116,
+              "emission_share": 0.261434,
+              "entry_combined": 65.6,
+              "entry_momentum": 36.3,
+              "entry_quality": 77.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 29,
+              "emission_share": 0.953797,
+              "entry_combined": 64.9,
+              "entry_momentum": 24.1,
+              "entry_quality": 75.2,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 49,
+              "emission_share": 0.864992,
+              "entry_combined": 65.6,
+              "entry_momentum": 63.6,
+              "entry_quality": 67.1,
+              "entry_price": 0.007447
+            }
+          ],
+          "avg_emission_share": 0.5706521688075671,
+          "avg_moving_price": 0.00727223,
+          "version": "v2_static"
+        },
+        "network_avg": {
+          "netuids": [],
+          "holdings": [],
+          "avg_emission_share": 1.492537313432836,
+          "avg_moving_price": 0,
+          "version": "baseline"
+        }
+      }
+    },
+    {
+      "date": "2026-03-29",
+      "total_emission": 292737659,
+      "strategies": {
+        "v1_top5_combined": {
+          "netuids": [
+            7,
+            124,
+            116,
+            29,
+            49
+          ],
+          "holdings": [
+            {
+              "netuid": 7,
+              "weight": 0.2,
+              "emission_share": 0.0,
+              "entry_combined": 16.8,
+              "entry_momentum": 0,
+              "entry_quality": 0.0,
+              "entry_price": 0.003906
+            },
+            {
+              "netuid": 124,
+              "weight": 0.2,
+              "emission_share": 0.773038,
+              "entry_combined": 54.5,
+              "entry_momentum": 63.3,
+              "entry_quality": 62.0,
+              "entry_price": 0.007086
+            },
+            {
+              "netuid": 116,
+              "weight": 0.2,
+              "emission_share": 0.261434,
+              "entry_combined": 58.7,
+              "entry_momentum": 43.2,
+              "entry_quality": 67.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 29,
+              "weight": 0.2,
+              "emission_share": 0.953797,
+              "entry_combined": 74.4,
+              "entry_momentum": 37.0,
+              "entry_quality": 89.5,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 49,
+              "weight": 0.2,
+              "emission_share": 0.864992,
+              "entry_combined": 62.6,
+              "entry_momentum": 64.4,
+              "entry_quality": 70.3,
+              "entry_price": 0.007447
+            }
+          ],
+          "avg_emission_share": 0.5706521688075671,
+          "avg_moving_price": 0.00727223,
+          "version": "v1"
+        },
+        "v1_top5_emission": {
+          "netuids": [
+            3,
+            4,
+            9,
+            120,
+            81
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "weight": 0.2,
+              "emission_share": 13.176465,
+              "entry_combined": 45.4,
+              "entry_momentum": 56.8,
+              "entry_quality": 72.2,
+              "entry_price": 0.07885
+            },
+            {
+              "netuid": 4,
+              "weight": 0.2,
+              "emission_share": 10.672545,
+              "entry_combined": 51.1,
+              "entry_momentum": 65.8,
+              "entry_quality": 85.0,
+              "entry_price": 0.062214
+            },
+            {
+              "netuid": 9,
+              "weight": 0.2,
+              "emission_share": 5.033309,
+              "entry_combined": 56.2,
+              "entry_momentum": 61.1,
+              "entry_quality": 92.0,
+              "entry_price": 0.029818
+            },
+            {
+              "netuid": 120,
+              "weight": 0.2,
+              "emission_share": 9.9086,
+              "entry_combined": 44.0,
+              "entry_momentum": 67.1,
+              "entry_quality": 65.6,
+              "entry_price": 0.083353
+            },
+            {
+              "netuid": 81,
+              "weight": 0.2,
+              "emission_share": 4.694255,
+              "entry_combined": 60.2,
+              "entry_momentum": 82.2,
+              "entry_quality": 94.6,
+              "entry_price": 0.027079
+            }
+          ],
+          "avg_emission_share": 8.697034705739721,
+          "avg_moving_price": 0.056262978,
+          "version": "v1_benchmark"
+        },
+        "v1_top5_flow": {
+          "netuids": [
+            3,
+            4,
+            9,
+            24,
+            68
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "weight": 0.2,
+              "emission_share": 13.176465,
+              "entry_combined": 45.4,
+              "entry_momentum": 56.8,
+              "entry_quality": 72.2,
+              "entry_price": 0.07885
+            },
+            {
+              "netuid": 4,
+              "weight": 0.2,
+              "emission_share": 10.672545,
+              "entry_combined": 51.1,
+              "entry_momentum": 65.8,
+              "entry_quality": 85.0,
+              "entry_price": 0.062214
+            },
+            {
+              "netuid": 9,
+              "weight": 0.2,
+              "emission_share": 5.033309,
+              "entry_combined": 56.2,
+              "entry_momentum": 61.1,
+              "entry_quality": 92.0,
+              "entry_price": 0.029818
+            },
+            {
+              "netuid": 24,
+              "weight": 0.2,
+              "emission_share": 2.696385,
+              "entry_combined": 43.8,
+              "entry_momentum": 64.7,
+              "entry_quality": 55.4,
+              "entry_price": 0.015343
+            },
+            {
+              "netuid": 68,
+              "weight": 0.2,
+              "emission_share": 3.278998,
+              "entry_combined": 50.1,
+              "entry_momentum": 62.3,
+              "entry_quality": 70.4,
+              "entry_price": 0.019617
+            }
+          ],
+          "avg_emission_share": 6.9715402759301295,
+          "avg_moving_price": 0.041168516,
+          "version": "v1_benchmark"
+        },
+        "v2_top5_combined": {
+          "netuids": [
+            7,
+            124,
+            116,
+            29,
+            49
+          ],
+          "holdings": [
+            {
+              "netuid": 7,
+              "weight": 0.2,
+              "emission_share": 0.0,
+              "entry_combined": 16.8,
+              "entry_momentum": 0,
+              "entry_quality": 0.0,
+              "entry_price": 0.003906
+            },
+            {
+              "netuid": 124,
+              "weight": 0.2,
+              "emission_share": 0.773038,
+              "entry_combined": 54.5,
+              "entry_momentum": 63.3,
+              "entry_quality": 62.0,
+              "entry_price": 0.007086
+            },
+            {
+              "netuid": 116,
+              "weight": 0.2,
+              "emission_share": 0.261434,
+              "entry_combined": 58.7,
+              "entry_momentum": 43.2,
+              "entry_quality": 67.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 29,
+              "weight": 0.2,
+              "emission_share": 0.953797,
+              "entry_combined": 74.4,
+              "entry_momentum": 37.0,
+              "entry_quality": 89.5,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 49,
+              "weight": 0.2,
+              "emission_share": 0.864992,
+              "entry_combined": 62.6,
+              "entry_momentum": 64.4,
+              "entry_quality": 70.3,
+              "entry_price": 0.007447
+            }
+          ],
+          "avg_emission_share": 0.5706521688075671,
+          "avg_moving_price": 0.00727223,
+          "version": "v2_static"
+        },
+        "v3_established": {
+          "netuids": [
+            3,
+            4,
+            120,
+            81,
+            9
+          ],
+          "holdings": [
+            {
+              "netuid": 3,
+              "weight": 0.266443,
+              "emission_share": 13.176465,
+              "entry_combined": 45.4,
+              "entry_momentum": 56.8,
+              "entry_quality": 72.2,
+              "entry_price": 0.07885
+            },
+            {
+              "netuid": 4,
+              "weight": 0.250005,
+              "emission_share": 10.672545,
+              "entry_combined": 51.1,
+              "entry_momentum": 65.8,
+              "entry_quality": 85.0,
+              "entry_price": 0.062214
+            },
+            {
+              "netuid": 120,
+              "weight": 0.236696,
+              "emission_share": 9.9086,
+              "entry_combined": 44.0,
+              "entry_momentum": 67.1,
+              "entry_quality": 65.6,
+              "entry_price": 0.083353
+            },
+            {
+              "netuid": 81,
+              "weight": 0.137372,
+              "emission_share": 4.694255,
+              "entry_combined": 60.2,
+              "entry_momentum": 82.2,
+              "entry_quality": 94.6,
+              "entry_price": 0.027079
+            },
+            {
+              "netuid": 9,
+              "weight": 0.109484,
+              "emission_share": 5.033309,
+              "entry_combined": 56.2,
+              "entry_momentum": 61.1,
+              "entry_quality": 92.0,
+              "entry_price": 0.029818
+            }
+          ],
+          "avg_emission_share": 9.72021838082199,
+          "avg_moving_price": 0.06327685966384,
+          "version": "v3_established",
+          "metadata": {
+            "style": "established",
+            "enb_target": 4,
+            "enb_actual": 4.54,
+            "n_holdings": 5,
+            "n_active": 67,
+            "n_candidates": 20,
+            "vol_filter": "emission >= 70th percentile (1.2030%)  [top 30% of universe]",
+            "blend_ratio": null
+          }
+        },
+        "v3_balanced": {
+          "netuids": [
+            128,
+            29,
+            116,
+            12,
+            83,
+            73,
+            65,
+            84
+          ],
+          "holdings": [
+            {
+              "netuid": 128,
+              "weight": 0.134676,
+              "emission_share": 0.345213,
+              "entry_combined": 54.0,
+              "entry_momentum": 53.4,
+              "entry_quality": 61.6,
+              "entry_price": 0.003662
+            },
+            {
+              "netuid": 29,
+              "weight": 0.134082,
+              "emission_share": 0.953797,
+              "entry_combined": 74.4,
+              "entry_momentum": 37.0,
+              "entry_quality": 89.5,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 116,
+              "weight": 0.131352,
+              "emission_share": 0.261434,
+              "entry_combined": 58.7,
+              "entry_momentum": 43.2,
+              "entry_quality": 67.9,
+              "entry_price": 0.003634
+            },
+            {
+              "netuid": 12,
+              "weight": 0.127733,
+              "emission_share": 0.665321,
+              "entry_combined": 56.5,
+              "entry_momentum": 62.3,
+              "entry_quality": 56.9,
+              "entry_price": 0.006935
+            },
+            {
+              "netuid": 83,
+              "weight": 0.123106,
+              "emission_share": 0.207357,
+              "entry_combined": 64.4,
+              "entry_momentum": 33.8,
+              "entry_quality": 62.2,
+              "entry_price": 0.003698
+            },
+            {
+              "netuid": 73,
+              "weight": 0.117098,
+              "emission_share": 0.438659,
+              "entry_combined": 55.4,
+              "entry_momentum": 52.1,
+              "entry_quality": 44.0,
+              "entry_price": 0.004471
+            },
+            {
+              "netuid": 65,
+              "weight": 0.116028,
+              "emission_share": 0.276497,
+              "entry_combined": 60.9,
+              "entry_momentum": 42.6,
+              "entry_quality": 49.7,
+              "entry_price": 0.004487
+            },
+            {
+              "netuid": 84,
+              "weight": 0.115925,
+              "emission_share": 0.17547,
+              "entry_combined": 40.1,
+              "entry_momentum": 55.2,
+              "entry_quality": 35.7,
+              "entry_price": 0.003517
+            }
+          ],
+          "avg_emission_share": 0.4230180147949465,
+          "avg_moving_price": 0.00567933599563,
+          "version": "v3_balanced",
+          "metadata": {
+            "style": "balanced",
+            "enb_target": 7,
+            "enb_actual": 7.97,
+            "n_holdings": 8,
+            "n_active": 67,
+            "n_candidates": 67,
+            "vol_filter": "none",
+            "blend_ratio": 0.6229
+          }
+        },
+        "v3_speculative": {
+          "netuids": [
+            100,
+            29,
+            95,
+            108
+          ],
+          "holdings": [
+            {
+              "netuid": 100,
+              "weight": 0.285135,
+              "emission_share": 1.538774,
+              "entry_combined": 77.5,
+              "entry_momentum": 63.0,
+              "entry_quality": 85.7,
+              "entry_price": 0.015941
+            },
+            {
+              "netuid": 29,
+              "weight": 0.26278,
+              "emission_share": 0.953797,
+              "entry_combined": 74.4,
+              "entry_momentum": 37.0,
+              "entry_quality": 89.5,
+              "entry_price": 0.014287
+            },
+            {
+              "netuid": 95,
+              "weight": 0.230628,
+              "emission_share": 2.255774,
+              "entry_combined": 69.7,
+              "entry_momentum": 65.6,
+              "entry_quality": 64.4,
+              "entry_price": 0.018109
+            },
+            {
+              "netuid": 108,
+              "weight": 0.221456,
+              "emission_share": 0.723685,
+              "entry_combined": 68.3,
+              "entry_momentum": 66.5,
+              "entry_quality": 72.6,
+              "entry_price": 0.004849
+            }
+          ],
+          "avg_emission_share": 1.369906096808679,
+          "avg_moving_price": 0.013550151856580001,
+          "version": "v3_speculative",
+          "metadata": {
+            "style": "speculative",
+            "enb_target": 3,
+            "enb_actual": 3.96,
+            "n_holdings": 4,
+            "n_active": 67,
+            "n_candidates": 67,
+            "vol_filter": "none (opportunity-weighted)",
+            "blend_ratio": null
+          }
+        },
+        "network_avg": {
+          "netuids": [],
+          "holdings": [],
+          "avg_emission_share": 1.492537313432836,
+          "avg_moving_price": 0,
           "version": "baseline"
         }
       }
@@ -779,46 +1168,79 @@
   "v2_dynamic": {
     "positions": [
       {
-        "netuid": 7,
-        "entry_date": "2026-03-23",
-        "entry_combined": 80.6,
-        "entry_momentum": 81.4,
-        "entry_quality": 67.8,
-        "entry_emission": 0.899839
+        "netuid": 124,
+        "entry_date": "2026-03-26",
+        "entry_combined": 69.2,
+        "entry_momentum": 82.8,
+        "entry_quality": 61.8,
+        "entry_emission": 0.909955
       },
       {
-        "netuid": 74,
-        "entry_date": "2026-03-23",
-        "entry_combined": 80.1,
-        "entry_momentum": 75.3,
-        "entry_quality": 24.7,
-        "entry_emission": 0.804729
+        "netuid": 116,
+        "entry_date": "2026-03-26",
+        "entry_combined": 66.3,
+        "entry_momentum": 45.6,
+        "entry_quality": 78.7,
+        "entry_emission": 0.225354
       },
       {
-        "netuid": 97,
-        "entry_date": "2026-03-23",
-        "entry_combined": 77.9,
-        "entry_momentum": 72.0,
-        "entry_quality": 32.7,
-        "entry_emission": 0.656185
+        "netuid": 29,
+        "entry_date": "2026-03-26",
+        "entry_combined": 64.9,
+        "entry_momentum": 25.4,
+        "entry_quality": 77.9,
+        "entry_emission": 0.735744
       },
       {
-        "netuid": 55,
-        "entry_date": "2026-03-23",
-        "entry_combined": 76.5,
-        "entry_momentum": 51.5,
-        "entry_quality": 31.3,
-        "entry_emission": 0.242168
+        "netuid": 49,
+        "entry_date": "2026-03-26",
+        "entry_combined": 64.5,
+        "entry_momentum": 59.0,
+        "entry_quality": 69.6,
+        "entry_emission": 0.661599
       },
       {
-        "netuid": 84,
-        "entry_date": "2026-03-23",
-        "entry_combined": 75.6,
-        "entry_momentum": 54.2,
-        "entry_quality": 47.5,
-        "entry_emission": 0.238743
+        "netuid": 100,
+        "entry_date": "2026-03-29",
+        "entry_combined": 77.5,
+        "entry_momentum": 63.0,
+        "entry_quality": 85.7,
+        "entry_emission": 1.538774
       }
     ],
-    "rotation_log": []
+    "rotation_log": [
+      {
+        "date": "2026-03-26",
+        "rotated_out": {
+          "netuid": 7,
+          "days_held": 0,
+          "entry_combined": 72.6,
+          "exit_combined": 16.8,
+          "reason": "EMERGENCY: ZERO_EMISSION"
+        },
+        "rotated_in": {
+          "netuid": 56,
+          "name": "Gradients",
+          "combined_score": 74.9,
+          "momentum_score": 87.5,
+          "quality_score": 73.1
+        }
+      },
+      {
+        "date": "2026-03-29",
+        "rotated_out": {
+          "netuid": 56,
+          "days_held": 3,
+          "entry_combined": 74.9,
+          "exit_combined": 15.7,
+          "reason": "EMERGENCY: ZERO_EMISSION"
+        },
+        "rotated_in": {
+          "netuid": 100,
+          "name": "Pla\u03c4form",
+          "combined_score": 77.5
+        }
+      }
+    ]
   }
 }
