@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAO Signal — Live Track Record</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -32,85 +32,103 @@
   body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.5; min-height:100vh; }
   body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
 
-  .topbar { border-bottom:1px solid var(--border); padding:0 24px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:100; }
-  .topbar-left { display:flex; align-items:center; gap:20px; }
-  .logo { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; color:var(--cyan); }
+  /* ── TOPBAR ─────────────────────────────────────────────── */
+  .topbar { border-bottom:1px solid var(--border); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:200; }
+  .topbar-left { display:flex; align-items:center; gap:0; }
+  .logo { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--yellow); letter-spacing:0.05em; padding:0 16px 0 0; border-right:1px solid var(--border); margin-right:0; cursor:pointer; }
   .logo span { color:var(--text); }
-  .back-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color 0.15s; }
-  .back-btn:hover { color:var(--cyan); }
-  .topbar-right { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
-  .topbar-right strong { color:var(--text); }
+  .nav-tabs { display:flex; height:48px; }
+  .nav-tab { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0 18px; height:48px; display:flex; align-items:center; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap; }
+  .nav-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+  .nav-tab:hover:not(.disabled) { color:var(--text); }
+  .nav-tab.disabled { color:var(--dim); cursor:not-allowed; position:relative; }
+  .nav-tab.disabled:hover .nav-tooltip { display:block; }
+  .nav-tooltip { display:none; position:absolute; top:52px; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--border2); padding:5px 10px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); white-space:nowrap; z-index:300; pointer-events:none; }
+  .topbar-right { display:flex; align-items:center; gap:16px; }
+  .account-wrap { position:relative; }
+  .account-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:5px 12px; cursor:pointer; transition:all 0.15s; text-transform:uppercase; display:flex; align-items:center; gap:6px; }
+  .account-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+  .account-btn .chevron { font-size:8px; transition:transform 0.15s; }
+  .account-btn.open .chevron { transform:rotate(180deg); }
+  .account-dropdown { display:none; position:absolute; top:calc(100% + 4px); right:0; background:var(--surface2); border:1px solid var(--border2); min-width:160px; z-index:300; }
+  .account-dropdown.open { display:block; }
+  .account-item { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:10px 14px; cursor:not-allowed; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); transition:all 0.15s; }
+  .account-item:last-child { border-bottom:none; }
+  .account-item .soon { font-size:8px; color:var(--dim); letter-spacing:0.1em; }
+  .account-item:hover { background:var(--surface); color:var(--text); }
 
+  /* ── HERO ───────────────────────────────────────────────── */
   .hero { padding:32px 24px 0; border-bottom:1px solid var(--border); }
   .hero-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
   .hero-title { font-size:28px; font-weight:700; letter-spacing:-0.02em; margin-bottom:8px; }
   .hero-title span { color:var(--cyan); }
   .hero-sub { font-size:13px; color:var(--muted); max-width:680px; margin-bottom:24px; line-height:1.6; }
 
-  .stats-strip { display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid var(--border); background:var(--surface); }
+  .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--border); background:var(--surface); }
   .stat-item { padding:14px 20px; border-right:1px solid var(--border); }
   .stat-item:last-child { border-right:none; }
   .stat-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
   .stat-val { font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; line-height:1; }
   .stat-sub { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
   .c-cyan{color:var(--cyan)} .c-green{color:var(--green)} .c-yellow{color:var(--yellow)}
-  .c-red{color:var(--red)} .c-purple{color:var(--purple)} .c-orange{color:var(--orange)}
+  .c-red{color:var(--red)} .c-purple{color:var(--purple)}
 
+  /* ── LAYOUT ─────────────────────────────────────────────── */
   .main { padding:24px; display:flex; flex-direction:column; gap:24px; max-width:1400px; margin:0 auto; }
-
   .section-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
   .section-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text); font-weight:500; white-space:nowrap; }
   .section-line { flex:1; height:1px; background:var(--border); }
   .section-badge { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; padding:3px 8px; border:1px solid var(--border2); color:var(--muted); text-transform:uppercase; white-space:nowrap; }
 
-  /* STRATEGY CARDS */
-  .strategy-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  /* ── STRATEGY CARDS ─────────────────────────────────────── */
+  .strategy-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
   .strategy-card { background:var(--surface); border:1px solid var(--border); padding:18px; position:relative; overflow:hidden; }
   .strategy-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-  .strategy-card.combined::before  { background:var(--cyan); }
-  .strategy-card.emission::before  { background:var(--yellow); }
-  .strategy-card.flow::before      { background:var(--green); }
-  .strategy-card.network::before   { background:var(--muted); }
-  .strategy-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-  .strategy-name { font-size:15px; font-weight:600; margin-bottom:12px; }
+  .strategy-card.established::before { background:var(--cyan); }
+  .strategy-card.balanced::before    { background:var(--green); }
+  .strategy-card.speculative::before { background:var(--purple); }
+  .strategy-card.largecap::before    { background:var(--yellow); }
+  .strategy-card.network::before     { background:var(--muted); }
+  .strategy-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .strategy-name { font-size:14px; font-weight:600; margin-bottom:12px; line-height:1.3; }
   .strategy-metrics { display:flex; flex-direction:column; gap:6px; }
   .metric-row { display:flex; justify-content:space-between; align-items:center; }
   .metric-label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
-  .metric-val { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; }
+  .metric-val { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; }
   .strategy-holdings { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
-  .holding-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; }
+  .holding-row { display:flex; justify-content:space-between; align-items:center; padding:3px 0; }
   .holding-name { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
   .holding-val { font-family:'IBM Plex Mono',monospace; font-size:10px; }
-  .accumulating { display:flex; align-items:center; gap:8px; margin-top:12px; }
+  .accumulating { display:flex; align-items:center; gap:8px; margin-top:10px; }
   .acc-dot { width:6px; height:6px; border-radius:50%; animation:pulse 2s infinite; flex-shrink:0; }
-  .acc-text { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+  .acc-text { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* CHARTS */
+  /* ── CHARTS ─────────────────────────────────────────────── */
   .charts-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
   .chart-card { background:var(--surface); border:1px solid var(--border); padding:20px; }
   .chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
   .chart-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; }
-  .chart-legend { display:flex; gap:12px; flex-wrap:wrap; }
+  .chart-legend { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
   .legend-item { display:flex; align-items:center; gap:5px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); }
   .legend-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-  .chart-note { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); margin-top:10px; }
+  .chart-note { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); margin-top:8px; }
 
-  /* PORTFOLIO TABLE */
-  .portfolio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  /* ── PORTFOLIO HOLDINGS ─────────────────────────────────── */
+  .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   .portfolio-card { background:var(--surface); border:1px solid var(--border); }
   .portfolio-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
   .portfolio-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; }
   .portfolio-body { padding:8px 0; }
-  .portfolio-row { display:flex; align-items:center; gap:10px; padding:8px 16px; border-bottom:1px solid rgba(26,34,48,0.5); }
+  .portfolio-row { display:flex; align-items:center; gap:10px; padding:7px 16px; border-bottom:1px solid rgba(26,34,48,0.5); }
   .portfolio-row:last-child { border-bottom:none; }
   .portfolio-rank { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); width:16px; }
-  .portfolio-netuid { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); width:36px; }
+  .portfolio-netuid { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); width:40px; }
   .portfolio-name { font-size:12px; font-weight:600; flex:1; }
+  .portfolio-weight { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
   .portfolio-emission { font-family:'IBM Plex Mono',monospace; font-size:10px; }
-  .portfolio-price { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
 
-  /* TIMELINE */
+  /* ── TIMELINE ───────────────────────────────────────────── */
   .timeline { background:var(--surface); border:1px solid var(--border); padding:20px; }
   .timeline-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
   .timeline-track { display:flex; align-items:center; position:relative; }
@@ -118,55 +136,81 @@
   .timeline-point { display:flex; flex-direction:column; align-items:center; flex:1; position:relative; z-index:1; }
   .timeline-dot { width:10px; height:10px; border-radius:50%; border:2px solid; margin-bottom:8px; }
   .timeline-dot.done   { background:var(--green);  border-color:var(--green); }
-  .timeline-dot.active { background:var(--cyan);   border-color:var(--cyan); animation:pulse 2s infinite; }
+  .timeline-dot.active { background:var(--cyan);   border-color:var(--cyan);  animation:pulse 2s infinite; }
   .timeline-dot.pending{ background:var(--bg);     border-color:var(--border2); }
   .timeline-label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); text-align:center; }
   .timeline-date  { font-family:'IBM Plex Mono',monospace; font-size:8px; color:var(--border2); text-align:center; margin-top:2px; }
 
-  /* METHODOLOGY */
-  .method-box { background:var(--surface); border:1px solid var(--border); padding:20px; }
-  .method-box-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+  /* ── METHODOLOGY ────────────────────────────────────────── */
+  .method-box { background:var(--surface); border:1px solid var(--border); padding:24px; }
   .method-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .method-item { padding:12px; background:var(--surface2); border:1px solid var(--border); }
-  .method-item-title { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text); margin-bottom:6px; font-weight:500; }
-  .method-item-desc { font-size:11px; color:var(--muted); line-height:1.5; }
-
-  .disclaimer { border-top:1px solid var(--border); padding:20px 24px; background:var(--surface); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); line-height:1.6; }
-  .disclaimer strong { color:var(--text); }
+  .method-block-title { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .method-block-title.cyan   { color:var(--cyan); }
+  .method-block-title.green  { color:var(--green); }
+  .method-block-title.yellow { color:var(--yellow); }
+  .method-block-title.purple { color:var(--purple); }
+  .method-desc { font-size:12px; color:var(--muted); line-height:1.75; }
+  .method-desc strong { color:var(--text); }
+  .method-stat-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(26,34,48,0.5); }
+  .method-stat-row:last-child { border-bottom:none; }
+  .method-stat-label { font-size:12px; color:var(--muted); }
+  .method-stat-value { font-family:'IBM Plex Mono',monospace; font-size:11px; }
 
   .pending-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px; text-align:center; gap:12px; }
   .pending-icon { font-size:32px; }
   .pending-title { font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--text); }
   .pending-sub { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); max-width:400px; line-height:1.6; }
 
+  .disclaimer { border-top:1px solid var(--border); padding:20px 24px; background:var(--surface); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); line-height:1.6; }
+  .disclaimer strong { color:var(--text); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-in { animation:fadeUp 0.4s ease both; }
+  ::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-track{background:var(--surface)} ::-webkit-scrollbar-thumb{background:var(--border2)}
 </style>
 </head>
 <body>
 
+<!-- ── TOPBAR ──────────────────────────────────────────────── -->
 <div class="topbar">
   <div class="topbar-left">
-    <div class="logo">TAO<span> Signal</span></div>
-    <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+    <canvas id="logo-canvas" style="display:block;cursor:default;margin-right:8px" width="280" height="48"></canvas>
+    <nav class="nav-tabs">
+      <a class="nav-tab" href="dashboard.html">Subnets</a>
+      <a class="nav-tab active" href="performance.html">Performance</a>
+      <a class="nav-tab disabled" href="#" onclick="return false;">
+        Portfolio
+        <span class="nav-tooltip">Coming soon</span>
+      </a>
+    </nav>
   </div>
-  <div class="topbar-right" id="lastUpdated">—</div>
+  <div class="topbar-right">
+    <div id="lastUpdated" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">—</div>
+    <div class="account-wrap">
+      <button class="account-btn" id="accountBtn" onclick="toggleAccount()">
+        Account <span class="chevron">▾</span>
+      </button>
+      <div class="account-dropdown" id="accountDropdown">
+        <div class="account-item">Settings <span class="soon">Soon</span></div>
+        <div class="account-item">Watchlist <span class="soon">Soon</span></div>
+        <div class="account-item">Login / Logout <span class="soon">Soon</span></div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- ── HERO ────────────────────────────────────────────────── -->
 <div class="hero">
   <div class="hero-eyebrow">Live Track Record</div>
-  <div class="hero-title">Performance <span>Tracker</span></div>
+  <div class="hero-title">Portfolio <span>Performance</span></div>
   <div class="hero-sub">
-    Paper portfolios tracked daily against the network average baseline.
-    All positions locked at signal time — no look-ahead bias, no cherry picking.
-    Three return metrics: emission share capture, alpha price appreciation in TAO, and total combined return.
+    Model portfolios tracked daily against two benchmarks: a large-cap index of the ten highest-emission subnets,
+    and a network-average equal-weight baseline. All positions locked at signal time with no forward-looking adjustments.
   </div>
-
   <div class="stats-strip">
     <div class="stat-item">
       <div class="stat-label">Track Record Started</div>
       <div class="stat-val c-cyan" id="statStartDate">—</div>
-      <div class="stat-sub">V3 model — day 1 locked</div>
+      <div class="stat-sub">V3 model — day 1</div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Days Accumulating</div>
@@ -174,19 +218,14 @@
       <div class="stat-sub">daily snapshots</div>
     </div>
     <div class="stat-item">
-      <div class="stat-label">First Results</div>
+      <div class="stat-label">First Evaluation</div>
       <div class="stat-val c-yellow" id="statFirstResult">—</div>
-      <div class="stat-sub">7-day window</div>
+      <div class="stat-sub">7-day window closes</div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Completed Periods</div>
       <div class="stat-val c-purple" id="statPeriods">—</div>
       <div class="stat-sub">evaluated windows</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Portfolios Tracked</div>
-      <div class="stat-val c-cyan" id="statPortfolios">—</div>
-      <div class="stat-sub">vs network baseline</div>
     </div>
   </div>
 </div>
@@ -196,8 +235,8 @@
   <!-- STRATEGY CARDS -->
   <div class="fade-in">
     <div class="section-header">
-      <div class="section-title">📊 Portfolio Strategies</div>
-      <div class="section-badge">Locked at inception — no rebalancing</div>
+      <div class="section-title">📊 Model Portfolios vs Benchmarks</div>
+      <div class="section-badge">Locked at inception — no forward-looking adjustments</div>
       <div class="section-line"></div>
     </div>
     <div class="strategy-grid" id="strategyGrid">
@@ -205,46 +244,31 @@
     </div>
   </div>
 
-  <!-- CHARTS — THREE RETURN METRICS -->
+  <!-- CHARTS -->
   <div class="fade-in">
     <div class="section-header">
-      <div class="section-title">📈 Returns — Three Metrics</div>
-      <div class="section-badge">All returns vs network baseline · TAO-denominated</div>
+      <div class="section-title">📈 Cumulative Returns — Three Metrics</div>
+      <div class="section-badge">TAO-denominated · vs benchmarks</div>
       <div class="section-line"></div>
     </div>
     <div class="charts-grid">
-      <!-- Emission chart -->
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title" style="color:var(--yellow)">⚡ Emission Share</div>
-        </div>
-        <div style="height:220px;position:relative">
-          <canvas id="emissionChart"></canvas>
-        </div>
-        <div class="chart-note">Avg emission share captured by portfolio vs network avg (0.78%)</div>
-        <div class="chart-legend" style="margin-top:8px" id="emLegend"></div>
+        <div class="chart-title" style="color:var(--yellow);margin-bottom:16px">⚡ Emission Share Capture</div>
+        <div style="height:220px;position:relative"><canvas id="emissionChart"></canvas></div>
+        <div class="chart-note">Average emission share captured by portfolio holdings vs benchmarks</div>
+        <div class="chart-legend" id="emLegend"></div>
       </div>
-      <!-- Price chart -->
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title" style="color:var(--cyan)">💰 Alpha Price Return (TAO)</div>
-        </div>
-        <div style="height:220px;position:relative">
-          <canvas id="priceChart"></canvas>
-        </div>
-        <div class="chart-note">Avg alpha price appreciation since entry · moving_price EMA · TAO-denominated</div>
-        <div class="chart-legend" style="margin-top:8px" id="prLegend"></div>
+        <div class="chart-title" style="color:var(--cyan);margin-bottom:16px">💰 Alpha Price Return (TAO)</div>
+        <div style="height:220px;position:relative"><canvas id="priceChart"></canvas></div>
+        <div class="chart-note">Average alpha price appreciation since entry · moving_price EMA · TAO-denominated</div>
+        <div class="chart-legend" id="prLegend"></div>
       </div>
-      <!-- Total return chart -->
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title" style="color:var(--green)">🏆 Total Return (TAO)</div>
-        </div>
-        <div style="height:220px;position:relative">
-          <canvas id="totalChart"></canvas>
-        </div>
-        <div class="chart-note">Combined: (1 + emission_return) × (1 + price_return) − 1 · multiplicative compounding</div>
-        <div class="chart-legend" style="margin-top:8px" id="totLegend"></div>
+        <div class="chart-title" style="color:var(--green);margin-bottom:16px">🏆 Total Return (TAO)</div>
+        <div style="height:220px;position:relative"><canvas id="totalChart"></canvas></div>
+        <div class="chart-note">Combined: (1 + emission_return) × (1 + price_return) − 1 · multiplicative</div>
+        <div class="chart-legend" id="totLegend"></div>
       </div>
     </div>
   </div>
@@ -252,11 +276,11 @@
   <!-- EVALUATION TIMELINE -->
   <div class="fade-in">
     <div class="section-header">
-      <div class="section-title">🗓 Evaluation Timeline</div>
+      <div class="section-title">🗓 Evaluation Windows</div>
       <div class="section-line"></div>
     </div>
     <div class="timeline">
-      <div class="timeline-title">V3 Evaluation Windows — Started March 26, 2026</div>
+      <div class="timeline-title">V3 Live Track Record — Evaluation Schedule</div>
       <div class="timeline-track" id="timelineTrack"></div>
     </div>
   </div>
@@ -264,8 +288,8 @@
   <!-- CURRENT HOLDINGS -->
   <div class="fade-in">
     <div class="section-header">
-      <div class="section-title">🗂 Day 1 Portfolio Holdings</div>
-      <div class="section-badge">Locked positions — entry price recorded</div>
+      <div class="section-title">🗂 Day 1 Holdings — Model Portfolios</div>
+      <div class="section-badge">Positions locked at inception</div>
       <div class="section-line"></div>
     </div>
     <div class="portfolio-grid" id="portfolioGrid">
@@ -280,40 +304,81 @@
       <div class="section-line"></div>
     </div>
     <div class="method-box">
-      <div class="method-box-title">How the Track Record Works</div>
       <div class="method-grid">
-        <div class="method-item">
-          <div class="method-item-title">Three Return Metrics</div>
-          <div class="method-item-desc">
-            <strong style="color:var(--yellow)">Emission share</strong> — the % of total network TAO emissions flowing to held subnets. Higher = more TAO yield from staking.<br><br>
-            <strong style="color:var(--cyan)">Alpha price return</strong> — change in each subnet's alpha token price in TAO terms since entry. TAO-denominated to remove USD volatility.<br><br>
-            <strong style="color:var(--green)">Total return</strong> — multiplicative combination: (1 + emission_return) × (1 + price_return) − 1. This is what a real staker earns.
+
+        <div>
+          <div class="method-block-title cyan">Return Framework</div>
+          <div class="method-desc">
+            Staker returns in Bittensor are <strong>multiplicative across two dimensions</strong>:
+            emission yield and alpha price appreciation. A position captures a share of network
+            emissions proportional to its weight, while the exchange rate between alpha and TAO
+            fluctuates independently. Total return compounds both effects simultaneously —
+            optimizing for either dimension in isolation leaves returns on the table.
+          </div>
+          <div style="margin-top:16px">
+            <div class="method-stat-row">
+              <span class="method-stat-label">Emission component</span>
+              <span class="method-stat-value" style="color:var(--yellow)">Share of network TAO/block</span>
+            </div>
+            <div class="method-stat-row">
+              <span class="method-stat-label">Price component</span>
+              <span class="method-stat-value" style="color:var(--cyan)">Alpha/TAO moving price EMA</span>
+            </div>
+            <div class="method-stat-row">
+              <span class="method-stat-label">Total return formula</span>
+              <span class="method-stat-value" style="color:var(--green)">(1+e) × (1+p) − 1</span>
+            </div>
           </div>
         </div>
-        <div class="method-item">
-          <div class="method-item-title">No Look-Ahead Bias</div>
-          <div class="method-item-desc">
-            Positions locked using only data available at snapshot time. No rebalancing within a window.<br><br>
-            Entry price recorded as moving_price (EMA of alpha/TAO) at the moment of lock — the right reference price for TAO-denominated returns, smoothed against intraday noise.<br><br>
-            Cron runs at 8am EDT. All scores determined by that morning's chain data only.
+
+        <div>
+          <div class="method-block-title green">Model Portfolios</div>
+          <div class="method-desc">
+            Three portfolios are generated by the model, each reflecting a different
+            risk/return profile. <strong>Established</strong> targets proven high-emission subnets
+            with validated momentum — the lower-risk allocation. <strong>Balanced</strong> is the
+            model's primary recommendation, blending signal strength with volatility adjustment.
+            <strong>Speculative</strong> concentrates in the highest-conviction mean-reversion
+            candidates — higher variance, higher potential upside.
+          </div>
+          <div style="margin-top:16px">
+            <div class="method-stat-row">
+              <span class="method-stat-label">Walk-forward win rate</span>
+              <span class="method-stat-value c-cyan">68.6% dual objective</span>
+            </div>
+            <div class="method-stat-row">
+              <span class="method-stat-label">Emission prediction</span>
+              <span class="method-stat-value c-green">67.5%</span>
+            </div>
+            <div class="method-stat-row">
+              <span class="method-stat-label">Price prediction</span>
+              <span class="method-stat-value c-green">69.8%</span>
+            </div>
           </div>
         </div>
-        <div class="method-item">
-          <div class="method-item-title">Benchmarks</div>
-          <div class="method-item-desc">
-            <strong style="color:var(--yellow)">Top Emission</strong> — top 5 by raw emission share. The "just buy the biggest subnets" strategy most naive stakers follow.<br><br>
-            <strong style="color:var(--green)">Top Flow</strong> — top 5 by EMA TAO inflow. A momentum benchmark.<br><br>
-            <strong style="color:var(--muted)">Network Average</strong> — equal weight across all active subnets. The passive baseline.
+
+        <div>
+          <div class="method-block-title yellow">Benchmark Construction</div>
+          <div class="method-desc">
+            Two benchmarks are tracked against the model portfolios.
+            The <strong>Large Cap Index</strong> holds the ten highest-emission subnets at equal weight —
+            the naive strategy most stakers default to. The <strong>Network Average</strong> holds all
+            active subnets at equal weight, representing a fully passive, undifferentiated allocation.
+            Outperforming both benchmarks across multiple evaluation windows is the validation standard.
           </div>
         </div>
-        <div class="method-item">
-          <div class="method-item-title">Evaluation Windows</div>
-          <div class="method-item-desc">
-            Each daily snapshot is evaluated at 7, 14, 30, 60, and 90 day windows.<br><br>
-            At each close, all three return metrics are compared against the network average baseline.<br><br>
-            First 7-day results: April 2, 2026. Full 30-day picture: April 25. Statistical significance requires 60-90 days of data.
+
+        <div>
+          <div class="method-block-title purple">Evaluation Standards</div>
+          <div class="method-desc">
+            Each daily position snapshot is evaluated at fixed forward windows: 7, 14, 30, 60,
+            and 90 days. Positions are locked at snapshot time using only information available
+            at that moment — no look-ahead, no rebalancing within a window.
+            <strong>Statistical significance</strong> requires a minimum of 30 completed periods.
+            Early results are indicative; conclusions are drawn at 60–90 days of data.
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -321,27 +386,42 @@
 </div>
 
 <div class="disclaimer">
-  <strong>DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, trading advice, or any other form of advice. TAO Signal does not recommend that any asset should be bought, sold, or held. Past performance of signals in backtesting or live tracking is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk, including potential loss of capital. Always conduct your own research and consult a qualified financial advisor before making any investment decisions. By using this platform you acknowledge that you are solely responsible for any financial decisions you make.
+  <strong>DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, or any other form of advice. Past performance is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk. Always conduct your own research and consult a qualified financial advisor before making investment decisions.
 </div>
 
 <script>
-// Strategy config — matches what track_performance.py actually writes
+// ── ACCOUNT DROPDOWN ───────────────────────────────────────
+function toggleAccount() {
+  document.getElementById('accountBtn').classList.toggle('open');
+  document.getElementById('accountDropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.account-wrap')) {
+    document.getElementById('accountBtn').classList.remove('open');
+    document.getElementById('accountDropdown').classList.remove('open');
+  }
+});
+
+// ── STRATEGIES ─────────────────────────────────────────────
+// V3 model portfolios + benchmarks
 const STRATEGIES = {
-  v1_top5_combined: { label:'TAO Signal Combined', color:'var(--cyan)',   colorHex:'#00d4ff', cls:'combined' },
-  v1_top5_emission: { label:'Top Emission',        color:'var(--yellow)', colorHex:'#ffd000', cls:'emission' },
-  v1_top5_flow:     { label:'Top Flow',            color:'var(--green)',  colorHex:'#00ff88', cls:'flow' },
-  network_avg:      { label:'Network Average',     color:'var(--muted)',  colorHex:'#445566', cls:'network' },
+  v3_established:  { label:'TAO Signal Established',  color:'var(--cyan)',   colorHex:'#00d4ff', cls:'established', isModel:true },
+  v3_balanced:     { label:'TAO Signal Balanced',     color:'var(--green)',  colorHex:'#00ff88', cls:'balanced',    isModel:true },
+  v3_speculative:  { label:'TAO Signal Speculative',  color:'var(--purple)', colorHex:'#9966ff', cls:'speculative', isModel:true },
+  largecap_index:  { label:'Large Cap Index (Top 10)', color:'var(--yellow)', colorHex:'#ffd000', cls:'largecap',    isModel:false },
+  network_avg:     { label:'Network Average',          color:'var(--muted)',  colorHex:'#445566', cls:'network',     isModel:false },
 };
 
-// Known subnet names for display
-const SUBNET_NAMES = {
-  3:'τemplar', 4:'Targon', 7:'subvortex', 9:'iota', 24:'Quasar',
-  29:'Coldint', 44:'Score', 49:'Nepher', 68:'NOVA', 74:'Gittensor',
-  75:'Hippius', 84:'ChipForge', 97:'Constantinople', 116:'TaoLend',
-  120:'Affine', 124:'Swarm', 128:'ByteLeap',
-};
+function getName(netuid) {
+  const names = {
+    3:'τemplar', 4:'Targon', 7:'subvortex', 9:'iota', 24:'Quasar',
+    29:'Coldint', 44:'Score', 49:'Nepher', 68:'NOVA', 74:'Gittensor',
+    75:'Hippius', 84:'ChipForge', 97:'Constantinople', 116:'TaoLend',
+    120:'Affine', 124:'Swarm', 128:'ByteLeap',
+  };
+  return names[netuid] || `SN${netuid}`;
+}
 
-function getName(netuid) { return SUBNET_NAMES[netuid] || `SN${netuid}`; }
 function fmtDate(d) {
   const dt = new Date(d + 'T00:00:00');
   return dt.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
@@ -359,6 +439,36 @@ function fmtPct(v, d=2) {
   return `${v >= 0 ? '+' : ''}${v.toFixed(d)}%`;
 }
 
+// ── BUILD LARGE CAP INDEX from snapshots ─────────────────────
+// Derives the top-10-by-emission benchmark from the first snapshot
+function buildLargeCapFromSnapshot(firstSnap) {
+  if (!firstSnap) return null;
+  // Try to get top 10 emission subnets from all known strategies' holdings
+  const allHoldings = [];
+  for (const key of Object.keys(firstSnap.strategies || {})) {
+    const strat = firstSnap.strategies[key];
+    for (const h of (strat.holdings || [])) {
+      if (!allHoldings.find(x => x.netuid === h.netuid)) {
+        allHoldings.push(h);
+      }
+    }
+  }
+  // Sort by emission share descending, take top 10
+  const top10 = [...allHoldings]
+    .sort((a,b) => (b.emission_share||0) - (a.emission_share||0))
+    .slice(0, 10);
+  if (top10.length === 0) return null;
+  const n = top10.length;
+  const avgEm = top10.reduce((s,h) => s+(h.emission_share||0),0) / n;
+  return {
+    netuids: top10.map(h=>h.netuid),
+    holdings: top10.map(h => ({ ...h, weight: 1/n })),
+    avg_emission_share: avgEm,
+    avg_moving_price: top10.reduce((s,h)=>s+(h.entry_price||0),0)/n,
+  };
+}
+
+// ── CHARTS ─────────────────────────────────────────────────
 const CHART_OPTS = (yLabel, yFmt) => ({
   responsive:true, maintainAspectRatio:false,
   interaction:{ mode:'index', intersect:false },
@@ -374,181 +484,171 @@ const CHART_OPTS = (yLabel, yFmt) => ({
   },
   scales:{
     x:{ grid:{ color:'rgba(26,34,48,0.5)', drawTicks:false }, ticks:{ color:'#445566', font:{ family:'IBM Plex Mono', size:9 }, maxRotation:0, maxTicksLimit:6 }, border:{ color:'#1a2230' } },
-    y:{ grid:{ color:'rgba(26,34,48,0.5)', drawTicks:false }, ticks:{ color:'#445566', font:{ family:'IBM Plex Mono', size:9 }, callback: v => yFmt(v) }, border:{ color:'#1a2230' }, title:{ display:true, text:yLabel, color:'#445566', font:{ family:'IBM Plex Mono', size:8 } } }
+    y:{ grid:{ color:'rgba(26,34,48,0.5)', drawTicks:false }, ticks:{ color:'#445566', font:{ family:'IBM Plex Mono', size:9 }, callback:v => yFmt(v) }, border:{ color:'#1a2230' }, title:{ display:true, text:yLabel, color:'#445566', font:{ family:'IBM Plex Mono', size:8 } } }
   }
 });
 
 let charts = { emission:null, price:null, total:null };
 
-function buildCharts(snapshots) {
-  const labels = snapshots.map(s => s.date);
-  const strategyKeys = ['v1_top5_combined','v1_top5_emission','v1_top5_flow','network_avg'];
+function buildCharts(snapshots, largecapSeries) {
+  const labels       = snapshots.map(s => s.date.slice(5)); // MM-DD
+  const strategyKeys = ['v3_established','v3_balanced','v3_speculative','network_avg'];
 
-  function makeDatasets(metricFn, defaultVal=0) {
-    return strategyKeys.map(key => {
+  function makeDatasets(metricFn) {
+    const ds = strategyKeys.map(key => {
       const cfg = STRATEGIES[key];
       return {
-        label:           cfg.label,
-        data:            snapshots.map(s => metricFn(s.strategies[key]) ?? defaultVal),
-        borderColor:     cfg.colorHex,
-        borderWidth:     key === 'v1_top5_combined' ? 2.5 : key === 'network_avg' ? 1 : 1.5,
-        borderDash:      key === 'network_avg' ? [4,4] : [],
-        pointRadius:     snapshots.length <= 7 ? 4 : 2,
+        label:       cfg.label,
+        data:        snapshots.map(s => metricFn(s.strategies[key]) ?? null),
+        borderColor: cfg.colorHex,
+        borderWidth: key.startsWith('v3_balanced') ? 2.5 : key==='network_avg' ? 1 : 1.5,
+        borderDash:  key==='network_avg' ? [4,4] : [],
+        pointRadius: snapshots.length <= 7 ? 3 : 1,
         pointBackgroundColor: cfg.colorHex,
-        tension:         0.3, fill:false,
+        tension: 0.3, fill: false,
+        spanGaps: true,
       };
     });
+    // Large cap benchmark
+    if (largecapSeries) {
+      ds.push({
+        label: 'Large Cap Index',
+        data:  largecapSeries.map(v => metricFn(v)),
+        borderColor: '#ffd000',
+        borderWidth: 1.5,
+        borderDash: [2,3],
+        pointRadius: 1,
+        pointBackgroundColor: '#ffd000',
+        tension: 0.3, fill: false,
+        spanGaps: true,
+      });
+    }
+    return ds;
   }
 
-  // Emission chart
   if (charts.emission) charts.emission.destroy();
   charts.emission = new Chart(
     document.getElementById('emissionChart').getContext('2d'),
     { type:'line', data:{ labels, datasets: makeDatasets(s => s?.avg_emission_share) },
-      options: CHART_OPTS('EMISSION SHARE %', v => v?.toFixed(3) + '%') }
+      options: CHART_OPTS('EMISSION SHARE %', v => v?.toFixed(3)+'%') }
   );
 
-  // Price chart — avg price_change_pct across holdings
   if (charts.price) charts.price.destroy();
   charts.price = new Chart(
     document.getElementById('priceChart').getContext('2d'),
     { type:'line', data:{ labels, datasets: makeDatasets(s => s?.avg_price_change_pct ?? null) },
-      options: CHART_OPTS('PRICE RETURN %', v => (v >= 0 ? '+' : '') + v?.toFixed(2) + '%') }
+      options: CHART_OPTS('PRICE RETURN %', v => (v>=0?'+':'')+v?.toFixed(2)+'%') }
   );
 
-  // Total return chart
   if (charts.total) charts.total.destroy();
   charts.total = new Chart(
     document.getElementById('totalChart').getContext('2d'),
     { type:'line', data:{ labels, datasets: makeDatasets(s => s?.avg_total_return_pct ?? null) },
-      options: CHART_OPTS('TOTAL RETURN %', v => (v >= 0 ? '+' : '') + v?.toFixed(2) + '%') }
+      options: CHART_OPTS('TOTAL RETURN %', v => (v>=0?'+':'')+v?.toFixed(2)+'%') }
   );
 
-  // Legends
+  const legendKeys = [...strategyKeys, 'largecap_index'];
+  const legendHtml = legendKeys.map(key => {
+    const cfg = STRATEGIES[key];
+    if (!cfg) return '';
+    return `<div class="legend-item"><div class="legend-dot" style="background:${cfg.colorHex}"></div>${cfg.label}</div>`;
+  }).join('');
   ['emLegend','prLegend','totLegend'].forEach(id => {
-    document.getElementById(id).innerHTML = strategyKeys.map(key => {
-      const cfg = STRATEGIES[key];
-      return `<div class="legend-item"><div class="legend-dot" style="background:${cfg.colorHex}"></div>${cfg.label}</div>`;
-    }).join('');
+    document.getElementById(id).innerHTML = legendHtml;
   });
 
-  // Overlay if too few data points
   if (snapshots.length < 3) {
-    ['emissionChart','priceChart','totalChart'].forEach(canvasId => {
-      const parent = document.getElementById(canvasId).parentElement;
-      const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none';
-      overlay.innerHTML = `<span style="font-family:monospace;font-size:11px;color:var(--muted);background:var(--surface);padding:6px 12px;border:1px solid var(--border)">Chart builds as data accumulates — check back daily</span>`;
-      parent.style.position = 'relative';
-      parent.appendChild(overlay);
+    ['emissionChart','priceChart','totalChart'].forEach(id => {
+      const p = document.getElementById(id).parentElement;
+      p.style.position = 'relative';
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none';
+      ov.innerHTML = `<span style="font-family:monospace;font-size:11px;color:var(--muted);background:var(--surface);padding:6px 12px;border:1px solid var(--border)">Building — check back daily</span>`;
+      p.appendChild(ov);
     });
   }
 }
 
-function buildStrategyCards(snapshots) {
+// ── STRATEGY CARDS ─────────────────────────────────────────
+function buildStrategyCards(snapshots, largecapData) {
   const first  = snapshots[0];
-  const latest = snapshots[snapshots.length - 1];
+  const latest = snapshots[snapshots.length-1];
+  if (!first || !latest) return;
 
-  const cards = Object.entries(STRATEGIES).map(([key, cfg]) => {
-    const isNetwork   = key === 'network_avg';
-    const latestStrat = latest.strategies[key] || {};
-    const firstStrat  = first.strategies[key]  || {};
-    const netAvg      = latest.strategies.network_avg?.avg_emission_share ?? (100/128);
+  const netAvg = latest.strategies?.network_avg?.avg_emission_share ?? (100/128);
 
-    const emShare  = latestStrat.avg_emission_share ?? 0;
-    const multiple = isNetwork ? null : (emShare / netAvg);
+  const entries = [
+    ['v3_established', latest.strategies?.v3_established, first.strategies?.v3_established],
+    ['v3_balanced',    latest.strategies?.v3_balanced,    first.strategies?.v3_balanced],
+    ['v3_speculative', latest.strategies?.v3_speculative, first.strategies?.v3_speculative],
+    ['largecap_index', largecapData, largecapData],
+    ['network_avg',    latest.strategies?.network_avg,    first.strategies?.network_avg],
+  ];
 
-    // Price and total return from latest snapshot results (if any)
-    const priceChg = latestStrat.avg_price_change_pct;
-    const totalRet = latestStrat.avg_total_return_pct;
-
-    const holdings = firstStrat.holdings || [];
+  document.getElementById('strategyGrid').innerHTML = entries.map(([key, latestS, firstS]) => {
+    const cfg      = STRATEGIES[key];
+    const emShare  = latestS?.avg_emission_share ?? 0;
+    const multiple = emShare / netAvg;
+    const priceChg = latestS?.avg_price_change_pct;
+    const totalRet = latestS?.avg_total_return_pct;
+    const holdings = firstS?.holdings || [];
+    const isNetwork = key === 'network_avg';
+    const isLargecap = key === 'largecap_index';
 
     const holdingRows = isNetwork
-      ? '<div class="holding-row"><span class="holding-name" style="color:var(--muted)">All 128 subnets equally weighted</span></div>'
+      ? `<div class="holding-row"><span class="holding-name" style="color:var(--muted)">Equal weight · all active subnets</span></div>`
+      : isLargecap
+      ? holdings.slice(0,5).map(h => `
+          <div class="holding-row">
+            <span class="holding-name">SN${h.netuid} ${getName(h.netuid)}</span>
+            <span class="holding-val" style="color:${cfg.color}">${(h.emission_share||0).toFixed(2)}%</span>
+          </div>`).join('') + (holdings.length > 5 ? `<div class="holding-row"><span class="holding-name" style="color:var(--muted)">+${holdings.length-5} more</span></div>` : '')
       : holdings.map(h => `
-        <div class="holding-row">
-          <span class="holding-name">SN${h.netuid} ${getName(h.netuid)}</span>
-          <span class="holding-val" style="color:${cfg.color}">${h.emission_share?.toFixed(2)}%</span>
-        </div>`).join('');
+          <div class="holding-row">
+            <span class="holding-name">SN${h.netuid} ${getName(h.netuid)}</span>
+            <span class="holding-val" style="color:${cfg.color}">${h.weight ? (h.weight*100).toFixed(1)+'%' : (h.emission_share||0).toFixed(2)+'%'}</span>
+          </div>`).join('');
 
     const priceRow = priceChg != null
       ? `<div class="metric-row"><span class="metric-label">Price return (TAO)</span><span class="metric-val" style="color:${priceChg>=0?'var(--green)':'var(--red)'}">${fmtPct(priceChg)}</span></div>`
-      : `<div class="metric-row"><span class="metric-label">Price return (TAO)</span><span class="metric-val" style="color:var(--muted)">accumulating...</span></div>`;
-
+      : `<div class="metric-row"><span class="metric-label">Price return (TAO)</span><span class="metric-val" style="color:var(--muted)">accumulating</span></div>`;
     const totalRow = totalRet != null
       ? `<div class="metric-row"><span class="metric-label">Total return</span><span class="metric-val" style="color:${totalRet>=0?'var(--green)':'var(--red)'}">${fmtPct(totalRet)}</span></div>`
-      : `<div class="metric-row"><span class="metric-label">Total return</span><span class="metric-val" style="color:var(--muted)">accumulating...</span></div>`;
+      : `<div class="metric-row"><span class="metric-label">Total return</span><span class="metric-val" style="color:var(--muted)">accumulating</span></div>`;
 
     return `
     <div class="strategy-card ${cfg.cls}">
-      <div class="strategy-label">${isNetwork ? 'Baseline' : 'Portfolio'}</div>
+      <div class="strategy-label">${isNetwork||isLargecap ? 'Benchmark' : 'Model Portfolio'}</div>
       <div class="strategy-name" style="color:${cfg.color}">${cfg.label}</div>
       <div class="strategy-metrics">
         <div class="metric-row">
           <span class="metric-label">Emission share</span>
           <span class="metric-val" style="color:${cfg.color}">${emShare.toFixed(3)}%</span>
         </div>
-        ${!isNetwork ? `<div class="metric-row"><span class="metric-label">vs network</span><span class="metric-val" style="color:var(--muted)">${multiple?.toFixed(2)}x</span></div>` : ''}
+        ${!isNetwork ? `<div class="metric-row"><span class="metric-label">vs network avg</span><span class="metric-val" style="color:var(--muted)">${multiple.toFixed(2)}x</span></div>` : ''}
         ${!isNetwork ? priceRow : ''}
         ${!isNetwork ? totalRow : ''}
       </div>
       <div class="strategy-holdings">
-        <div style="font-family:monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">
-          ${isNetwork ? 'Benchmark' : 'Holdings (locked day 1)'}
+        <div style="font-family:monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">
+          ${isNetwork ? 'Passive benchmark' : isLargecap ? 'Top 10 by emission' : 'Holdings (locked day 1)'}
         </div>
         ${holdingRows}
       </div>
-      <div class="accumulating">
-        <div class="acc-dot" style="background:${cfg.color}"></div>
-        <span class="acc-text">Accumulating daily</span>
-      </div>
-    </div>`;
-  });
-
-  document.getElementById('strategyGrid').innerHTML = cards.join('');
-}
-
-function buildTimeline(snapshots) {
-  const first = snapshots[0]?.date;
-  if (!first) return;
-
-  const windows = [
-    { days:0,  label:'Day 1',    desc:'Track start' },
-    { days:7,  label:'7 Days',   desc:'First results' },
-    { days:14, label:'14 Days',  desc:'Mid evaluation' },
-    { days:30, label:'30 Days',  desc:'Full picture' },
-    { days:60, label:'60 Days',  desc:'Signal validation' },
-    { days:90, label:'90 Days',  desc:'Significance' },
-  ];
-
-  const today = new Date().toISOString().slice(0,10);
-
-  document.getElementById('timelineTrack').innerHTML = windows.map(w => {
-    const target  = addDays(first, w.days);
-    const isPast  = today >= target;
-    const dLeft   = daysBetween(today, target);
-    const dotCls  = isPast ? 'done' : (dLeft <= 1 ? 'active' : 'pending');
-    const lblCol  = isPast ? 'var(--green)' : (dLeft <= 1 ? 'var(--cyan)' : 'var(--muted)');
-    return `<div class="timeline-point">
-      <div class="timeline-dot ${dotCls}"></div>
-      <div class="timeline-label" style="color:${lblCol}">${w.label}</div>
-      <div class="timeline-date">${fmtDate(target)}</div>
-      <div style="font-family:monospace;font-size:8px;color:var(--muted);margin-top:2px;text-align:center">
-        ${isPast ? '✓ passed' : dLeft === 0 ? 'today' : `${dLeft}d`}
-      </div>
+      ${!isNetwork && !isLargecap ? `<div class="accumulating"><div class="acc-dot" style="background:${cfg.color}"></div><span class="acc-text">Accumulating daily</span></div>` : ''}
     </div>`;
   }).join('');
 }
 
+// ── PORTFOLIO HOLDINGS GRID ─────────────────────────────────
 function buildPortfolioGrid(snapshots) {
   const first = snapshots[0];
   if (!first) return;
 
   const portfolios = [
-    { key:'v1_top5_combined', title:'TAO Signal Combined', color:'var(--cyan)' },
-    { key:'v1_top5_emission', title:'Top Emission',        color:'var(--yellow)' },
-    { key:'v1_top5_flow',     title:'Top Flow',            color:'var(--green)' },
+    { key:'v3_established', title:'Established',  color:'var(--cyan)' },
+    { key:'v3_balanced',    title:'Balanced',     color:'var(--green)' },
+    { key:'v3_speculative', title:'Speculative',  color:'var(--purple)' },
   ];
 
   document.getElementById('portfolioGrid').innerHTML = portfolios.map(p => {
@@ -557,43 +657,75 @@ function buildPortfolioGrid(snapshots) {
     const avg      = strat.avg_emission_share ?? 0;
     const netAvg   = first.strategies.network_avg?.avg_emission_share ?? (100/128);
     const multiple = (avg / netAvg).toFixed(2);
+    const meta     = strat.metadata || {};
 
-    const rows = holdings.map((h, i) => `
-      <div class="portfolio-row">
-        <span class="portfolio-rank">${i+1}</span>
-        <span class="portfolio-netuid">SN${h.netuid}</span>
-        <span class="portfolio-name">${getName(h.netuid)}</span>
-        <span class="portfolio-emission" style="color:${p.color}">${h.emission_share?.toFixed(2)}%</span>
-        <span class="portfolio-price">${h.entry_price ? h.entry_price.toFixed(4) + ' τ' : '—'}</span>
-      </div>`).join('');
+    const rows = holdings
+      .sort((a,b) => (b.weight||0)-(a.weight||0))
+      .map((h,i) => `
+        <div class="portfolio-row">
+          <span class="portfolio-rank">${i+1}</span>
+          <span class="portfolio-netuid">SN${h.netuid}</span>
+          <span class="portfolio-name">${getName(h.netuid)}</span>
+          ${h.weight ? `<span class="portfolio-weight">${(h.weight*100).toFixed(1)}%</span>` : ''}
+          <span class="portfolio-emission" style="color:${p.color}">${(h.emission_share||0).toFixed(2)}%</span>
+        </div>`).join('');
 
     return `
     <div class="portfolio-card">
       <div class="portfolio-header">
         <div class="portfolio-title" style="color:${p.color}">${p.title}</div>
-        <span style="font-family:monospace;font-size:10px;color:var(--muted)">${multiple}x network avg</span>
+        <span style="font-family:monospace;font-size:10px;color:var(--muted)">${multiple}x network · ENB ${meta.enb_actual||'—'}</span>
       </div>
-      <div class="portfolio-body">${rows || '<div class="portfolio-row"><span style="color:var(--muted);font-size:11px">No holdings recorded</span></div>'}</div>
-      <div style="padding:10px 16px;border-top:1px solid var(--border);font-family:monospace;font-size:10px;color:var(--muted)">
-        Avg emission: <span style="color:${p.color}">${avg.toFixed(3)}%</span> ·
-        Entry: <span style="color:var(--text)">${fmtDate(first.date)}</span>
+      <div class="portfolio-body">${rows || '<div class="portfolio-row"><span style="color:var(--muted);font-size:11px;font-family:monospace">No holdings recorded</span></div>'}</div>
+      <div style="padding:8px 16px;border-top:1px solid var(--border);font-family:monospace;font-size:10px;color:var(--muted)">
+        Avg emission: <span style="color:${p.color}">${avg.toFixed(3)}%</span> · Entry: <span style="color:var(--text)">${fmtDate(first.date)}</span>
       </div>
     </div>`;
   }).join('');
 }
 
+// ── TIMELINE ───────────────────────────────────────────────
+function buildTimeline(snapshots) {
+  const first = snapshots[0]?.date;
+  if (!first) return;
+  const windows = [
+    { days:0,  label:'Day 1'   },
+    { days:7,  label:'7 Days'  },
+    { days:14, label:'14 Days' },
+    { days:30, label:'30 Days' },
+    { days:60, label:'60 Days' },
+    { days:90, label:'90 Days' },
+  ];
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('timelineTrack').innerHTML = windows.map(w => {
+    const target = addDays(first, w.days);
+    const isPast = today >= target;
+    const dLeft  = daysBetween(today, target);
+    const dotCls = isPast ? 'done' : (dLeft <= 1 ? 'active' : 'pending');
+    const lblCol = isPast ? 'var(--green)' : (dLeft <= 1 ? 'var(--cyan)' : 'var(--muted)');
+    return `<div class="timeline-point">
+      <div class="timeline-dot ${dotCls}"></div>
+      <div class="timeline-label" style="color:${lblCol}">${w.label}</div>
+      <div class="timeline-date">${fmtDate(target)}</div>
+      <div style="font-family:monospace;font-size:8px;color:var(--muted);margin-top:2px;text-align:center">
+        ${isPast ? '✓' : dLeft === 0 ? 'today' : `${dLeft}d`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── STATS ───────────────────────────────────────────────────
 function buildStats(snapshots, performance) {
   const first = snapshots[0]?.date;
   const today = new Date().toISOString().slice(0,10);
   const days  = first ? daysBetween(first, today) + 1 : 0;
-
   document.getElementById('statStartDate').textContent   = first ? fmtDate(first) : '—';
   document.getElementById('statDays').textContent        = days;
   document.getElementById('statFirstResult').textContent = first ? fmtDate(addDays(first, 7)) : '—';
   document.getElementById('statPeriods').textContent     = performance?.length ?? 0;
-  document.getElementById('statPortfolios').textContent  = Object.keys(STRATEGIES).length;
 }
 
+// ── LOAD ────────────────────────────────────────────────────
 async function loadData() {
   try {
     const res = await fetch('data/performance_log.json?t=' + Date.now());
@@ -607,18 +739,51 @@ async function loadData() {
       document.getElementById('strategyGrid').innerHTML = `
         <div style="grid-column:1/-1" class="pending-overlay">
           <div class="pending-icon">⏳</div>
-          <div class="pending-title">No snapshots yet</div>
-          <div class="pending-sub">First snapshot locks at next cron run (8am EDT daily)</div>
+          <div class="pending-title">Track record initializing</div>
+          <div class="pending-sub">First snapshot locks at the next daily run. Check back tomorrow.</div>
         </div>`;
       return;
     }
 
+    // Build latestReturns: {strategy_key: {emission_change_pct, price_change_pct, total_return_pct}}
+    // Use the most recent completed performance period for each strategy
+    const latestReturns = {};
+    // Sort performance by eval_date descending so we get most recent first
+    const sortedPerf = [...performance].sort((a,b) => (b.eval_date||'').localeCompare(a.eval_date||''));
+    for (const period of sortedPerf) {
+      for (const [key, result] of Object.entries(period.results || {})) {
+        if (!latestReturns[key]) {
+          latestReturns[key] = {
+            emission_change_pct: result.emission_change_pct ?? null,
+            price_change_pct:    result.price_change_pct    ?? null,
+            total_return_pct:    result.total_return_pct    ?? null,
+            window_days:         period.window_days,
+            eval_date:           period.eval_date,
+          };
+        }
+      }
+    }
+
+    // Inject return metrics into latest snapshot strategies for display
+    const latest = snapshots[snapshots.length - 1];
+    if (latest) {
+      for (const [key, returns] of Object.entries(latestReturns)) {
+        if (latest.strategies[key]) {
+          latest.strategies[key].avg_price_change_pct  = returns.price_change_pct;
+          latest.strategies[key].avg_total_return_pct  = returns.total_return_pct;
+          latest.strategies[key].avg_emission_change_pct = returns.emission_change_pct;
+        }
+      }
+    }
+
     document.getElementById('lastUpdated').innerHTML =
-      `Updated: <strong>${snapshots[snapshots.length-1]?.date || '—'}</strong>`;
+      `<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">Updated: <strong style="color:var(--text)">${snapshots[snapshots.length-1]?.date||'—'}</strong></span>`;
+
+    const largecapData = buildLargeCapFromSnapshot(snapshots[0]);
 
     buildStats(snapshots, performance);
-    buildStrategyCards(snapshots);
-    buildCharts(snapshots);
+    buildStrategyCards(snapshots, largecapData);
+    buildCharts(snapshots, null);
     buildTimeline(snapshots);
     buildPortfolioGrid(snapshots);
 
@@ -632,6 +797,117 @@ async function loadData() {
 }
 
 loadData();
+</script>
+
+<!-- ── TAO SIGNAL LOGO v3 ────────────────────────────────── -->
+<script>
+(function() {
+  const canvas = document.getElementById('logo-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const FONT          = '700 24px "IBM Plex Mono"';
+  const LETTER_COLOR  = '#c8d8e8';
+  const FREQ          = 0.028;
+
+  function drawLogo() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.font = FONT;
+    const taoW = ctx.measureText('TAO').width;
+    const sigW = ctx.measureText('SIGNAL').width;
+    const gap   = 10;
+    const taoX  = Math.round((W - taoW - gap - sigW) / 2);
+    const sigX  = taoX + taoW + gap;
+    const bl    = Math.round(H * 0.72);
+    const mid   = H * 0.50;
+    const waveX0 = taoX - 8;
+    const waveX1 = sigX + sigW + 8;
+
+    const wT=ctx.measureText('T').width, wA=ctx.measureText('A').width, wO=ctx.measureText('O').width;
+    const wS=ctx.measureText('S').width, wI=ctx.measureText('I').width, wG=ctx.measureText('G').width;
+    const wN=ctx.measureText('N').width, wA2=ctx.measureText('A').width, wL=ctx.measureText('L').width;
+    const xT=taoX, xA=taoX+wT, xO=taoX+wT+wA;
+    const xS=sigX, xG=sigX+wS+wI;
+    const xN=sigX+wS+wI+wG, xA2=sigX+wS+wI+wG+wN, xL=sigX+wS+wI+wG+wN+wA2;
+    const oCx = xO + wO*0.5;
+    const aCx = xA2 + wA2*0.5;
+
+    // Phase computed so O center lands on upslope (zero crossing)
+    const phase = -oCx * FREQ + 0.25;
+
+    // Build signal points
+    const pts = [];
+    for (let x = waveX0; x <= waveX1; x++) {
+      const t    = (x - waveX0) / (waveX1 - waveX0);
+      const fade = Math.min(t*10, 1) * Math.min((1-t)*10, 1);
+      const mp   = (oCx + aCx) / 2;
+      const swell = 5.5 * Math.exp(-Math.pow((x - mp) / ((aCx - oCx) * 0.45), 2));
+      const amp  = (1.8 + swell) * fade;
+      pts.push([x, mid + Math.sin((x * FREQ + phase) * Math.PI * 2) * amp]);
+    }
+
+    // 1. Letters base
+    ctx.fillStyle = LETTER_COLOR;
+    ctx.font = FONT;
+    ctx.fillText('TAO', taoX, bl);
+    ctx.fillText('SIGNAL', sigX, bl);
+
+    // 2. Wave — glow then core
+    const grad = ctx.createLinearGradient(waveX0, 0, waveX1, 0);
+    grad.addColorStop(0,    'rgba(160,100,0,0)');
+    grad.addColorStop(0.06, '#FFD000');
+    grad.addColorStop(0.45, '#FFE566');
+    grad.addColorStop(0.55, '#FFE566');
+    grad.addColorStop(0.94, '#FFD000');
+    grad.addColorStop(1,    'rgba(160,100,0,0)');
+
+    ctx.beginPath();
+    pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+    ctx.strokeStyle = 'rgba(255,200,0,0.10)';
+    ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+
+    ctx.beginPath();
+    pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.5; ctx.stroke();
+
+    // 3. Redraw behind-letters over wave
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const oc = off.getContext('2d');
+    oc.fillStyle = LETTER_COLOR; oc.font = FONT;
+    oc.fillText('TAO', taoX, bl);
+    oc.fillText('SIGNAL', sigX, bl);
+
+    [{x:xT,w:wT},{x:xA,w:wA},{x:xS,w:wS},{x:xG,w:wG},{x:xL,w:wL+2}]
+      .forEach(({x,w}) => {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x-1, 0, w+2, H); ctx.clip();
+        ctx.drawImage(off, 0, 0);
+        ctx.restore();
+      });
+
+    // 4. Thread through O counter
+    function thread(cx, cy, rx, ry, xFrom, xTo) {
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2); ctx.clip();
+      const seg = pts.filter(([x]) => x >= xFrom-1 && x <= xTo+1);
+      if (seg.length > 1) {
+        ctx.beginPath();
+        seg.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+        ctx.strokeStyle = '#FFE566'; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      ctx.restore();
+    }
+    thread(oCx, bl-11, wO*0.27, 6, xO, xO+wO);
+    thread(aCx, bl-11, wA2*0.27, 6, xA2, xA2+wA2);
+  }
+
+  document.fonts.ready.then(() => setTimeout(drawLogo, 80));
+})();
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAO Signal — Subnet Detail</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -123,14 +123,35 @@
 </style>
 </head>
 <body>
+<!-- Global tooltip -->
+<div id="gTT" style="display:none;position:fixed;z-index:9999;background:#0f1419;border:1px solid #243040;padding:10px 14px;width:220px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+  <div id="gTTL" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#445566;margin-bottom:5px"></div>
+  <div id="gTTV" style="font-size:11px;color:#c8d8e8;line-height:1.5;white-space:normal;word-wrap:break-word"></div>
+  <div id="gTTS" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#00d4ff;margin-top:5px;display:none"></div>
+</div>
 
 <div class="topbar">
   <div class="topbar-left">
-    <a href="dashboard.html" class="back-btn">← Back</a>
-    <div class="breadcrumb">TAO Signal / <span id="breadcrumbName">Loading...</span></div>
+    <canvas id="logo-canvas" style="display:block;cursor:default;margin-right:8px" width="280" height="48"></canvas>
+    <nav style="display:flex;height:48px">
+      <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="dashboard.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Subnets</a>
+      <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="performance.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Performance</a>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#2a3a4a;padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;cursor:not-allowed" title="Coming soon">Portfolio</span>
+    </nav>
   </div>
-  <div class="topbar-right">
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="breadcrumb">TAO Signal / <span id="breadcrumbName">Loading...</span></div>
     <div class="netuid-badge" id="netuidBadge">SN—</div>
+    <div style="position:relative">
+      <button style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;background:transparent;border:1px solid var(--border2);color:var(--muted);padding:5px 12px;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:6px;transition:all 0.15s" id="accountBtn" onclick="toggleAccount()" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">
+        Account <span id="chevron" style="font-size:8px;transition:transform 0.15s">▾</span>
+      </button>
+      <div id="accountDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--surface2);border:1px solid var(--border2);min-width:160px;z-index:300">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">Settings <span style="font-size:8px;color:var(--dim)">Soon</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">Watchlist <span style="font-size:8px;color:var(--dim)">Soon</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between">Login / Logout <span style="font-size:8px;color:var(--dim)">Soon</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -311,22 +332,157 @@ function filterRange(labels, data, range) {
   };
 }
 
-function badge(signal) {
+function escAttr(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function badge(signal, signalType, s) {
   if (!signal || signal==='UNKNOWN') return '<span class="badge b-muted">—</span>';
-  const s = signal.toLowerCase();
+  const sl = signal.toLowerCase();
   let cls = 'b-muted';
   if (['strong','dominant','thriving','collapsing','active','strong_inflow','veteran',
        'well_below','below','slight_below','deeply_oversold','accumulating','turning',
-       'highly_persistent','very_stable','very_consistent'].some(v=>s.includes(v))) cls='b-green';
-  else if (['turning','moderate','declining','inflow','established','falling','growing',
-            'recovering','increasing','persistent','consistent','stable'].some(v=>s.includes(v))) cls='b-cyan';
+       'highly_persistent','very_stable','very_consistent'].some(v=>sl.includes(v))) cls='b-green';
+  else if (['moderate','declining','inflow','established','falling','growing',
+            'recovering','increasing','persistent','consistent','stable'].some(v=>sl.includes(v))) cls='b-cyan';
   else if (['slowing','low','slight_inflow','young','rising','above','holding',
-            'sporadic'].some(v=>s.includes(v))) cls='b-yellow';
+            'sporadic'].some(v=>sl.includes(v))) cls='b-yellow';
   else if (['weak','zero','none','heavy_outflow','well_above','far_above','reversing',
-            'worsening','exiting','deteriorating','inconsistent','absent','exodus'].some(v=>s.includes(v))) cls='b-red';
-  else if (['bleeding','minimal','decelerating','volatile','zero_emission'].some(v=>s.includes(v))) cls='b-orange';
-  else if (['surging','accelerating'].some(v=>s.includes(v))) cls='b-purple';
+            'worsening','exiting','deteriorating','inconsistent','absent','exodus',
+            'decelerating'].some(v=>sl.includes(v))) cls='b-red';
+  else if (['bleeding','minimal','volatile','zero_emission'].some(v=>sl.includes(v))) cls='b-orange';
+  else if (['surging','accelerating'].some(v=>sl.includes(v))) cls='b-purple';
+
+  if (signalType && s) {
+    const tt = subnetTooltip(signalType, signal, s);
+    if (tt) {
+      return `<span class="badge ${cls} has-tip"
+        data-ttl="${escAttr(tt.label)}"
+        data-ttv="${escAttr(tt.value)}"
+        data-tts="${escAttr(tt.sub||'')}"
+        onmouseenter="showTT(event,this)"
+        onmouseleave="hideTT()">
+        <span class="badge-dot"></span>${signal}
+      </span>`;
+    }
+  }
   return `<span class="badge ${cls}"><span class="badge-dot"></span>${signal}</span>`;
+}
+
+// Global tooltip for subnet page
+function showTT(e, el) {
+  const tt = document.getElementById('gTT');
+  document.getElementById('gTTL').textContent = el.dataset.ttl || '';
+  document.getElementById('gTTV').textContent = el.dataset.ttv || '';
+  const s = document.getElementById('gTTS');
+  s.textContent = el.dataset.tts || '';
+  s.style.display = el.dataset.tts ? 'block' : 'none';
+  tt.style.display = 'block';
+  posTT(e);
+}
+function hideTT() { document.getElementById('gTT').style.display = 'none'; }
+function posTT(e) {
+  const tt = document.getElementById('gTT');
+  const m = 12, w = 220, h = tt.offsetHeight || 80;
+  let x = e.clientX + m, y = e.clientY + m;
+  if (x + w > window.innerWidth  - m) x = e.clientX - w - m;
+  if (y + h > window.innerHeight - m) y = e.clientY - h - m;
+  tt.style.left = x + 'px'; tt.style.top = y + 'px';
+}
+document.addEventListener('mousemove', e => {
+  if (document.getElementById('gTT').style.display === 'block') posTT(e);
+});
+
+function subnetTooltip(signalType, signal, s) {
+  const name = s.name || (s.netuid ? `SN${s.netuid}` : 'This subnet');
+  const map = {
+    flow_signal: {
+      label: 'EMA TAO Inflow',
+      value: () => {
+        const v = s.ema_tao_inflow || 0;
+        const dir = v > 0 ? 'net capital inflow' : v < 0 ? 'net capital outflow' : 'neutral flow';
+        return `${name} has ${dir} of ${Math.abs(v).toFixed(6)} TAO/block (exponential moving average).`;
+      },
+      sub: () => signal
+    },
+    price_vs_ema_signal: {
+      label: 'Price vs EMA',
+      value: () => {
+        const ratio = s.price_vs_ema || s.priceVsEma || 1.0;
+        const pct = ((ratio - 1) * 100).toFixed(1);
+        const dir = ratio > 1 ? `${pct}% above` : `${Math.abs(pct)}% below`;
+        return `${name}'s spot price is ${dir} its 30-day moving average EMA. ${ratio < 1 ? 'Discount to EMA — potential mean reversion entry.' : 'Trading at a premium to EMA.'}`;
+      },
+      sub: () => `ratio: ${(s.price_vs_ema || s.priceVsEma || 1).toFixed(4)}x`
+    },
+    vs_network_signal: {
+      label: 'Emission vs Network',
+      value: () => {
+        const pct = (s.emission_share_pct || 0).toFixed(3);
+        return `${name} captures ${pct}% of total network emissions. Ranked cross-sectionally vs all active subnets today. Lower current share = higher mean reversion potential.`;
+      },
+      sub: () => `${(s.emission_share_pct||0).toFixed(3)}% of network`
+    },
+    emission_velocity_signal: {
+      label: 'Emission Share Velocity',
+      value: () => `7-day rate of change in ${name}'s emission share percentage, EMA-smoothed and ranked vs all active subnets. Declining velocity = subnets losing ground relative to the network, which historically precedes mean reversion gains.`,
+      sub: () => signal
+    },
+    emission_stability_signal: {
+      label: 'Emission Stability',
+      value: () => `Proportional downside deviation of ${name}'s emission share over 30 days. Normalized by subnet size (coefficient of variation) so large and small subnets are comparable. Stable = consistent validator support, low collapse risk.`,
+      sub: () => signal
+    },
+    flow_persistence_signal: {
+      label: 'Flow Persistence',
+      value: () => `Fraction of the last 30 days where ${name} had positive TAO inflow. Persistent positive flow indicates sustained capital attraction, not one-off spikes.`,
+      sub: () => signal
+    },
+    rank_consistency_signal: {
+      label: 'Rank Consistency',
+      value: () => `Stability of ${name}'s emission rank relative to all subnets over 30 days. Consistent rank = structural validator preference — the subnet reliably holds its network position rather than oscillating.`,
+      sub: () => signal
+    },
+    validator_retention_signal: {
+      label: 'Validator Retention',
+      value: () => `Whether the active validator count on ${name} is growing, stable, or contracting. Validator exits precede alpha price deterioration before emission changes — this signal leads the other quality metrics.`,
+      sub: () => signal
+    },
+    emission_momentum: {
+      label: 'Emission Momentum',
+      value: () => {
+        const em = (s.emission_share_pct || 0).toFixed(3);
+        return `${name}'s emission share trend z-scored vs its own 30-day history. Current share: ${em}%. Reflects direction of change, not absolute level.`;
+      },
+      sub: () => signal
+    },
+    inflow_momentum: {
+      label: 'Inflow Momentum',
+      value: () => {
+        const v = s.ema_tao_inflow || 0;
+        return `Dual z-score: ${name}'s TAO inflow vs its own 14-day history AND vs all active subnets today. Blended 50/50. Current EMA inflow: ${v.toFixed(6)} τ/block.`;
+      },
+      sub: () => signal
+    },
+    price_momentum: {
+      label: 'Price Momentum',
+      value: () => `14-day trend in ${name}'s price-vs-EMA ratio. Positive = spot price rising relative to its own moving average. Tracks whether the price gap is opening or compressing.`,
+      sub: () => signal
+    },
+    alpha_ratio_momentum: {
+      label: 'Alpha Ratio Momentum',
+      value: () => `14-day trend in ${name}'s alpha ratio (staked alpha / pool alpha). A rising ratio means staked supply is growing relative to the AMM pool — signals increasing conviction from existing holders.`,
+      sub: () => signal
+    },
+    tao_staked_momentum: {
+      label: 'TAO Staked Momentum',
+      value: () => `30-day trend in ${name}'s share of total network TAO staked. Share-based, not absolute — removes bull market bias. A subnet can be gaining TAO while losing relative ground; this signal detects the latter.`,
+      sub: () => signal
+    },
+  };
+  const t = map[signalType];
+  if (!t) return null;
+  return { label: t.label, value: t.value(), sub: t.sub() };
 }
 
 const TTip = {
@@ -549,7 +705,6 @@ async function loadData() {
     }
 
     const signals = [score?.flow_signal, score?.price_vs_ema_signal, score?.vs_network_signal, score?.emission_velocity_signal].filter(Boolean);
-    document.getElementById('signalRow').innerHTML = signals.map(s=>badge(s)).join('');
 
     // Stats strip
     const price      = live?.alpha_price_tao || 0;
@@ -564,6 +719,23 @@ async function loadData() {
     const regAt      = live?.network_registered_at || 0;
     const block      = chain.block || 0;
     const ageDays    = regAt && block ? Math.floor((block-regAt)/7200) : 0;
+
+    // Build merged subnet data object for tooltip context — must be after vars above
+    const sd = {
+      name,
+      netuid: NETUID,
+      ema_tao_inflow:     inflow,
+      price_vs_ema:       priceVsEma,
+      emission_share_pct: parseFloat(emShare),
+      alpha_ratio:        alphaRatio,
+    };
+
+    document.getElementById('signalRow').innerHTML = [
+      [score?.flow_signal,                 'flow_signal'],
+      [score?.price_vs_ema_signal,         'price_vs_ema_signal'],
+      [score?.vs_network_signal,           'vs_network_signal'],
+      [score?.emission_velocity_signal,    'emission_velocity_signal'],
+    ].filter(([v]) => v).map(([v, t]) => badge(v, t, sd)).join('');
 
     document.getElementById('statPrice').textContent        = price.toFixed(6) + ' τ';
     document.getElementById('statMovingPrice').textContent  = movPrice ? `EMA: ${movPrice.toFixed(6)} τ` : '—';
@@ -598,28 +770,28 @@ async function loadData() {
 
     // Opportunity signals sidebar
     document.getElementById('signalDetails').innerHTML = [
-      ['Flow Momentum',     score?.flow_signal],
-      ['Price vs EMA',      score?.price_vs_ema_signal],
-      ['Vs Network Avg',    score?.vs_network_signal],
-      ['Emission Velocity', score?.emission_velocity_signal],
-    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+      ['Flow Momentum',     score?.flow_signal,                  'flow_signal'],
+      ['Price vs EMA',      score?.price_vs_ema_signal,          'price_vs_ema_signal'],
+      ['Vs Network Avg',    score?.vs_network_signal,            'vs_network_signal'],
+      ['Emission Velocity', score?.emission_velocity_signal,     'emission_velocity_signal'],
+    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
 
-    // Quality signals sidebar — v3 Sortino fields
+    // Quality signals sidebar
     document.getElementById('qualityDetails').innerHTML = [
-      ['Em. Stability',      qual?.emission_stability_signal],
-      ['Flow Persistence',   qual?.flow_persistence_signal],
-      ['Rank Consistency',   qual?.rank_consistency_signal],
-      ['Validator Retention',qual?.validator_retention_signal],
-    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+      ['Em. Stability',      qual?.emission_stability_signal,  'emission_stability_signal'],
+      ['Flow Persistence',   qual?.flow_persistence_signal,    'flow_persistence_signal'],
+      ['Rank Consistency',   qual?.rank_consistency_signal,    'rank_consistency_signal'],
+      ['Validator Retention',qual?.validator_retention_signal, 'validator_retention_signal'],
+    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
 
     // Momentum signals sidebar
     document.getElementById('momentumDetails').innerHTML = [
-      ['Emission (30d)',    mom?.emission_momentum    || score?.emission_momentum],
-      ['Inflow (14d)',      mom?.inflow_momentum      || score?.inflow_momentum],
-      ['Price (14d)',       mom?.price_momentum       || score?.price_momentum],
-      ['Alpha Ratio (14d)', mom?.alpha_ratio_momentum || score?.alpha_ratio_momentum],
-      ['TAO Staked (30d)',  mom?.tao_staked_momentum],
-    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN')}</div>`).join('');
+      ['Emission (30d)',    mom?.emission_momentum    || score?.emission_momentum,   'emission_momentum'],
+      ['Inflow (14d)',      mom?.inflow_momentum      || score?.inflow_momentum,     'inflow_momentum'],
+      ['Price (14d)',       mom?.price_momentum       || score?.price_momentum,      'price_momentum'],
+      ['Alpha Ratio (14d)', mom?.alpha_ratio_momentum || score?.alpha_ratio_momentum,'alpha_ratio_momentum'],
+      ['TAO Staked (30d)',  mom?.tao_staked_momentum,                                'tao_staked_momentum'],
+    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
 
     // Chain data sidebar
     document.getElementById('chainInfo').innerHTML = [
@@ -710,6 +882,131 @@ async function loadChainHistory() {
 }
 
 loadData();
+</script>
+
+<script>
+function toggleAccount() {
+  const open = document.getElementById('accountDropdown').style.display === 'block';
+  document.getElementById('accountDropdown').style.display = open ? 'none' : 'block';
+  document.getElementById('chevron').style.transform = open ? '' : 'rotate(180deg)';
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#accountBtn') && !e.target.closest('#accountDropdown')) {
+    document.getElementById('accountDropdown').style.display = 'none';
+    document.getElementById('chevron').style.transform = '';
+  }
+});
+</script>
+
+<!-- ── TAO SIGNAL LOGO v3 ────────────────────────────────── -->
+<script>
+(function() {
+  const canvas = document.getElementById('logo-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const FONT          = '700 24px "IBM Plex Mono"';
+  const LETTER_COLOR  = '#c8d8e8';
+  const FREQ          = 0.028;
+
+  function drawLogo() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.font = FONT;
+    const taoW = ctx.measureText('TAO').width;
+    const sigW = ctx.measureText('SIGNAL').width;
+    const gap   = 10;
+    const taoX  = Math.round((W - taoW - gap - sigW) / 2);
+    const sigX  = taoX + taoW + gap;
+    const bl    = Math.round(H * 0.72);
+    const mid   = H * 0.50;
+    const waveX0 = taoX - 8;
+    const waveX1 = sigX + sigW + 8;
+
+    const wT=ctx.measureText('T').width, wA=ctx.measureText('A').width, wO=ctx.measureText('O').width;
+    const wS=ctx.measureText('S').width, wI=ctx.measureText('I').width, wG=ctx.measureText('G').width;
+    const wN=ctx.measureText('N').width, wA2=ctx.measureText('A').width, wL=ctx.measureText('L').width;
+    const xT=taoX, xA=taoX+wT, xO=taoX+wT+wA;
+    const xS=sigX, xG=sigX+wS+wI;
+    const xN=sigX+wS+wI+wG, xA2=sigX+wS+wI+wG+wN, xL=sigX+wS+wI+wG+wN+wA2;
+    const oCx = xO + wO*0.5;
+    const aCx = xA2 + wA2*0.5;
+
+    // Phase computed so O center lands on upslope (zero crossing)
+    const phase = -oCx * FREQ + 0.25;
+
+    // Build signal points
+    const pts = [];
+    for (let x = waveX0; x <= waveX1; x++) {
+      const t    = (x - waveX0) / (waveX1 - waveX0);
+      const fade = Math.min(t*10, 1) * Math.min((1-t)*10, 1);
+      const mp   = (oCx + aCx) / 2;
+      const swell = 5.5 * Math.exp(-Math.pow((x - mp) / ((aCx - oCx) * 0.45), 2));
+      const amp  = (1.8 + swell) * fade;
+      pts.push([x, mid + Math.sin((x * FREQ + phase) * Math.PI * 2) * amp]);
+    }
+
+    // 1. Letters base
+    ctx.fillStyle = LETTER_COLOR;
+    ctx.font = FONT;
+    ctx.fillText('TAO', taoX, bl);
+    ctx.fillText('SIGNAL', sigX, bl);
+
+    // 2. Wave — glow then core
+    const grad = ctx.createLinearGradient(waveX0, 0, waveX1, 0);
+    grad.addColorStop(0,    'rgba(160,100,0,0)');
+    grad.addColorStop(0.06, '#FFD000');
+    grad.addColorStop(0.45, '#FFE566');
+    grad.addColorStop(0.55, '#FFE566');
+    grad.addColorStop(0.94, '#FFD000');
+    grad.addColorStop(1,    'rgba(160,100,0,0)');
+
+    ctx.beginPath();
+    pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+    ctx.strokeStyle = 'rgba(255,200,0,0.10)';
+    ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+
+    ctx.beginPath();
+    pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.5; ctx.stroke();
+
+    // 3. Redraw behind-letters over wave
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const oc = off.getContext('2d');
+    oc.fillStyle = LETTER_COLOR; oc.font = FONT;
+    oc.fillText('TAO', taoX, bl);
+    oc.fillText('SIGNAL', sigX, bl);
+
+    [{x:xT,w:wT},{x:xA,w:wA},{x:xS,w:wS},{x:xG,w:wG},{x:xL,w:wL+2}]
+      .forEach(({x,w}) => {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x-1, 0, w+2, H); ctx.clip();
+        ctx.drawImage(off, 0, 0);
+        ctx.restore();
+      });
+
+    // 4. Thread through O counter
+    function thread(cx, cy, rx, ry, xFrom, xTo) {
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2); ctx.clip();
+      const seg = pts.filter(([x]) => x >= xFrom-1 && x <= xTo+1);
+      if (seg.length > 1) {
+        ctx.beginPath();
+        seg.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+        ctx.strokeStyle = '#FFE566'; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      ctx.restore();
+    }
+    thread(oCx, bl-11, wO*0.27, 6, xO, xO+wO);
+    thread(aCx, bl-11, wA2*0.27, 6, xA2, xA2+wA2);
+  }
+
+  document.fonts.ready.then(() => setTimeout(drawLogo, 80));
+})();
 </script>
 </body>
 </html>
