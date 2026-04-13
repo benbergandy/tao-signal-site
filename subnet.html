@@ -47,7 +47,7 @@
   .subnet-name .symbol { color:var(--cyan); font-family:'IBM Plex Mono',monospace; font-size:16px; margin-left:8px; }
   .signal-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 
-  .hero-right { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); min-width:520px; }
+  .hero-right { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); min-width:420px; }
   .score-cell { background:var(--surface); padding:14px 18px; text-align:center; }
   .score-cell-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
   .score-cell-value { font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; line-height:1; }
@@ -134,7 +134,8 @@
   <div class="topbar-left">
     <canvas id="logo-canvas" style="display:block;cursor:default;margin-right:8px" width="280" height="48"></canvas>
     <nav style="display:flex;height:48px">
-      <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="dashboard.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Subnets</a>
+      <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="subnets.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Subnets</a>
+      <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="signals.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Signals</a>
       <a style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none;transition:color 0.15s" href="performance.html" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Performance</a>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#2a3a4a;padding:0 18px;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;cursor:not-allowed" title="Coming soon">Portfolio</span>
     </nav>
@@ -168,19 +169,29 @@
       <div class="score-cell-sub">overall signal</div>
     </div>
     <div class="score-cell">
-      <div class="score-cell-label">Opportunity</div>
-      <div class="score-cell-value c-yellow" id="scoreOpportunity">—</div>
-      <div class="score-cell-sub" id="scoreOppSub">contrarian</div>
+      <div class="score-cell-label">Stability</div>
+      <div class="score-cell-value c-green" id="scoreStability">—</div>
+      <div class="score-cell-sub">42.2% weight</div>
     </div>
     <div class="score-cell">
-      <div class="score-cell-label">Quality</div>
-      <div class="score-cell-value c-green" id="scoreQuality">—</div>
-      <div class="score-cell-sub">survivability</div>
+      <div class="score-cell-label">Yield</div>
+      <div class="score-cell-value c-yellow" id="scoreYield">—</div>
+      <div class="score-cell-sub">23.6% weight</div>
     </div>
     <div class="score-cell">
-      <div class="score-cell-label">Momentum</div>
-      <div class="score-cell-value c-purple" id="scoreMomentum">—</div>
-      <div class="score-cell-sub" id="scoreMomentumSub">direction of travel</div>
+      <div class="score-cell-label">Consensus</div>
+      <div class="score-cell-value c-purple" id="scoreConsensus">—</div>
+      <div class="score-cell-sub">15.8% weight</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-cell-label">Flow</div>
+      <div class="score-cell-value c-cyan" id="scoreFlow">—</div>
+      <div class="score-cell-sub">13.1% weight</div>
+    </div>
+    <div class="score-cell">
+      <div class="score-cell-label">Conviction</div>
+      <div class="score-cell-value" style="color:var(--orange)" id="scoreConviction">—</div>
+      <div class="score-cell-sub">5.3% weight</div>
     </div>
   </div>
 </div>
@@ -195,8 +206,8 @@
   <div class="stat-item"><div class="stat-label">EMA Inflow</div><div class="stat-val" id="statInflow">—</div><div class="stat-delta" id="statInflowSignal">—</div></div>
   <div class="stat-item"><div class="stat-label">Emission Share</div><div class="stat-val" id="statEmission">—</div><div class="stat-delta" id="statVsNetwork">—</div></div>
   <div class="stat-item"><div class="stat-label">Alpha Ratio</div><div class="stat-val" id="statAlphaRatio">—</div><div class="stat-delta">staked / pool</div></div>
-  <div class="stat-item"><div class="stat-label">Em. Momentum</div><div class="stat-val" id="statEmMomentum">—</div><div class="stat-delta">30d trend</div></div>
-  <div class="stat-item"><div class="stat-label">Inflow Momentum</div><div class="stat-val" id="statInflowMomentum">—</div><div class="stat-delta">14d trend</div></div>
+  <div class="stat-item"><div class="stat-label">TAO in Pool</div><div class="stat-val" id="statTaoIn">—</div><div class="stat-delta">liquidity depth</div></div>
+  <div class="stat-item"><div class="stat-label">Avg Dividends</div><div class="stat-val" id="statDividends">—</div><div class="stat-delta">yield signal</div></div>
   <div class="stat-item"><div class="stat-label">Active Neurons</div><div class="stat-val" id="statMiners">—</div><div class="stat-delta" id="statAge">—</div></div>
 </div>
 
@@ -271,16 +282,24 @@
 
   <div class="sidebar">
     <div class="info-card fade-in">
-      <div class="info-card-header">Opportunity Signals</div>
-      <div class="info-card-body" id="signalDetails"><div class="loading">Loading...</div></div>
+      <div class="info-card-header" style="color:var(--green)">Stability Signals (42.2%)</div>
+      <div class="info-card-body" id="stabilityDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
-      <div class="info-card-header">Quality Signals — Sortino v3</div>
-      <div class="info-card-body" id="qualityDetails"><div class="loading">Loading...</div></div>
+      <div class="info-card-header" style="color:var(--yellow)">Yield Signal (23.6%)</div>
+      <div class="info-card-body" id="yieldDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
-      <div class="info-card-header momentum">🚀 Momentum Signals</div>
-      <div class="info-card-body" id="momentumDetails"><div class="loading">Loading...</div></div>
+      <div class="info-card-header" style="color:var(--purple)">Consensus Signals (15.8%)</div>
+      <div class="info-card-body" id="consensusDetails"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header" style="color:var(--cyan)">Flow Signals (13.1%)</div>
+      <div class="info-card-body" id="flowFactorDetails"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="info-card-header" style="color:var(--orange)">Conviction Signals (5.3%)</div>
+      <div class="info-card-body" id="convictionDetails"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
       <div class="info-card-header">Signal History (14d)</div>
@@ -291,8 +310,75 @@
       <div class="info-card-body" id="chainInfo"><div class="loading">Loading...</div></div>
     </div>
     <div class="info-card fade-in">
+      <div class="info-card-header" style="color:var(--cyan)">Liquidity</div>
+      <div class="info-card-body" id="liquidityInfo"><div class="loading">Loading...</div></div>
+    </div>
+    <div class="info-card fade-in">
       <div class="info-card-header">Subnet Info</div>
       <div class="info-card-body" id="subnetInfo"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Position Sizing Calculator -->
+<div style="padding:0 24px 18px" class="fade-in">
+  <div style="background:var(--surface);border:1px solid var(--border);padding:20px 24px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);font-weight:500">Position Sizing Calculator</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;padding:3px 8px;border:1px solid var(--cyan);color:var(--cyan);text-transform:uppercase">AMM Cost Model</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px">
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em">Position Size</label>
+        <input id="positionInput" type="number" value="100" min="1" step="10" style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:6px 12px;width:120px;text-align:right" oninput="updatePositionCalc()">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">TAO</span>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="range-btn" onclick="setPosition(10)">10</button>
+        <button class="range-btn" onclick="setPosition(50)">50</button>
+        <button class="range-btn active" onclick="setPosition(100)">100</button>
+        <button class="range-btn" onclick="setPosition(500)">500</button>
+        <button class="range-btn" onclick="setPosition(1000)">1K</button>
+        <button class="range-btn" onclick="setPosition(5000)">5K</button>
+        <button class="range-btn" onclick="setPosition(10000)">10K</button>
+      </div>
+    </div>
+    <div id="positionResults" style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
+      <div style="background:var(--surface);padding:14px 16px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Entry Slippage</div>
+        <div id="calcEntrySlip" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--yellow)">—</div>
+      </div>
+      <div style="background:var(--surface);padding:14px 16px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Round-Trip Cost</div>
+        <div id="calcRTCost" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--orange)">—</div>
+      </div>
+      <div style="background:var(--surface);padding:14px 16px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Cost in TAO</div>
+        <div id="calcCostTao" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--red)">—</div>
+      </div>
+      <div style="background:var(--surface);padding:14px 16px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Daily Yield</div>
+        <div id="calcYield" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--green)">—</div>
+      </div>
+      <div style="background:var(--surface);padding:14px 16px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Break-Even</div>
+        <div id="calcBreakEven" style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--cyan)">—</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);line-height:1.6">
+        <span style="color:var(--text)">Max position @1% slip:</span> <span id="calcMax1" style="color:var(--green)">—</span> TAO
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);line-height:1.6">
+        <span style="color:var(--text)">Max position @2% slip:</span> <span id="calcMax2" style="color:var(--yellow)">—</span> TAO
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);line-height:1.6">
+        <span style="color:var(--text)">Max position @5% slip:</span> <span id="calcMax5" style="color:var(--orange)">—</span> TAO
+      </div>
+    </div>
+    <div style="margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);border-top:1px solid var(--border);padding-top:10px">
+      Constant-product AMM model. Includes 0.05% swap fee per transaction. Break-even assumes current emission rate and pool depth remain stable. Actual costs may vary.
     </div>
   </div>
 </div>
@@ -655,25 +741,82 @@ function buildSignalHistory() {
   }).join('');
 }
 
+// ── POSITION SIZING CALCULATOR ────────────────────────────────
+const SWAP_FEE = 0.0005;
+
+function setPosition(val) {
+  document.getElementById('positionInput').value = val;
+  document.querySelectorAll('#positionResults ~ div .range-btn, div:has(> #positionInput) + div .range-btn').forEach(b => b.classList.remove('active'));
+  updatePositionCalc();
+}
+
+function updatePositionCalc() {
+  const d = window._liqData;
+  if (!d || !d.taoReserve || !d.alphaReserve) return;
+
+  const pos = parseFloat(document.getElementById('positionInput').value) || 0;
+  if (pos <= 0) return;
+
+  const T = d.taoReserve;
+  const A = d.alphaReserve;
+  const k = T * A;
+
+  // Entry slippage
+  const entrySlip = pos / (T + pos);
+
+  // Alpha received (after fee)
+  const taoAfterFee = pos * (1 - SWAP_FEE);
+  const alphaReceived = A - k / (T + taoAfterFee);
+
+  // Exit: sell alpha back into original pool (conservative)
+  const taoBack = T - k / (A + alphaReceived);
+  const exitFee = taoBack * SWAP_FEE;
+  const taoFinal = taoBack - exitFee;
+
+  const rtCost = (pos - taoFinal) / pos;
+  const costTao = pos - taoFinal;
+
+  // Daily yield estimate
+  const yourShare = pos / (T + pos);
+  const subnetDailyEm = (d.emissionSharePct / 100) * d.networkEmissionPerDay;
+  const dailyYield = subnetDailyEm > 0 ? (yourShare * subnetDailyEm) / pos : 0;
+  const breakEven = dailyYield > 0 ? rtCost / dailyYield : null;
+
+  // Max positions
+  const max1 = T * 0.01 / 0.99;
+  const max2 = T * 0.02 / 0.98;
+  const max5 = T * 0.05 / 0.95;
+
+  document.getElementById('calcEntrySlip').textContent = (entrySlip * 100).toFixed(2) + '%';
+  document.getElementById('calcRTCost').textContent = (rtCost * 100).toFixed(2) + '%';
+  document.getElementById('calcCostTao').textContent = costTao.toFixed(1) + 'τ';
+  document.getElementById('calcYield').textContent = dailyYield > 0 ? (dailyYield * 100).toFixed(4) + '%' : 'N/A';
+  document.getElementById('calcBreakEven').textContent = breakEven ? Math.ceil(breakEven) + 'd' : 'N/A';
+  document.getElementById('calcMax1').textContent = max1.toFixed(0);
+  document.getElementById('calcMax2').textContent = max2.toFixed(0);
+  document.getElementById('calcMax5').textContent = max5.toFixed(0);
+
+  // Color the entry slippage based on severity
+  const slipEl = document.getElementById('calcEntrySlip');
+  if (entrySlip < 0.01) slipEl.style.color = 'var(--green)';
+  else if (entrySlip < 0.03) slipEl.style.color = 'var(--yellow)';
+  else if (entrySlip < 0.10) slipEl.style.color = 'var(--orange)';
+  else slipEl.style.color = 'var(--red)';
+}
+
 // ── MAIN LOAD ─────────────────────────────────────────────────
 async function loadData() {
   try {
-    const [combinedRes, chainRes, qualityRes, momentumRes] = await Promise.all([
+    const [combinedRes, chainRes] = await Promise.all([
       fetch(`data/combined_scores.json?t=${Date.now()}`),
       fetch(`data/chain_data.json?t=${Date.now()}`),
-      fetch(`data/quality_scores.json?t=${Date.now()}`),
-      fetch(`data/momentum_scores.json?t=${Date.now()}`),
     ]);
 
     const combined = await combinedRes.json();
     const chain    = await chainRes.json();
-    const quality  = await qualityRes.json();
-    const momentum = momentumRes.ok ? await momentumRes.json() : null;
 
     const score = combined.scores?.find(s => s.netuid===NETUID);
     const live  = chain.subnets?.find(s => s.netuid===NETUID);
-    const qual  = quality.scores?.find(s => s.netuid===NETUID);
-    const mom   = momentum?.scores?.find(s => s.netuid===NETUID);
 
     const name   = score?.name || live?.name || `SN${NETUID}`;
     const symbol = live?.symbol || '';
@@ -683,28 +826,13 @@ async function loadData() {
     document.getElementById('netuidBadge').textContent    = `SN${NETUID}`;
     document.getElementById('subnetName').innerHTML       = `${name} <span class="symbol">${symbol}</span>`;
 
-    // Score cards
-    document.getElementById('scoreCombined').textContent    = score?.combined_score?.toFixed(1) || '—';
-    document.getElementById('scoreOpportunity').textContent = score?.opportunity_score?.toFixed(1) || '—';
-    document.getElementById('scoreQuality').textContent     = score?.quality_score?.toFixed(1) || qual?.quality_score?.toFixed(1) || '—';
-    document.getElementById('scoreMomentum').textContent    = mom?.momentum_score?.toFixed(1) || score?.momentum_score?.toFixed(1) || '—';
-
-    if (mom?.emission_momentum) {
-      document.getElementById('scoreMomentumSub').textContent = mom.emission_momentum.toLowerCase();
-    }
-
-    if (score?.opportunity_suppressed) {
-      document.getElementById('suppressionWarning').classList.remove('hidden');
-      const msgs = {
-        ZERO_EMISSION:'⚠ Opportunity score suppressed — zero emissions. High scores here are a trap.',
-        BLEEDING:'⚠ Opportunity score suppressed — minimal emissions AND negative 30d flow.',
-        MINIMAL_EMISSION:'⚠ Opportunity score capped — minimal emissions. Treat signals with caution.',
-      };
-      document.getElementById('suppressionText').textContent = msgs[score.opportunity_suppressed] || '⚠ Suppressed';
-      document.getElementById('scoreOppSub').textContent = score.opportunity_suppressed.replace(/_/g,' ').toLowerCase();
-    }
-
-    const signals = [score?.flow_signal, score?.price_vs_ema_signal, score?.vs_network_signal, score?.emission_velocity_signal].filter(Boolean);
+    // Score cards — 5-factor model
+    document.getElementById('scoreCombined').textContent  = score?.combined_score?.toFixed(1) || '—';
+    document.getElementById('scoreStability').textContent = score?.stability_score?.toFixed(1) || '—';
+    document.getElementById('scoreYield').textContent     = score?.yield_score?.toFixed(1) || '—';
+    document.getElementById('scoreConsensus').textContent = score?.consensus_score?.toFixed(1) || '—';
+    document.getElementById('scoreFlow').textContent      = score?.flow_score?.toFixed(1) || '—';
+    document.getElementById('scoreConviction').textContent= score?.conviction_score?.toFixed(1) || '—';
 
     // Stats strip
     const price      = live?.alpha_price_tao || 0;
@@ -752,46 +880,51 @@ async function loadData() {
     document.getElementById('statMiners').textContent       = miners || '—';
     document.getElementById('statAge').textContent          = ageDays ? ageDays + 'd post-dTAO' : '—';
 
-    // Momentum stats
-    const emMom     = mom?.emission_momentum || score?.emission_momentum || '—';
-    const inflowMom = mom?.inflow_momentum   || score?.inflow_momentum   || '—';
-    document.getElementById('statEmMomentum').textContent     = emMom;
-    document.getElementById('statEmMomentum').className       = 'stat-val ' + (
-      ['SURGING','GROWING'].includes(emMom) ? 'c-purple' :
-      ['STABLE'].includes(emMom) ? 'c-cyan' :
-      ['DECLINING','COLLAPSING'].includes(emMom) ? 'c-red' : ''
-    );
-    document.getElementById('statInflowMomentum').textContent = inflowMom;
-    document.getElementById('statInflowMomentum').className   = 'stat-val ' + (
-      ['ACCELERATING','INCREASING','TURNING'].includes(inflowMom) ? 'c-purple' :
-      ['STABLE'].includes(inflowMom) ? 'c-cyan' :
-      ['DECELERATING','REVERSING','WORSENING'].includes(inflowMom) ? 'c-red' : ''
-    );
+    // TAO pool and dividends stats
+    const taoIn = live?.tao_in || 0;
+    document.getElementById('statTaoIn').textContent = taoIn >= 1000 ? (taoIn/1000).toFixed(1) + 'k τ' : taoIn.toFixed(0) + ' τ';
+    document.getElementById('statDividends').textContent = score?.avg_dividends ? (score.avg_dividends * 100).toFixed(0) : '—';
 
-    // Opportunity signals sidebar
-    document.getElementById('signalDetails').innerHTML = [
-      ['Flow Momentum',     score?.flow_signal,                  'flow_signal'],
-      ['Price vs EMA',      score?.price_vs_ema_signal,          'price_vs_ema_signal'],
-      ['Vs Network Avg',    score?.vs_network_signal,            'vs_network_signal'],
-      ['Emission Velocity', score?.emission_velocity_signal,     'emission_velocity_signal'],
-    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
+    // Helper for raw signal display (0-1 → 0-100)
+    function fmtSig(val) {
+      if (val === null || val === undefined) return '—';
+      return (val * 100).toFixed(0);
+    }
 
-    // Quality signals sidebar
-    document.getElementById('qualityDetails').innerHTML = [
-      ['Em. Stability',      qual?.emission_stability_signal,  'emission_stability_signal'],
-      ['Flow Persistence',   qual?.flow_persistence_signal,    'flow_persistence_signal'],
-      ['Rank Consistency',   qual?.rank_consistency_signal,    'rank_consistency_signal'],
-      ['Validator Retention',qual?.validator_retention_signal, 'validator_retention_signal'],
-    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
+    // Stability signals sidebar
+    document.getElementById('stabilityDetails').innerHTML = [
+      ['Em vs Network',    fmtSig(score?.emission_vs_network)],
+      ['Rank Consistency', fmtSig(score?.rank_consistency)],
+      ['Em Stability',     fmtSig(score?.emission_stability)],
+      ['Factor Score',     score?.stability_score?.toFixed(1) || '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
 
-    // Momentum signals sidebar
-    document.getElementById('momentumDetails').innerHTML = [
-      ['Emission (30d)',    mom?.emission_momentum    || score?.emission_momentum,   'emission_momentum'],
-      ['Inflow (14d)',      mom?.inflow_momentum      || score?.inflow_momentum,     'inflow_momentum'],
-      ['Price (14d)',       mom?.price_momentum       || score?.price_momentum,      'price_momentum'],
-      ['Alpha Ratio (14d)', mom?.alpha_ratio_momentum || score?.alpha_ratio_momentum,'alpha_ratio_momentum'],
-      ['TAO Staked (30d)',  mom?.tao_staked_momentum,                                'tao_staked_momentum'],
-    ].map(([k,v,t])=>`<div class="info-row"><span class="info-key">${k}</span>${badge(v||'UNKNOWN',t,sd)}</div>`).join('');
+    // Yield signals sidebar
+    document.getElementById('yieldDetails').innerHTML = [
+      ['Avg Dividends',    fmtSig(score?.avg_dividends)],
+      ['Factor Score',     score?.yield_score?.toFixed(1) || '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Consensus signals sidebar
+    document.getElementById('consensusDetails').innerHTML = [
+      ['Wt Conc Trend',    fmtSig(score?.weight_concentration_trend)],
+      ['Wt Conc Delta',    fmtSig(score?.weight_conc_delta)],
+      ['Factor Score',     score?.consensus_score?.toFixed(1) || '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Flow signals sidebar
+    document.getElementById('flowFactorDetails').innerHTML = [
+      ['Em Velocity',      fmtSig(score?.emission_velocity)],
+      ['Inflow Momentum',  fmtSig(score?.inflow_momentum)],
+      ['Factor Score',     score?.flow_score?.toFixed(1) || '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Conviction signals sidebar
+    document.getElementById('convictionDetails').innerHTML = [
+      ['Avg Val Trust',    fmtSig(score?.avg_validator_trust)],
+      ['Active Val Delta', fmtSig(score?.n_active_delta)],
+      ['Factor Score',     score?.conviction_score?.toFixed(1) || '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
 
     // Chain data sidebar
     document.getElementById('chainInfo').innerHTML = [
@@ -813,6 +946,36 @@ async function loadData() {
       ['Age',     ageDays?ageDays+' days post-dTAO':'—'],
       ['Block',   block?block.toLocaleString():'—'],
     ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Liquidity sidebar
+    const taoPool = live?.tao_in || 0;
+    const alphaPool = live?.alpha_in || 0;
+    let liqTier = 'ILLIQUID', liqClass = 'b-red';
+    if (taoPool >= 50000) { liqTier = 'DEEP'; liqClass = 'b-green'; }
+    else if (taoPool >= 10000) { liqTier = 'ADEQUATE'; liqClass = 'b-cyan'; }
+    else if (taoPool >= 1000) { liqTier = 'THIN'; liqClass = 'b-yellow'; }
+    else if (taoPool >= 100) { liqTier = 'VERY THIN'; liqClass = 'b-orange'; }
+
+    const max1 = taoPool > 0 ? (taoPool * 0.01 / 0.99) : 0;
+    const max2 = taoPool > 0 ? (taoPool * 0.02 / 0.98) : 0;
+    const max5 = taoPool > 0 ? (taoPool * 0.05 / 0.95) : 0;
+
+    document.getElementById('liquidityInfo').innerHTML = [
+      ['Tier', `<span class="badge ${liqClass}"><span class="badge-dot"></span>${liqTier}</span>`],
+      ['TAO Reserve', taoPool ? taoPool.toLocaleString(undefined,{maximumFractionDigits:0}) + ' TAO' : '—'],
+      ['Alpha Reserve', alphaPool ? alphaPool.toLocaleString(undefined,{maximumFractionDigits:0}) + ' α' : '—'],
+      ['Max @1% slip', max1 ? max1.toFixed(0) + ' TAO' : '—'],
+      ['Max @2% slip', max2 ? max2.toFixed(0) + ' TAO' : '—'],
+    ].map(([k,v])=>`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('');
+
+    // Store for position calculator
+    window._liqData = {
+      taoReserve: taoPool,
+      alphaReserve: alphaPool,
+      emissionSharePct: parseFloat(emShare),
+      networkEmissionPerDay: totalEm * 7200, // blocks per day
+    };
+    updatePositionCalc();
 
     await loadChainHistory();
 

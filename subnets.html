@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAO Signal — Subnet Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #050709;
+    --surface:   #0a0e12;
+    --surface2:  #0f1419;
+    --border:    #1a2230;
+    --border2:   #243040;
+    --text:      #c8d8e8;
+    --muted:     #445566;
+    --dim:       #2a3a4a;
+    --cyan:      #00d4ff;
+    --cyan-dim:  rgba(0,212,255,0.08);
+    --green:     #00ff88;
+    --green-dim: rgba(0,255,136,0.08);
+    --yellow:    #ffd000;
+    --yellow-dim:rgba(255,208,0,0.08);
+    --orange:    #ff8800;
+    --orange-dim:rgba(255,136,0,0.08);
+    --red:       #ff3355;
+    --red-dim:   rgba(255,51,85,0.08);
+    --purple:    #9966ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.5; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
+
+  /* ── TOPBAR ─────────────────────────────────────────────── */
+  .topbar { border-bottom:1px solid var(--border); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:200; }
+  .topbar-left { display:flex; align-items:center; gap:0; }
+  .logo-canvas { display:block; cursor:default; margin-right:8px; }
+
+  /* Page-level nav tabs */
+  .nav-tabs { display:flex; height:48px; }
+  .nav-tab { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0 18px; height:48px; display:flex; align-items:center; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap; }
+  .nav-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+  .nav-tab:hover:not(.disabled) { color:var(--text); }
+  .nav-tab.disabled { color:var(--dim); cursor:not-allowed; position:relative; }
+  .nav-tab.disabled:hover .nav-tooltip { display:block; }
+  .nav-tooltip { display:none; position:absolute; top:52px; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--border2); padding:5px 10px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); white-space:nowrap; z-index:300; pointer-events:none; }
+
+  /* Topbar right */
+  .topbar-right { display:flex; align-items:center; gap:16px; }
+  .last-updated { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+  .last-updated strong { color:var(--text); }
+  .live-indicator { display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--green); }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── STATS ROW ──────────────────────────────────────────── */
+  .stats-row { display:grid; grid-template-columns:repeat(8,1fr); border-bottom:1px solid var(--border); background:var(--surface); }
+  .stat-cell { padding:12px 16px; border-right:1px solid var(--border); }
+  .stat-cell:last-child { border-right:none; }
+  .stat-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .stat-value { font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; letter-spacing:-0.02em; line-height:1; }
+  .stat-sub { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
+  .c-cyan{color:var(--cyan)} .c-green{color:var(--green)} .c-yellow{color:var(--yellow)}
+  .c-red{color:var(--red)} .c-purple{color:var(--purple)} .c-orange{color:var(--orange)}
+
+  /* ── LAYOUT ─────────────────────────────────────────────── */
+  .main { padding:20px; display:flex; flex-direction:column; gap:20px; }
+
+  /* ── FILTERS ────────────────────────────────────────────── */
+  .table-controls { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px; }
+  .filter-row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .filter-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .filter-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; background:transparent; border:1px solid var(--border2); color:var(--muted); padding:4px 10px; cursor:pointer; transition:all 0.15s; }
+  .filter-btn:hover,.filter-btn.active { border-color:var(--cyan); color:var(--cyan); }
+
+  /* ── TABLE ──────────────────────────────────────────────── */
+  .table-wrap { border:1px solid var(--border); overflow-x:auto; background:var(--surface); }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:var(--surface2); border-bottom:1px solid var(--border2); }
+  th { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:10px 12px; text-align:left; white-space:nowrap; font-weight:400; cursor:pointer; user-select:none; transition:color 0.15s; }
+  th:hover:not(.no-sort) { color:var(--text); }
+  th.sorted { color:var(--cyan); }
+  th.no-sort { cursor:default; }
+  th.no-sort:hover { color:var(--muted); }
+  tbody tr { border-bottom:1px solid rgba(26,34,48,0.8); transition:background 0.1s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(0,212,255,0.03); }
+  td { padding:10px 12px; white-space:nowrap; vertical-align:middle; }
+  .td-rank { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); width:32px; }
+  .td-netuid { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); width:40px; }
+  .td-name { font-weight:600; font-size:13px; color:var(--text); min-width:140px; }
+  .td-mono { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+
+  /* ── BADGE ──────────────────────────────────────────────── */
+  .badge { display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; padding:3px 7px; border:1px solid; font-weight:500; white-space:nowrap; cursor:default; }
+  .badge-dot { width:4px; height:4px; border-radius:50%; background:currentColor; flex-shrink:0; }
+  .sig-green  { color:var(--green);  border-color:var(--green);  background:var(--green-dim); }
+  .sig-cyan   { color:var(--cyan);   border-color:var(--cyan);   background:var(--cyan-dim); }
+  .sig-yellow { color:var(--yellow); border-color:var(--yellow); background:var(--yellow-dim); }
+  .sig-orange { color:var(--orange); border-color:var(--orange); background:var(--orange-dim); }
+  .sig-red    { color:var(--red);    border-color:var(--red);    background:var(--red-dim); }
+  .sig-muted  { color:var(--muted);  border-color:var(--border2);background:transparent; }
+
+  /* ── SECTION HEADER ─────────────────────────────────────── */
+  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .section-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text); font-weight:500; white-space:nowrap; }
+  .section-line { flex:1; height:1px; background:var(--border); }
+  .section-badge { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; padding:3px 8px; border:1px solid var(--border2); color:var(--muted); text-transform:uppercase; white-space:nowrap; }
+  .section-badge.chain { border-color:var(--green); color:var(--green); }
+
+  .state-msg { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); padding:48px; text-align:center; }
+  .state-msg.error { color:var(--red); }
+  ::-webkit-scrollbar{width:6px;height:6px} ::-webkit-scrollbar-track{background:var(--surface)} ::-webkit-scrollbar-thumb{background:var(--border2)}
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ──────────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <canvas id="logo-canvas" class="logo-canvas" width="280" height="48"></canvas>
+    <nav class="nav-tabs">
+      <a class="nav-tab active" href="subnets.html">Subnets</a>
+      <a class="nav-tab" href="signals.html">Signals</a>
+      <a class="nav-tab" href="performance.html">Performance</a>
+      <a class="nav-tab disabled" href="#" onclick="return false;">
+        Portfolio
+        <span class="nav-tooltip">Coming soon</span>
+      </a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <div class="live-indicator"><div class="live-dot"></div>CHAIN NATIVE</div>
+    <div class="last-updated" id="lastUpdated">—</div>
+  </div>
+</div>
+
+<!-- ── STATS ROW ───────────────────────────────────────────── -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-label">Active Subnets</div>
+    <div class="stat-value c-cyan" id="statActive">—</div>
+    <div class="stat-sub">with emission &gt; 0</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Total TAO Staked</div>
+    <div class="stat-value c-green" id="statTaoStaked">—</div>
+    <div class="stat-sub">across all subnets</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Network Emission</div>
+    <div class="stat-value c-yellow" id="statEmission" style="font-size:16px">—</div>
+    <div class="stat-sub">TAO/block</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Deep Liquidity</div>
+    <div class="stat-value c-green" id="statDeep">—</div>
+    <div class="stat-sub">&ge; 50,000 TAO staked</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Adequate Liquidity</div>
+    <div class="stat-value c-cyan" id="statAdequate">—</div>
+    <div class="stat-sub">&ge; 10,000 TAO staked</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Thin Liquidity</div>
+    <div class="stat-value c-yellow" id="statThin">—</div>
+    <div class="stat-sub">&ge; 1,000 TAO staked</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Current Block</div>
+    <div class="stat-value c-purple" id="statBlock" style="font-size:14px">—</div>
+    <div class="stat-sub">direct from chain</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Last Updated</div>
+    <div class="stat-value" id="statUpdated" style="font-size:12px;color:var(--muted)">—</div>
+    <div class="stat-sub">chain data snapshot</div>
+  </div>
+</div>
+
+<!-- ── MAIN ────────────────────────────────────────────────── -->
+<div class="main">
+  <div class="fade-in">
+    <div class="section-header">
+      <div class="section-title">Subnet Explorer</div>
+      <div class="section-line"></div>
+      <div class="section-badge chain">On-chain data</div>
+    </div>
+
+    <!-- Search + Filter row -->
+    <div class="table-controls">
+      <div class="filter-row">
+        <input id="searchInput" type="text" placeholder="Search subnets..." oninput="rebuildTable()" style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:5px 12px;width:180px;transition:border-color 0.15s;outline:none" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border2)'">
+        <span class="filter-label" style="margin-left:8px">Filter:</span>
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('deep',this)">Deep Liquidity</button>
+        <button class="filter-btn" onclick="setFilter('inflow',this)">Positive Inflow</button>
+        <button class="filter-btn" onclick="setFilter('active',this)">Active Emission</button>
+      </div>
+      <button style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;background:transparent;border:1px solid var(--border2);color:var(--muted);padding:5px 12px;cursor:pointer;text-transform:uppercase;transition:all 0.15s" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'" onclick="loadData()">&#8635; Refresh</button>
+    </div>
+
+    <div class="table-wrap" id="mainTable"><div class="state-msg">Loading...</div></div>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<div style="border-top:1px solid var(--border);padding:20px;background:var(--surface)">
+  <div style="max-width:1600px;margin:0 auto;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
+    <strong style="color:var(--text)">DISCLAIMER:</strong> TAO Signal provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice, investment advice, or any other form of advice. Past performance is not indicative of future results. Cryptocurrency markets are highly volatile and involve significant risk. Always conduct your own research and consult a qualified financial advisor before making investment decisions.
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────
+let allSubnets    = [];
+let currentFilter = 'all';
+let sortField     = 'emission_share_pct';
+let sortDir       = -1;
+
+// ── FILTER ────────────────────────────────────────────────
+function applyFilter(subnets) {
+  switch(currentFilter) {
+    case 'deep':   return subnets.filter(s => (s.tao_in || 0) >= 50000);
+    case 'inflow': return subnets.filter(s => (s.ema_tao_inflow || 0) > 0);
+    case 'active': return subnets.filter(s => (s.emission_share_pct || 0) > 0);
+    default:       return subnets;
+  }
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rebuildTable();
+}
+
+// ── SORT ──────────────────────────────────────────────────
+function handleSort(field, thEl) {
+  sortDir   = sortField === field ? sortDir * -1 : -1;
+  sortField = field;
+  document.querySelectorAll('#mainTable th').forEach(t => {
+    t.classList.remove('sorted');
+    t.textContent = t.textContent.replace(' \u2193','').replace(' \u2191','');
+  });
+  thEl.classList.add('sorted');
+  thEl.textContent += sortDir === -1 ? ' \u2193' : ' \u2191';
+  rebuildTable();
+}
+
+function applySearch(subnets) {
+  const q = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+  if (!q) return subnets;
+  return subnets.filter(s =>
+    (s.name || '').toLowerCase().includes(q) ||
+    (s.symbol || '').toLowerCase().includes(q) ||
+    String(s.netuid) === q ||
+    ('sn' + s.netuid) === q
+  );
+}
+
+function getSorted() {
+  let subnets = applySearch(applyFilter(allSubnets));
+  return [...subnets].sort((a, b) => {
+    const av = a[sortField] ?? 0;
+    const bv = b[sortField] ?? 0;
+    return sortDir === -1 ? (bv - av) : (av - bv);
+  });
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function fmtPrice(val) {
+  if (val === null || val === undefined) return '\u2014';
+  return val.toFixed(6);
+}
+
+function fmtPriceVsEma(val) {
+  if (val === null || val === undefined) return '\u2014';
+  const pct = ((val - 1) * 100).toFixed(1);
+  const sign = pct >= 0 ? '+' : '';
+  return sign + pct + '%';
+}
+
+function fmtComma(val) {
+  if (val === null || val === undefined) return '\u2014';
+  return Math.round(val).toLocaleString();
+}
+
+function fmtInflow(val) {
+  if (val === null || val === undefined) return '\u2014';
+  const sign = val >= 0 ? '+' : '';
+  if (Math.abs(val) >= 1)     return sign + val.toFixed(2);
+  if (Math.abs(val) >= 0.001) return sign + val.toFixed(4);
+  return sign + val.toFixed(6);
+}
+
+function fmtVolume(val) {
+  if (val === null || val === undefined) return '\u2014';
+  if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M';
+  if (val >= 1000)    return (val / 1000).toFixed(1) + 'K';
+  return Math.round(val).toLocaleString();
+}
+
+function liquidityTier(taoIn) {
+  if (taoIn >= 50000) return { label: 'DEEP',      cls: 'sig-green' };
+  if (taoIn >= 10000) return { label: 'ADEQUATE',   cls: 'sig-cyan' };
+  if (taoIn >= 1000)  return { label: 'THIN',       cls: 'sig-yellow' };
+  if (taoIn >= 100)   return { label: 'VERY THIN',  cls: 'sig-orange' };
+  return               { label: 'ILLIQUID',   cls: 'sig-red' };
+}
+
+function nameLink(s) {
+  return '<a href="subnet.html?id=' + s.netuid + '" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">' + escHtml(s.name) + '</a>';
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ── TABLE HEADERS ─────────────────────────────────────────
+function th(label, field) {
+  const sorted = sortField === field;
+  const arrow  = sorted ? (sortDir === -1 ? ' \u2193' : ' \u2191') : '';
+  return '<th class="' + (sorted ? 'sorted' : '') + '" onclick="handleSort(\'' + field + '\',this)">' + label + arrow + '</th>';
+}
+function thN(label) { return '<th class="no-sort">' + label + '</th>'; }
+
+// ── RENDER ────────────────────────────────────────────────
+function buildTable(subnets) {
+  if (!subnets.length) return '<div class="state-msg">No subnets match this filter</div>';
+
+  let html = '<table><thead><tr>';
+  html += thN('#');
+  html += thN('SN');
+  html += thN('Name');
+  html += th('Price', 'alpha_price_tao');
+  html += th('Price vs EMA', 'price_vs_ema');
+  html += th('Emission %', 'emission_share_pct');
+  html += th('TAO Staked', 'tao_in');
+  html += th('EMA Inflow', 'ema_tao_inflow');
+  html += th('Volume', 'subnet_volume');
+  html += th('Nodes', 'miners');
+  html += th('Liquidity', 'tao_in_liq');
+  html += '</tr></thead><tbody>';
+
+  subnets.forEach(function(s, i) {
+    const pveColor = (s.price_vs_ema || 1) <= 1.0 ? 'var(--green)' : 'var(--red)';
+    const inflowColor = (s.ema_tao_inflow || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+    const tier = liquidityTier(s.tao_in || 0);
+
+    html += '<tr>';
+    html += '<td class="td-rank">' + (i + 1) + '</td>';
+    html += '<td class="td-netuid">' + s.netuid + '</td>';
+    html += '<td class="td-name">' + nameLink(s) + '</td>';
+    html += '<td class="td-mono" style="color:var(--text)">' + fmtPrice(s.alpha_price_tao) + ' <span style="color:var(--muted);font-size:9px">\u03c4</span></td>';
+    html += '<td class="td-mono" style="color:' + pveColor + '">' + fmtPriceVsEma(s.price_vs_ema) + '</td>';
+    html += '<td class="td-mono" style="color:var(--yellow)">' + (s.emission_share_pct || 0).toFixed(3) + '%</td>';
+    html += '<td class="td-mono" style="color:var(--cyan)">' + fmtComma(s.tao_in) + '</td>';
+    html += '<td class="td-mono" style="color:' + inflowColor + '">' + fmtInflow(s.ema_tao_inflow) + ' \u03c4</td>';
+    html += '<td class="td-mono" style="color:var(--text)">' + fmtVolume(s.subnet_volume) + '</td>';
+    html += '<td class="td-mono" style="color:var(--text)">' + (s.miners || '\u2014') + '</td>';
+    html += '<td><span class="badge ' + tier.cls + '"><span class="badge-dot"></span>' + tier.label + '</span></td>';
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  return html;
+}
+
+function rebuildTable() {
+  document.getElementById('mainTable').innerHTML = buildTable(getSorted());
+}
+
+// ── DATA LOAD ──────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch('data/chain_data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('Could not load chain data');
+    const chain = await res.json();
+
+    // Add a synthetic field for liquidity sorting (same as tao_in but used for the Liquidity column)
+    allSubnets = (chain.subnets || []).map(function(s) {
+      return Object.assign({}, s, { tao_in_liq: s.tao_in || 0 });
+    });
+
+    // Stats
+    var activeCount   = allSubnets.filter(function(s) { return (s.emission_share_pct || 0) > 0; }).length;
+    var totalTao      = allSubnets.reduce(function(sum, s) { return sum + (s.tao_in || 0); }, 0);
+    var deepCount     = allSubnets.filter(function(s) { return (s.tao_in || 0) >= 50000; }).length;
+    var adequateCount = allSubnets.filter(function(s) { var t = s.tao_in || 0; return t >= 10000 && t < 50000; }).length;
+    var thinCount     = allSubnets.filter(function(s) { var t = s.tao_in || 0; return t >= 1000 && t < 10000; }).length;
+
+    document.getElementById('statActive').textContent    = activeCount;
+    document.getElementById('statTaoStaked').textContent  = Math.round(totalTao).toLocaleString();
+    document.getElementById('statEmission').textContent   = chain.total_emission_tao ? chain.total_emission_tao.toFixed(4) : '\u2014';
+    document.getElementById('statDeep').textContent       = deepCount;
+    document.getElementById('statAdequate').textContent   = adequateCount;
+    document.getElementById('statThin').textContent       = thinCount;
+    document.getElementById('statBlock').textContent      = chain.block ? chain.block.toLocaleString() : '\u2014';
+    document.getElementById('statUpdated').textContent    = chain.generated_at || '\u2014';
+    document.getElementById('lastUpdated').innerHTML      = 'Updated: <strong>' + (chain.generated_at || '\u2014') + '</strong>';
+
+    rebuildTable();
+
+  } catch(e) {
+    document.getElementById('mainTable').innerHTML = '<div class="state-msg error">\u26a0 ' + e.message + '</div>';
+    document.getElementById('lastUpdated').textContent = 'Error loading data';
+  }
+}
+
+loadData();
+</script>
+
+<!-- ── TAO SIGNAL LOGO v3 ────────────────────────────────── -->
+<script>
+(function() {
+  var canvas = document.getElementById('logo-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width;
+  var H = canvas.height;
+
+  var FONT          = '700 24px "IBM Plex Mono"';
+  var LETTER_COLOR  = '#c8d8e8';
+  var FREQ          = 0.028;
+
+  function drawLogo() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.font = FONT;
+    var taoW = ctx.measureText('TAO').width;
+    var sigW = ctx.measureText('SIGNAL').width;
+    var gap   = 10;
+    var taoX  = Math.round((W - taoW - gap - sigW) / 2);
+    var sigX  = taoX + taoW + gap;
+    var bl    = Math.round(H * 0.72);
+    var mid   = H * 0.50;
+    var waveX0 = taoX - 8;
+    var waveX1 = sigX + sigW + 8;
+
+    var wT=ctx.measureText('T').width, wA=ctx.measureText('A').width, wO=ctx.measureText('O').width;
+    var wS=ctx.measureText('S').width, wI=ctx.measureText('I').width, wG=ctx.measureText('G').width;
+    var wN=ctx.measureText('N').width, wA2=ctx.measureText('A').width, wL=ctx.measureText('L').width;
+    var xT=taoX, xA=taoX+wT, xO=taoX+wT+wA;
+    var xS=sigX, xG=sigX+wS+wI;
+    var xN=sigX+wS+wI+wG, xA2=sigX+wS+wI+wG+wN, xL=sigX+wS+wI+wG+wN+wA2;
+    var oCx = xO + wO*0.5;
+    var aCx = xA2 + wA2*0.5;
+
+    var phase = -oCx * FREQ + 0.25;
+
+    var pts = [];
+    for (var x = waveX0; x <= waveX1; x++) {
+      var t    = (x - waveX0) / (waveX1 - waveX0);
+      var fade = Math.min(t*10, 1) * Math.min((1-t)*10, 1);
+      var mp   = (oCx + aCx) / 2;
+      var swell = 5.5 * Math.exp(-Math.pow((x - mp) / ((aCx - oCx) * 0.45), 2));
+      var amp  = (1.8 + swell) * fade;
+      pts.push([x, mid + Math.sin((x * FREQ + phase) * Math.PI * 2) * amp]);
+    }
+
+    // 1. Letters base
+    ctx.fillStyle = LETTER_COLOR;
+    ctx.font = FONT;
+    ctx.fillText('TAO', taoX, bl);
+    ctx.fillText('SIGNAL', sigX, bl);
+
+    // 2. Wave
+    var grad = ctx.createLinearGradient(waveX0, 0, waveX1, 0);
+    grad.addColorStop(0,    'rgba(160,100,0,0)');
+    grad.addColorStop(0.06, '#FFD000');
+    grad.addColorStop(0.45, '#FFE566');
+    grad.addColorStop(0.55, '#FFE566');
+    grad.addColorStop(0.94, '#FFD000');
+    grad.addColorStop(1,    'rgba(160,100,0,0)');
+
+    ctx.beginPath();
+    pts.forEach(function(p,i) { i===0 ? ctx.moveTo(p[0],p[1]) : ctx.lineTo(p[0],p[1]); });
+    ctx.strokeStyle = 'rgba(255,200,0,0.10)';
+    ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+
+    ctx.beginPath();
+    pts.forEach(function(p,i) { i===0 ? ctx.moveTo(p[0],p[1]) : ctx.lineTo(p[0],p[1]); });
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.5; ctx.stroke();
+
+    // 3. Redraw behind-letters over wave
+    var off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    var oc = off.getContext('2d');
+    oc.fillStyle = LETTER_COLOR; oc.font = FONT;
+    oc.fillText('TAO', taoX, bl);
+    oc.fillText('SIGNAL', sigX, bl);
+
+    [{x:xT,w:wT},{x:xA,w:wA},{x:xS,w:wS},{x:xG,w:wG},{x:xL,w:wL+2}]
+      .forEach(function(r) {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(r.x-1, 0, r.w+2, H); ctx.clip();
+        ctx.drawImage(off, 0, 0);
+        ctx.restore();
+      });
+
+    // 4. Thread through O counter
+    function thread(cx, cy, rx, ry, xFrom, xTo) {
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2); ctx.clip();
+      var seg = pts.filter(function(p) { return p[0] >= xFrom-1 && p[0] <= xTo+1; });
+      if (seg.length > 1) {
+        ctx.beginPath();
+        seg.forEach(function(p,i) { i===0 ? ctx.moveTo(p[0],p[1]) : ctx.lineTo(p[0],p[1]); });
+        ctx.strokeStyle = '#FFE566'; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.stroke();
+      }
+      ctx.restore();
+    }
+    thread(oCx, bl-11, wO*0.27, 6, xO, xO+wO);
+    thread(aCx, bl-11, wA2*0.27, 6, xA2, xA2+wA2);
+  }
+
+  document.fonts.ready.then(function() { setTimeout(drawLogo, 80); });
+})();
+</script>
+</body>
+</html>

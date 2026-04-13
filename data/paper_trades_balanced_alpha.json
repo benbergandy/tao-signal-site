@@ -1,0 +1,90 @@
+[
+  {
+    "date": "2026-04-09",
+    "type": "ENTRY",
+    "netuid": 86,
+    "name": "\u2692",
+    "tao": 17.3,
+    "slippage_pct": 0.999,
+    "entry_price": 0.00431907,
+    "sortino": 0.1408
+  },
+  {
+    "date": "2026-04-09",
+    "type": "ENTRY",
+    "netuid": 128,
+    "name": "ByteLeap",
+    "tao": 43.2,
+    "slippage_pct": 1.029,
+    "entry_price": 0.00371591,
+    "sortino": 0.0781
+  },
+  {
+    "date": "2026-04-09",
+    "type": "ENTRY",
+    "netuid": 92,
+    "name": "TensorClaw",
+    "tao": 12.8,
+    "slippage_pct": 0.998,
+    "entry_price": 0.00423013,
+    "sortino": 0.111
+  },
+  {
+    "date": "2026-04-09",
+    "type": "ENTRY",
+    "netuid": 111,
+    "name": "oneoneone",
+    "tao": 32.8,
+    "slippage_pct": 0.632,
+    "entry_price": 0.0046768,
+    "sortino": 0.126
+  },
+  {
+    "date": "2026-04-10",
+    "type": "EXIT",
+    "netuid": 111,
+    "name": "oneoneone",
+    "tao": 32.8,
+    "tao_received": 32.56,
+    "slippage_pct": 0.687,
+    "reason": "no longer scored"
+  },
+  {
+    "date": "2026-04-12",
+    "type": "ENTRY",
+    "netuid": 108,
+    "name": "TalkHead",
+    "tao": 7.5,
+    "slippage_pct": 0.491,
+    "entry_price": 0.00415907,
+    "sortino": 0.0158
+  },
+  {
+    "date": "2026-04-13",
+    "type": "ENTRY",
+    "netuid": 49,
+    "name": "Nepher Robotics",
+    "tao": 9.2,
+    "slippage_pct": 0.516,
+    "entry_price": 0.00548646,
+    "sortino": 0.0082
+  },
+  {
+    "date": "2026-04-13",
+    "type": "INCREASE",
+    "netuid": 108,
+    "name": "TalkHead",
+    "tao_added": 7.8,
+    "new_total": 15.3
+  },
+  {
+    "date": "2026-04-13",
+    "type": "EXIT",
+    "netuid": 128,
+    "name": "ByteLeap",
+    "tao": 43.2,
+    "tao_received": 42.73,
+    "slippage_pct": 1.048,
+    "reason": "no longer scored"
+  }
+]

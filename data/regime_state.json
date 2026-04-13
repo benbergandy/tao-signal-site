@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-04-13 21:06 UTC",
+  "date": "2026-04-13",
+  "regime": "NORMAL",
+  "composite_score": 0.185,
+  "indicators": {
+    "drawdown_velocity": {
+      "severity": 0.1,
+      "cum_3d_pct": 229.66,
+      "cum_7d_pct": 416.39,
+      "avg_daily_pct": 37.471
+    },
+    "correlation_spike": {
+      "severity": 0.3,
+      "recent_corr": 0.1344,
+      "baseline_corr": 0.0178,
+      "spike": 0.1166
+    },
+    "flow_direction": {
+      "severity": 0.5,
+      "avg_net_flow": -0.032,
+      "pct_negative": 57.1
+    },
+    "pool_drain": {
+      "severity": 0,
+      "avg_change_7d_pct": 3.85,
+      "pct_draining": 21.8,
+      "proj_7d_pct": 3.85
+    },
+    "breadth": {
+      "severity": 0,
+      "pct_negative": 54.3,
+      "n_negative": 38,
+      "n_total": 70
+    }
+  },
+  "adjustments": {
+    "root_stake_increase": 0.0,
+    "max_volatility_multiplier": 1.0,
+    "max_drawdown_multiplier": 1.0,
+    "min_sortino_increase": 0.0,
+    "liquidity_tier_upgrade": 0,
+    "description": "Normal conditions \u2014 portfolio runs as designed"
+  }
+}
