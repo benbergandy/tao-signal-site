@@ -324,6 +324,266 @@
       "total_value": 0.827026,
       "total_pnl_tao": -0.172974,
       "total_pnl_pct": -17.3
+    },
+    {
+      "date": "2026-04-14",
+      "balance": 0.485842,
+      "positions": {
+        "3": {
+          "name": "Templar",
+          "tokens": 1.40535,
+          "price": 0.02985122,
+          "tao_value": 0.041951,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.058049,
+          "pnl_pct": -58.05,
+          "emission": "\u200e0.066536503\u03b3\u200e",
+          "hotkey": "5HdTZQ6UXD7MWcRsMeEx..."
+        },
+        "15": {
+          "name": "ORO",
+          "tokens": 5.41459,
+          "price": 0.01466677,
+          "tao_value": 0.079415,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.020585,
+          "pnl_pct": -20.59,
+          "emission": "\u200e9.754903447\u03bf\u200e",
+          "hotkey": "5E2LP6EnZ54m3wS8s1yP..."
+        },
+        "24": {
+          "name": "Quasar",
+          "tokens": 7.722389,
+          "price": 0.01459056,
+          "tao_value": 0.112674,
+          "cost_basis": 0.1,
+          "pnl_tao": 0.012674,
+          "pnl_pct": 12.67,
+          "emission": "\u200e0.056788872\u03c9\u200e",
+          "hotkey": "5HbScNssaEfioJHXjcXd..."
+        },
+        "81": {
+          "name": "Grail",
+          "tokens": 3.796802,
+          "price": 0.0094666,
+          "tao_value": 0.035943,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.064057,
+          "pnl_pct": -64.06,
+          "emission": "\u200e0.006650671\u16a0\u200e",
+          "hotkey": "5F9uEDDovurwEJihzZSp..."
+        },
+        "105": {
+          "name": "Beam",
+          "tokens": 7.380488,
+          "price": 0.01020992,
+          "tao_value": 0.075354,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.024646,
+          "pnl_pct": -24.65,
+          "emission": "\u200e0.450876072\u0533\u200e",
+          "hotkey": "5GUHsu6g6Kwq7dX9rM7v..."
+        }
+      },
+      "total_staked_value": 0.345337,
+      "total_value": 0.831178,
+      "total_pnl_tao": -0.168822,
+      "total_pnl_pct": -16.88
+    },
+    {
+      "date": "2026-04-15",
+      "balance": 0.485842,
+      "positions": {
+        "3": {
+          "name": "Templar",
+          "tokens": 1.40535,
+          "price": 0.03009374,
+          "tao_value": 0.042292,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.057708,
+          "pnl_pct": -57.71,
+          "emission": "\u200e0.000000000\u03b3\u200e",
+          "hotkey": "5HdTZQ6UXD7MWcRsMeEx..."
+        },
+        "15": {
+          "name": "ORO",
+          "tokens": 5.436131,
+          "price": 0.01464902,
+          "tao_value": 0.079634,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.020366,
+          "pnl_pct": -20.37,
+          "emission": "\u200e9.712297142\u03bf\u200e",
+          "hotkey": "5E2LP6EnZ54m3wS8s1yP..."
+        },
+        "24": {
+          "name": "Quasar",
+          "tokens": 7.727722,
+          "price": 0.01481359,
+          "tao_value": 0.114475,
+          "cost_basis": 0.1,
+          "pnl_tao": 0.014475,
+          "pnl_pct": 14.48,
+          "emission": "\u200e0.057728801\u03c9\u200e",
+          "hotkey": "5HbScNssaEfioJHXjcXd..."
+        },
+        "81": {
+          "name": "Grail",
+          "tokens": 3.796808,
+          "price": 0.01025665,
+          "tao_value": 0.038943,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.061057,
+          "pnl_pct": -61.06,
+          "emission": "\u200e0.000532926\u16a0\u200e",
+          "hotkey": "5F9uEDDovurwEJihzZSp..."
+        },
+        "105": {
+          "name": "Beam",
+          "tokens": 7.39688,
+          "price": 0.01140488,
+          "tao_value": 0.08436,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.01564,
+          "pnl_pct": -15.64,
+          "emission": "\u200e0.348100266\u0533\u200e",
+          "hotkey": "5GUHsu6g6Kwq7dX9rM7v..."
+        }
+      },
+      "total_staked_value": 0.359705,
+      "total_value": 0.845546,
+      "total_pnl_tao": -0.154454,
+      "total_pnl_pct": -15.45
+    },
+    {
+      "date": "2026-04-16",
+      "balance": 0.485842,
+      "positions": {
+        "3": {
+          "name": "Templar",
+          "tokens": 1.40535,
+          "price": 0.02916351,
+          "tao_value": 0.040985,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.059015,
+          "pnl_pct": -59.02,
+          "emission": "\u200e0.000000000\u03b3\u200e",
+          "hotkey": "5HdTZQ6UXD7MWcRsMeEx..."
+        },
+        "15": {
+          "name": "ORO",
+          "tokens": 5.457866,
+          "price": 0.01391193,
+          "tao_value": 0.075929,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.024071,
+          "pnl_pct": -24.07,
+          "emission": "\u200e9.398784662\u03bf\u200e",
+          "hotkey": "5E2LP6EnZ54m3wS8s1yP..."
+        },
+        "24": {
+          "name": "Quasar",
+          "tokens": 7.733157,
+          "price": 0.01443787,
+          "tao_value": 0.11165,
+          "cost_basis": 0.1,
+          "pnl_tao": 0.01165,
+          "pnl_pct": 11.65,
+          "emission": "\u200e0.057854249\u03c9\u200e",
+          "hotkey": "5HbScNssaEfioJHXjcXd..."
+        },
+        "81": {
+          "name": "Grail",
+          "tokens": 3.796808,
+          "price": 0.0101417,
+          "tao_value": 0.038506,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.061494,
+          "pnl_pct": -61.49,
+          "emission": "\u200e0.000000000\u16a0\u200e",
+          "hotkey": "5F9uEDDovurwEJihzZSp..."
+        },
+        "105": {
+          "name": "Beam",
+          "tokens": 7.412953,
+          "price": 0.01105722,
+          "tao_value": 0.081967,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.018033,
+          "pnl_pct": -18.03,
+          "emission": "\u200e0.292026645\u0533\u200e",
+          "hotkey": "5GUHsu6g6Kwq7dX9rM7v..."
+        }
+      },
+      "total_staked_value": 0.349037,
+      "total_value": 0.834879,
+      "total_pnl_tao": -0.165121,
+      "total_pnl_pct": -16.51
+    },
+    {
+      "date": "2026-04-17",
+      "balance": 0.485842,
+      "positions": {
+        "3": {
+          "name": "Templar",
+          "tokens": 1.40535,
+          "price": 0.02642078,
+          "tao_value": 0.03713,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.06287,
+          "pnl_pct": -62.87,
+          "emission": "\u200e0.000000000\u03b3\u200e",
+          "hotkey": "5HdTZQ6UXD7MWcRsMeEx..."
+        },
+        "15": {
+          "name": "ORO",
+          "tokens": 5.480453,
+          "price": 0.01367343,
+          "tao_value": 0.074937,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.025063,
+          "pnl_pct": -25.06,
+          "emission": "\u200e10.006852443\u03bf\u200e",
+          "hotkey": "5E2LP6EnZ54m3wS8s1yP..."
+        },
+        "24": {
+          "name": "Quasar",
+          "tokens": 7.73852,
+          "price": 0.01431724,
+          "tao_value": 0.110794,
+          "cost_basis": 0.1,
+          "pnl_tao": 0.010794,
+          "pnl_pct": 10.79,
+          "emission": "\u200e0.058714328\u03c9\u200e",
+          "hotkey": "5HbScNssaEfioJHXjcXd..."
+        },
+        "81": {
+          "name": "Grail",
+          "tokens": 3.796808,
+          "price": 0.00960507,
+          "tao_value": 0.036469,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.063531,
+          "pnl_pct": -63.53,
+          "emission": "\u200e0.000000000\u16a0\u200e",
+          "hotkey": "5F9uEDDovurwEJihzZSp..."
+        },
+        "105": {
+          "name": "Beam",
+          "tokens": 7.430585,
+          "price": 0.01062377,
+          "tao_value": 0.078941,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.021059,
+          "pnl_pct": -21.06,
+          "emission": "\u200e0.317364918\u0533\u200e",
+          "hotkey": "5GUHsu6g6Kwq7dX9rM7v..."
+        }
+      },
+      "total_staked_value": 0.338271,
+      "total_value": 0.824112,
+      "total_pnl_tao": -0.175888,
+      "total_pnl_pct": -17.59
     }
   ],
   "initial_date": "2026-04-07"

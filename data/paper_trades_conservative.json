@@ -57,5 +57,24 @@
     "tao_received": 47.87,
     "slippage_pct": 0.214,
     "reason": "no longer scored"
+  },
+  {
+    "date": "2026-04-17",
+    "type": "ENTRY",
+    "netuid": 66,
+    "name": "ninja",
+    "tao": 48.0,
+    "slippage_pct": 0.333,
+    "entry_price": 0.01640471,
+    "sortino": 4.5709
+  },
+  {
+    "date": "2026-04-17",
+    "type": "DECREASE",
+    "netuid": 28,
+    "name": "gm",
+    "tao_removed": 32.8,
+    "new_total": 11.3,
+    "slippage_pct": 0.245
   }
 ]

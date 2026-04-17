@@ -594,5 +594,219 @@
     "tao_received": 101.23,
     "slippage_pct": 0.7048,
     "reason": "governance flags=3 (top1=85% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-14",
+    "type": "EXIT",
+    "netuid": 68,
+    "name": "NOVA",
+    "tao": 40.9,
+    "tao_received": 40.83,
+    "slippage_pct": 0.115,
+    "reason": "no longer scored"
+  },
+  {
+    "date": "2026-04-14",
+    "type": "ENTRY",
+    "netuid": 66,
+    "name": "ninja",
+    "tao": 102.0,
+    "slippage_pct": 0.706,
+    "entry_price": 0.01701281,
+    "sortino": 7.3382
+  },
+  {
+    "date": "2026-04-15",
+    "type": "ENTRY",
+    "netuid": 114,
+    "name": "SOMA",
+    "tao": 4.4,
+    "slippage_pct": 0.345,
+    "entry_price": 0.00919809,
+    "sortino": 0.2882
+  },
+  {
+    "date": "2026-04-15",
+    "type": "ENTRY",
+    "netuid": 116,
+    "name": "TaoLend",
+    "tao": 4.0,
+    "slippage_pct": 0.122,
+    "entry_price": 0.00363869,
+    "sortino": 0.2619
+  },
+  {
+    "date": "2026-04-15",
+    "type": "ENTRY",
+    "netuid": 29,
+    "name": "Coldint",
+    "tao": 2.0,
+    "slippage_pct": 0.011,
+    "entry_price": 0.01394722,
+    "sortino": 0.1269
+  },
+  {
+    "date": "2026-04-15",
+    "type": "ENTRY",
+    "netuid": 108,
+    "name": "TalkHead",
+    "tao": 1.8,
+    "slippage_pct": 0.113,
+    "entry_price": 0.00428848,
+    "sortino": 0.1163
+  },
+  {
+    "date": "2026-04-15",
+    "type": "DECREASE",
+    "netuid": 17,
+    "name": "404\u2014GEN",
+    "tao_removed": 59.7,
+    "new_total": 25.5,
+    "slippage_pct": 0.195
+  },
+  {
+    "date": "2026-04-15",
+    "type": "DECREASE",
+    "netuid": 24,
+    "name": "Quasar",
+    "tao_removed": 46.8,
+    "new_total": 9.2,
+    "slippage_pct": 0.307
+  },
+  {
+    "date": "2026-04-16",
+    "type": "ENTRY",
+    "netuid": 97,
+    "name": "distil",
+    "tao": 20.0,
+    "slippage_pct": 0.961,
+    "entry_price": 0.06685256,
+    "sortino": 5.3296
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 28,
+    "name": "gm",
+    "tao_removed": 17.0,
+    "new_total": 34.9,
+    "slippage_pct": 0.126
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 95,
+    "name": "nion",
+    "tao_removed": 6.4,
+    "new_total": 8.8,
+    "slippage_pct": 0.045
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 104,
+    "name": "for sale (burn to uid1)",
+    "tao_removed": 14.9,
+    "new_total": 6.0,
+    "slippage_pct": 0.256
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 113,
+    "name": "TensorUSD",
+    "tao_removed": 9.9,
+    "new_total": 4.7,
+    "slippage_pct": 0.584
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 124,
+    "name": "Swarm",
+    "tao_removed": 10.5,
+    "new_total": 3.7,
+    "slippage_pct": 0.122
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 93,
+    "name": "Bitcast",
+    "tao_removed": 12.9,
+    "new_total": 3.3,
+    "slippage_pct": 0.06
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 105,
+    "name": "Beam",
+    "tao_removed": 28.4,
+    "new_total": 3.3,
+    "slippage_pct": 0.84
+  },
+  {
+    "date": "2026-04-17",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.0,
+    "tao_received": 19.79,
+    "slippage_pct": 0.9852,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-17",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.0,
+    "tao_received": 19.79,
+    "slippage_pct": 0.9852,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-17",
+    "type": "ENTRY",
+    "netuid": 97,
+    "name": "distil",
+    "tao": 20.8,
+    "slippage_pct": 1.024,
+    "entry_price": 0.05644127,
+    "sortino": 4.636
+  },
+  {
+    "date": "2026-04-17",
+    "type": "INCREASE",
+    "netuid": 17,
+    "name": "404\u2014GEN",
+    "tao_added": 8.5,
+    "new_total": 34.0
+  },
+  {
+    "date": "2026-04-17",
+    "type": "DECREASE",
+    "netuid": 28,
+    "name": "gm",
+    "tao_removed": 11.3,
+    "new_total": 23.6,
+    "slippage_pct": 0.085
+  },
+  {
+    "date": "2026-04-17",
+    "type": "INCREASE",
+    "netuid": 24,
+    "name": "Quasar",
+    "tao_added": 5.4,
+    "new_total": 14.6
+  },
+  {
+    "date": "2026-04-17",
+    "type": "INCREASE",
+    "netuid": 114,
+    "name": "SOMA",
+    "tao_added": 6.8,
+    "new_total": 11.2
   }
 ]

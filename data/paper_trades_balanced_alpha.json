@@ -86,5 +86,42 @@
     "tao_received": 42.73,
     "slippage_pct": 1.048,
     "reason": "no longer scored"
+  },
+  {
+    "date": "2026-04-14",
+    "type": "ENTRY",
+    "netuid": 116,
+    "name": "TaoLend",
+    "tao": 32.6,
+    "slippage_pct": 0.991,
+    "entry_price": 0.00361347,
+    "sortino": 0.2206
+  },
+  {
+    "date": "2026-04-15",
+    "type": "ENTRY",
+    "netuid": 90,
+    "name": "ogham",
+    "tao": 7.9,
+    "slippage_pct": 0.496,
+    "entry_price": 0.0044672,
+    "sortino": 0.0164
+  },
+  {
+    "date": "2026-04-15",
+    "type": "INCREASE",
+    "netuid": 49,
+    "name": "Nepher Robotics",
+    "tao_added": 9.8,
+    "new_total": 19.0
+  },
+  {
+    "date": "2026-04-16",
+    "type": "DECREASE",
+    "netuid": 86,
+    "name": "\u2692",
+    "tao_removed": 8.5,
+    "new_total": 8.8,
+    "slippage_pct": 0.489
   }
 ]

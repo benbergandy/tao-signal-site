@@ -3,13 +3,13 @@
   "total_tao": 1000,
   "positions": {
     "86": {
-      "tao": 17.3,
+      "tao": 8.8,
       "entry_date": "2026-04-09",
       "entry_price": 0.00431907,
       "name": "\u2692",
       "alpha_tokens_at_entry": 4005.4919,
-      "accumulated_emission_tokens": 25.0533,
-      "accumulated_emission_tao": 0.103818,
+      "accumulated_emission_tokens": 37.439,
+      "accumulated_emission_tao": 0.153842,
       "cost_basis_tao": 17.3
     },
     "92": {
@@ -18,8 +18,8 @@
       "entry_price": 0.00423013,
       "name": "TensorClaw",
       "alpha_tokens_at_entry": 3025.9117,
-      "accumulated_emission_tokens": 26.9659,
-      "accumulated_emission_tao": 0.111301,
+      "accumulated_emission_tokens": 44.8888,
+      "accumulated_emission_tao": 0.183337,
       "cost_basis_tao": 12.8
     },
     "108": {
@@ -28,25 +28,45 @@
       "entry_price": 0.00415907,
       "name": "TalkHead",
       "alpha_tokens_at_entry": 1803.2878,
-      "accumulated_emission_tokens": 13.9773,
-      "accumulated_emission_tao": 0.057348,
+      "accumulated_emission_tokens": 32.2648,
+      "accumulated_emission_tao": 0.135235,
       "cost_basis_tao": 7.5
     },
     "49": {
-      "tao": 9.2,
+      "tao": 19.0,
       "entry_date": "2026-04-13",
       "entry_price": 0.00548646,
       "name": "Nepher Robotics",
       "alpha_tokens_at_entry": 1676.8554,
-      "accumulated_emission_tokens": 3.3049,
-      "accumulated_emission_tao": 0.018613,
+      "accumulated_emission_tokens": 13.985,
+      "accumulated_emission_tao": 0.08038,
       "cost_basis_tao": 9.2
+    },
+    "116": {
+      "tao": 32.6,
+      "entry_date": "2026-04-14",
+      "entry_price": 0.00361347,
+      "name": "TaoLend",
+      "alpha_tokens_at_entry": 9021.799,
+      "accumulated_emission_tokens": 12.5376,
+      "accumulated_emission_tao": 0.045615,
+      "cost_basis_tao": 32.6
+    },
+    "90": {
+      "tao": 7.9,
+      "entry_date": "2026-04-15",
+      "entry_price": 0.0044672,
+      "name": "ogham",
+      "alpha_tokens_at_entry": 1768.4456,
+      "accumulated_emission_tokens": 6.876,
+      "accumulated_emission_tao": 0.030758,
+      "cost_basis_tao": 7.9
     }
   },
-  "root_stake": 945.5214,
-  "cash_value": 999.18,
-  "accumulated_root_yield": 0.837497,
-  "benchmark_eq_weight": 982.2,
+  "root_stake": 904.1944,
+  "cash_value": 1000.06,
+  "accumulated_root_yield": 1.356302,
+  "benchmark_eq_weight": 977.48,
   "benchmark_eq_prices": {
     "1": 0.01176801,
     "2": 0.00787769,
@@ -133,8 +153,8 @@
     "127": 0.00598287,
     "128": 0.00371591
   },
-  "benchmark_eq_emissions": 13.309432,
-  "benchmark_mcw_emissions": 1.31756,
+  "benchmark_eq_emissions": 20.570591,
+  "benchmark_mcw_emissions": 2.06655,
   "benchmark_mcw_prices": {
     "1": {
       "price": 0.01176801,
@@ -473,7 +493,7 @@
       "weight": 0.00329041332881925
     }
   },
-  "benchmark_mcw": 908.17,
-  "benchmark_root_value": 1000.9136,
-  "benchmark_root": 1000.91
+  "benchmark_mcw": 897.19,
+  "benchmark_root_value": 1001.4881,
+  "benchmark_root": 1001.49
 }
