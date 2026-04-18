@@ -106,7 +106,7 @@
   /* Auth gate overlay */
   .gate-wrapper { position:relative; }
   .gate-preview { filter:blur(8px); pointer-events:none; user-select:none; opacity:0.4; }
-  .gate-overlay { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:flex-start; justify-content:center; padding-top:40px; z-index:10; }
+  .gate-overlay { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:flex-start; justify-content:center; padding-top:40px; z-index:1001; }
   .gate-card { background:var(--surface); border:1px solid var(--cyan); padding:32px 40px; max-width:420px; width:100%; box-shadow:0 8px 32px rgba(0,0,0,0.5); }
   .gate-title { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; color:var(--text); text-align:center; margin-bottom:6px; }
   .gate-sub { font-size:12px; color:var(--muted); text-align:center; margin-bottom:24px; line-height:1.6; }
@@ -328,12 +328,10 @@ function setAuthTab(mode) {
   hideMessages();
 }
 
-// Wire up tab clicks and submit button after DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('tabSignIn').addEventListener('click', function() { setAuthTab('signin'); });
-  document.getElementById('tabSignUp').addEventListener('click', function() { setAuthTab('signup'); });
-  document.getElementById('authSubmitBtn').addEventListener('click', signIn);
-});
+// Wire up tab clicks and submit button immediately (script is at bottom of page)
+document.getElementById('tabSignIn').addEventListener('click', function() { setAuthTab('signin'); });
+document.getElementById('tabSignUp').addEventListener('click', function() { setAuthTab('signup'); });
+document.getElementById('authSubmitBtn').addEventListener('click', signIn);
 
 function hideMessages() {
   document.getElementById('authError').classList.add('hidden');
