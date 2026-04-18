@@ -148,35 +148,10 @@
   </div>
 </div>
 
-<!-- AUTH GATE (shown when not logged in — blurred preview + sign in overlay) -->
-<div class="main gate-wrapper" id="authView">
-  <!-- Blurred preview of what they'll get -->
-  <div class="gate-preview">
-    <div class="profile-section">
-      <div class="section-title green">Risk Profile</div>
-      <div class="risk-toggle">
-        <button class="risk-btn">Conservative</button>
-        <button class="risk-btn active">Balanced</button>
-        <button class="risk-btn">Aggressive</button>
-      </div>
-    </div>
-    <div class="profile-section">
-      <div class="section-title yellow">Recommended Allocations</div>
-      <div class="rec-card"><div class="rec-rank">1</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
-      <div class="rec-card"><div class="rec-rank">2</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
-      <div class="rec-card"><div class="rec-rank">3</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
-      <div class="rec-card"><div class="rec-rank">4</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
-      <div class="rec-card"><div class="rec-rank">5</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
-    </div>
-    <div class="profile-section">
-      <div class="section-title cyan">Wallet Connection</div>
-      <div style="padding:20px 0;color:var(--dim)">Connect your wallet to track positions...</div>
-    </div>
-  </div>
-
-  <!-- Sign in/Sign up overlay -->
-  <div class="gate-overlay">
-    <div class="gate-card fade-in">
+<!-- AUTH GATE (shown when not logged in) -->
+<div class="main" id="authView">
+  <div style="max-width:420px;margin:0 auto">
+    <div class="auth-card fade-in" style="background:var(--surface);border:1px solid var(--border);padding:32px 40px">
       <div class="gate-title">TAO Signals Portfolio</div>
       <div class="gate-sub">
         Personalized subnet allocations powered by our quantitative model.
