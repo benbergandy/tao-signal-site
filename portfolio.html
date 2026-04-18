@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAO Signals — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg:        #050709;
+    --surface:   #0a0e12;
+    --surface2:  #0f1419;
+    --border:    #1a2230;
+    --border2:   #243040;
+    --text:      #c8d8e8;
+    --muted:     #445566;
+    --dim:       #2a3a4a;
+    --cyan:      #00d4ff;
+    --cyan-dim:  rgba(0,212,255,0.08);
+    --green:     #00ff88;
+    --green-dim: rgba(0,255,136,0.08);
+    --yellow:    #ffd000;
+    --yellow-dim:rgba(255,208,0,0.08);
+    --orange:    #ff8800;
+    --red:       #ff3355;
+    --red-dim:   rgba(255,51,85,0.08);
+    --purple:    #9966ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.5; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
+
+  .topbar { border-bottom:1px solid var(--border); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; background:var(--surface); position:sticky; top:0; z-index:200; }
+  .topbar-left { display:flex; align-items:center; gap:0; }
+  .nav-tabs { display:flex; height:48px; }
+  .nav-tab { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0 18px; height:48px; display:flex; align-items:center; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap; }
+  .nav-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+  .nav-tab:hover { color:var(--text); }
+  .topbar-right { display:flex; align-items:center; gap:12px; }
+
+  .main { max-width:800px; margin:0 auto; padding:40px 24px; }
+
+  /* Auth section */
+  .auth-card { background:var(--surface); border:1px solid var(--border); padding:40px; margin-bottom:24px; }
+  .auth-title { font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--cyan); margin-bottom:20px; }
+  .auth-subtitle { font-size:14px; color:var(--muted); margin-bottom:24px; line-height:1.6; }
+
+  .form-group { margin-bottom:16px; }
+  .form-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; display:block; }
+  .form-input { font-family:'IBM Plex Mono',monospace; font-size:13px; background:var(--surface2); border:1px solid var(--border2); color:var(--text); padding:10px 14px; width:100%; outline:none; transition:border-color 0.15s; }
+  .form-input:focus { border-color:var(--cyan); }
+  .form-input::placeholder { color:var(--dim); }
+
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .btn { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:12px 24px; cursor:pointer; transition:all 0.15s; border:none; width:100%; }
+  .btn-primary { background:var(--cyan); color:var(--bg); font-weight:600; }
+  .btn-primary:hover { background:#33ddff; }
+  .btn-secondary { background:transparent; border:1px solid var(--border2); color:var(--muted); }
+  .btn-secondary:hover { border-color:var(--cyan); color:var(--cyan); }
+  .btn-danger { background:transparent; border:1px solid var(--red); color:var(--red); }
+  .btn-danger:hover { background:var(--red-dim); }
+
+  .toggle-link { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); cursor:pointer; text-align:center; margin-top:12px; }
+  .toggle-link:hover { text-decoration:underline; }
+
+  .error-msg { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--red); margin-top:8px; }
+  .success-msg { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--green); margin-top:8px; }
+
+  /* Profile section */
+  .profile-section { background:var(--surface); border:1px solid var(--border); padding:24px; margin-bottom:24px; }
+  .section-title { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+  .section-title.green { color:var(--green); }
+  .section-title.cyan { color:var(--cyan); }
+  .section-title.yellow { color:var(--yellow); }
+
+  .profile-field { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(26,34,48,0.5); }
+  .profile-field:last-child { border-bottom:none; }
+  .profile-key { font-size:12px; color:var(--muted); }
+  .profile-val { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text); }
+
+  .risk-toggle { display:flex; gap:0; border:1px solid var(--border2); }
+  .risk-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 16px; cursor:pointer; background:transparent; border:none; border-right:1px solid var(--border2); color:var(--muted); transition:all 0.15s; }
+  .risk-btn:last-child { border-right:none; }
+  .risk-btn:hover { color:var(--text); background:var(--surface2); }
+  .risk-btn.active { color:var(--cyan); background:var(--cyan-dim); }
+  .risk-btn.active.conservative { color:var(--green); background:var(--green-dim); }
+  .risk-btn.active.aggressive { color:var(--orange); background:rgba(255,136,0,0.08); }
+
+  .wallet-display { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--cyan); word-break:break-all; }
+  .wallet-note { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); margin-top:6px; line-height:1.5; }
+
+  /* Recommendations */
+  .rec-card { background:var(--surface2); border:1px solid var(--border); padding:14px; margin-bottom:8px; display:grid; grid-template-columns:auto 1fr auto auto; gap:16px; align-items:center; }
+  .rec-rank { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:700; color:var(--dim); width:30px; text-align:center; }
+  .rec-name { font-weight:600; font-size:14px; }
+  .rec-name span { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-left:8px; }
+  .rec-score { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+  .rec-alloc { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; color:var(--cyan); text-align:right; }
+  .rec-alloc span { display:block; font-size:9px; color:var(--muted); font-weight:400; }
+
+  .hidden { display:none; }
+
+  .user-badge { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); padding:5px 12px; border:1px solid var(--cyan); cursor:default; }
+  .signout-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); background:none; border:1px solid var(--border2); padding:4px 10px; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
+  .signout-btn:hover { color:var(--red); border-color:var(--red); }
+
+  .disclaimer { border-top:1px solid var(--border); padding:20px; background:var(--surface); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); line-height:1.6; max-width:800px; margin:40px auto 0; }
+  .disclaimer strong { color:var(--text); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fadeUp 0.4s ease both; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <nav class="nav-tabs">
+      <a class="nav-tab" href="subnets.html">Subnets</a>
+      <a class="nav-tab" href="signals.html">Signals</a>
+      <a class="nav-tab" href="performance.html">Performance</a>
+      <a class="nav-tab active" href="portfolio.html">Portfolio</a>
+    </nav>
+  </div>
+  <div class="topbar-right" id="topbarRight">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- AUTH VIEW (shown when not logged in) -->
+<div class="main" id="authView">
+  <div class="auth-card fade-in">
+    <div class="auth-title">TAO Signals Portfolio</div>
+    <div class="auth-subtitle">
+      Sign in to access personalized subnet allocation recommendations based on your
+      risk profile and TAO budget. Your wallet keys never leave your device.
+    </div>
+
+    <!-- Sign In Form -->
+    <div id="signInForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="authEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="authPassword" placeholder="password">
+      </div>
+      <div id="authError" class="error-msg hidden"></div>
+      <div id="authSuccess" class="success-msg hidden"></div>
+      <div class="form-group" style="margin-top:20px">
+        <button class="btn btn-primary" onclick="signIn()">Sign In</button>
+      </div>
+      <div class="toggle-link" onclick="toggleAuthMode()">
+        <span id="authToggleText">Don't have an account? Sign up</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE VIEW (shown when logged in) -->
+<div class="main hidden" id="profileView">
+
+  <!-- Account -->
+  <div class="profile-section fade-in">
+    <div class="section-title">Account</div>
+    <div class="profile-field">
+      <span class="profile-key">Email</span>
+      <span class="profile-val" id="profileEmail">-</span>
+    </div>
+    <div class="profile-field">
+      <span class="profile-key">Member since</span>
+      <span class="profile-val" id="profileCreated">-</span>
+    </div>
+  </div>
+
+  <!-- Risk Profile -->
+  <div class="profile-section fade-in">
+    <div class="section-title green">Risk Profile</div>
+    <div class="form-group">
+      <label class="form-label">Risk Preference</label>
+      <div class="risk-toggle" id="riskToggle">
+        <button class="risk-btn conservative" onclick="setRisk('conservative')">Conservative</button>
+        <button class="risk-btn" onclick="setRisk('balanced')">Balanced</button>
+        <button class="risk-btn aggressive" onclick="setRisk('aggressive')">Aggressive</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label class="form-label">TAO Budget</label>
+      <input type="number" class="form-input" id="taoBudget" placeholder="1000" min="1" step="1" onchange="saveProfile()">
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label class="form-label">Rebalance Frequency</label>
+      <div class="risk-toggle" id="rebalToggle">
+        <button class="risk-btn" onclick="setRebalance('daily')">Daily</button>
+        <button class="risk-btn" onclick="setRebalance('weekly')">Weekly</button>
+        <button class="risk-btn" onclick="setRebalance('manual')">Manual</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wallet -->
+  <div class="profile-section fade-in">
+    <div class="section-title cyan">Wallet Connection</div>
+    <div id="walletConnected" class="hidden">
+      <div class="profile-field">
+        <span class="profile-key">Coldkey Address</span>
+        <span class="wallet-display" id="walletAddress">-</span>
+      </div>
+      <div class="wallet-note">
+        Read-only connection. We can view your on-chain positions but cannot move funds.
+        Your private keys never leave your device.
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect Wallet</button>
+      </div>
+    </div>
+    <div id="walletDisconnected">
+      <div class="form-group">
+        <label class="form-label">Bittensor Coldkey Address</label>
+        <input type="text" class="form-input" id="walletInput" placeholder="5Fgft...mPvB (your public address, NOT your seed phrase)">
+      </div>
+      <div class="wallet-note" style="margin-bottom:12px">
+        Paste your public coldkey address (starts with 5). This is NOT your seed phrase or private key.
+        Your address is already public on the blockchain. We use it to read your positions.
+      </div>
+      <button class="btn btn-secondary" onclick="connectWallet()" style="width:auto;padding:8px 16px">Connect Wallet</button>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="profile-section fade-in">
+    <div class="section-title yellow">Recommended Allocations</div>
+    <div id="recommendations">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:20px 0;text-align:center">
+        Loading recommendations...
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign Out -->
+  <div style="text-align:center;margin-top:24px">
+    <button class="btn btn-danger" onclick="signOut()" style="width:auto;padding:10px 24px">Sign Out</button>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <strong>DISCLAIMER:</strong> TAO Signals provides quantitative data analysis tools for informational and educational purposes only. Nothing on this platform constitutes financial advice. Your wallet connection is read-only — we cannot access your private keys or move your funds. Past performance is not indicative of future results.
+</div>
+
+<script>
+// ── SUPABASE INIT ────────────────────────────────────────────
+const SUPABASE_URL = 'https://ofbdkvoyodxyqzxqcerr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mYmRrdm95b2R4eXF6eHFjZXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NDU2NjIsImV4cCI6MjA5MjEyMTY2Mn0.mXy237k1du2tZVb2zE4KIQhtyCtHNl9oDLsYhXqQYVk';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let isSignUp = false;
+
+// ── AUTH ──────────────────────────────────────────────────────
+function toggleAuthMode() {
+  isSignUp = !isSignUp;
+  document.getElementById('authToggleText').textContent = isSignUp
+    ? 'Already have an account? Sign in'
+    : "Don't have an account? Sign up";
+  document.querySelector('#signInForm .btn-primary').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+  hideMessages();
+}
+
+function hideMessages() {
+  document.getElementById('authError').classList.add('hidden');
+  document.getElementById('authSuccess').classList.add('hidden');
+}
+
+function showError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function showSuccess(msg) {
+  const el = document.getElementById('authSuccess');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+async function signIn() {
+  hideMessages();
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  if (!email || !password) {
+    showError('Please enter email and password');
+    return;
+  }
+
+  if (isSignUp) {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      showError(error.message);
+      return;
+    }
+    showSuccess('Account created! Check your email to confirm, then sign in.');
+  } else {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      showError(error.message);
+      return;
+    }
+    currentUser = data.user;
+    await loadProfile();
+    showProfileView();
+  }
+}
+
+async function signOut() {
+  await supabase.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  showAuthView();
+}
+
+// ── PROFILE ──────────────────────────────────────────────────
+async function loadProfile() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (error && error.code === 'PGRST116') {
+    // No profile yet, create one
+    const { data: newProfile, error: insertError } = await supabase
+      .from('user_profiles')
+      .insert({
+        id: currentUser.id,
+        email: currentUser.email,
+        risk_preference: 'balanced',
+        tao_budget: 1000,
+        rebalance_frequency: 'daily',
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Profile creation error:', insertError);
+      return;
+    }
+    currentProfile = newProfile;
+  } else if (data) {
+    currentProfile = data;
+  }
+}
+
+async function saveProfile() {
+  if (!currentUser || !currentProfile) return;
+
+  const budget = parseFloat(document.getElementById('taoBudget').value) || 1000;
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({
+      risk_preference: currentProfile.risk_preference,
+      tao_budget: budget,
+      rebalance_frequency: currentProfile.rebalance_frequency,
+      wallet_address: currentProfile.wallet_address,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', currentUser.id);
+
+  if (!error) {
+    currentProfile.tao_budget = budget;
+    loadRecommendations();
+  }
+}
+
+function setRisk(risk) {
+  currentProfile.risk_preference = risk;
+  updateRiskButtons();
+  saveProfile();
+}
+
+function setRebalance(freq) {
+  currentProfile.rebalance_frequency = freq;
+  updateRebalanceButtons();
+  saveProfile();
+}
+
+function updateRiskButtons() {
+  document.querySelectorAll('#riskToggle .risk-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const risk = btn.textContent.trim().toLowerCase();
+    if (risk === currentProfile.risk_preference) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+function updateRebalanceButtons() {
+  document.querySelectorAll('#rebalToggle .risk-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const freq = btn.textContent.trim().toLowerCase();
+    if (freq === currentProfile.rebalance_frequency) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+// ── WALLET ───────────────────────────────────────────────────
+async function connectWallet() {
+  const address = document.getElementById('walletInput').value.trim();
+  if (!address || !address.startsWith('5') || address.length < 40) {
+    alert('Please enter a valid Bittensor coldkey address (starts with 5)');
+    return;
+  }
+  currentProfile.wallet_address = address;
+  await saveProfile();
+  updateWalletDisplay();
+}
+
+async function disconnectWallet() {
+  currentProfile.wallet_address = null;
+  document.getElementById('walletInput').value = '';
+  await saveProfile();
+  updateWalletDisplay();
+}
+
+function updateWalletDisplay() {
+  const connected = document.getElementById('walletConnected');
+  const disconnected = document.getElementById('walletDisconnected');
+
+  if (currentProfile.wallet_address) {
+    connected.classList.remove('hidden');
+    disconnected.classList.add('hidden');
+    document.getElementById('walletAddress').textContent = currentProfile.wallet_address;
+  } else {
+    connected.classList.add('hidden');
+    disconnected.classList.remove('hidden');
+  }
+}
+
+// ── RECOMMENDATIONS ──────────────────────────────────────────
+async function loadRecommendations() {
+  const container = document.getElementById('recommendations');
+  const risk = currentProfile?.risk_preference || 'balanced';
+  const budget = currentProfile?.tao_budget || 1000;
+
+  try {
+    const res = await fetch('data/combined_scores.json?t=' + Date.now());
+    const scores = await res.json();
+
+    let riskRes, riskData;
+    try {
+      riskRes = await fetch('data/risk_metrics.json?t=' + Date.now());
+      riskData = await riskRes.json();
+    } catch(e) {
+      riskData = null;
+    }
+
+    const riskSubs = riskData?.subnets || {};
+
+    // Simple allocation: top subnets by score, filtered by risk profile
+    const maxVol = risk === 'conservative' ? 30 : risk === 'balanced' ? 60 : 150;
+    const maxDD = risk === 'conservative' ? 50 : risk === 'balanced' ? 100 : 200;
+    const rootPct = risk === 'conservative' ? 40 : risk === 'balanced' ? 15 : 10;
+    const maxPositions = risk === 'conservative' ? 12 : risk === 'balanced' ? 20 : 25;
+
+    const deployable = budget * (1 - rootPct / 100);
+    const rootTao = budget * rootPct / 100;
+
+    // Filter and rank
+    const candidates = scores.scores
+      .filter(s => {
+        const r = riskSubs[String(s.netuid)] || {};
+        const vol = r.volatility || 999;
+        const dd = r.max_drawdown_pct || 999;
+        return vol <= maxVol && dd <= maxDD;
+      })
+      .sort((a, b) => b.combined_score - a.combined_score)
+      .slice(0, maxPositions);
+
+    if (!candidates.length) {
+      container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);padding:20px 0;text-align:center">No subnets pass the risk filters for this profile</div>';
+      return;
+    }
+
+    // Allocate proportionally by score
+    const totalScore = candidates.reduce((s, c) => s + c.combined_score, 0);
+
+    let html = `<div class="rec-card" style="background:var(--surface);border-color:var(--cyan)">
+      <div class="rec-rank" style="color:var(--cyan)">R</div>
+      <div class="rec-name" style="color:var(--cyan)">Root Stake <span>base yield</span></div>
+      <div class="rec-score" style="color:var(--muted)">${rootPct}% reserved</div>
+      <div class="rec-alloc">${rootTao.toFixed(0)} TAO<span>root</span></div>
+    </div>`;
+
+    candidates.forEach((s, i) => {
+      const alloc = (s.combined_score / totalScore) * deployable;
+      const pct = (alloc / budget * 100).toFixed(1);
+      html += `<div class="rec-card">
+        <div class="rec-rank">${i + 1}</div>
+        <div class="rec-name"><a href="subnet.html?id=${s.netuid}" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">SN${s.netuid} ${s.name}</a></div>
+        <div class="rec-score">Score: ${s.combined_score.toFixed(1)}</div>
+        <div class="rec-alloc">${alloc.toFixed(1)} TAO<span>${pct}%</span></div>
+      </div>`;
+    });
+
+    html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);margin-top:12px;text-align:center">
+      ${risk.toUpperCase()} profile | ${budget} TAO budget | ${candidates.length} positions | Updated: ${scores.generated_at || '-'}
+    </div>`;
+
+    container.innerHTML = html;
+
+  } catch (e) {
+    container.innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);padding:20px 0;text-align:center">Error loading recommendations: ${e.message}</div>`;
+  }
+}
+
+// ── VIEW MANAGEMENT ──────────────────────────────────────────
+function showAuthView() {
+  document.getElementById('authView').classList.remove('hidden');
+  document.getElementById('profileView').classList.add('hidden');
+  document.getElementById('topbarRight').innerHTML = '';
+}
+
+function showProfileView() {
+  document.getElementById('authView').classList.add('hidden');
+  document.getElementById('profileView').classList.remove('hidden');
+
+  // Topbar
+  document.getElementById('topbarRight').innerHTML = `
+    <div class="user-badge">${currentUser.email}</div>
+    <button class="signout-btn" onclick="signOut()">Sign Out</button>
+  `;
+
+  // Profile fields
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  document.getElementById('profileCreated').textContent = new Date(currentUser.created_at).toLocaleDateString();
+  document.getElementById('taoBudget').value = currentProfile?.tao_budget || 1000;
+
+  updateRiskButtons();
+  updateRebalanceButtons();
+  updateWalletDisplay();
+  loadRecommendations();
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+async function init() {
+  // Check for existing session
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    await loadProfile();
+    showProfileView();
+  } else {
+    showAuthView();
+  }
+
+  // Listen for auth changes
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      currentUser = session.user;
+      await loadProfile();
+      showProfileView();
+    } else if (event === 'SIGNED_OUT') {
+      showAuthView();
+    }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
