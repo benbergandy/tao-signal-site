@@ -166,8 +166,8 @@
       </div>
 
       <div class="auth-tabs" id="authTabs">
-        <div class="auth-tab active" id="tabSignIn">Sign In</div>
-        <div class="auth-tab" id="tabSignUp">Sign Up</div>
+        <div class="auth-tab active" id="tabSignIn" onclick="setAuthTab('signin')" style="cursor:pointer">Sign In</div>
+        <div class="auth-tab" id="tabSignUp" onclick="setAuthTab('signup')" style="cursor:pointer">Sign Up</div>
       </div>
 
       <div class="form-group">
@@ -283,9 +283,14 @@
 
 <script>
 // ── UI WIRING (runs first, no dependencies) ──────────────────
-let currentUser = null;
-let currentProfile = null;
-let isSignUp = false;
+var currentUser = null;
+var currentProfile = null;
+var isSignUp = false;
+
+function hideMessages() {
+  document.getElementById('authError').classList.add('hidden');
+  document.getElementById('authSuccess').classList.add('hidden');
+}
 
 function setAuthTab(mode) {
   isSignUp = mode === 'signup';
@@ -296,12 +301,10 @@ function setAuthTab(mode) {
   document.getElementById('passwordLabel').textContent = isSignUp ? 'Create Password' : 'Password';
   hideMessages();
 }
+</script>
 
-document.getElementById('tabSignIn').addEventListener('click', function(e) { e.preventDefault(); setAuthTab('signin'); });
-document.getElementById('tabSignUp').addEventListener('click', function(e) { e.preventDefault(); setAuthTab('signup'); });
-document.getElementById('authSubmitBtn').addEventListener('click', function(e) { e.preventDefault(); signIn(); });
-
-// ── SUPABASE INIT ────────────────────────────────────────────
+<script>
+// ── SUPABASE INIT (separate script block so UI works even if this fails) ──
 const SUPABASE_URL = 'https://ofbdkvoyodxyqzxqcerr.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mYmRrdm95b2R4eXF6eHFjZXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NDU2NjIsImV4cCI6MjA5MjEyMTY2Mn0.mXy237k1du2tZVb2zE4KIQhtyCtHNl9oDLsYhXqQYVk';
 
@@ -310,11 +313,6 @@ try {
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 } catch(e) {
   console.error('Supabase init failed:', e);
-}
-
-function hideMessages() {
-  document.getElementById('authError').classList.add('hidden');
-  document.getElementById('authSuccess').classList.add('hidden');
 }
 
 function showError(msg) {
