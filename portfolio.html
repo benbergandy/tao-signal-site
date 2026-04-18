@@ -103,6 +103,23 @@
 
   .hidden { display:none; }
 
+  /* Auth gate overlay */
+  .gate-wrapper { position:relative; }
+  .gate-preview { filter:blur(8px); pointer-events:none; user-select:none; opacity:0.4; }
+  .gate-overlay { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:flex-start; justify-content:center; padding-top:40px; z-index:10; }
+  .gate-card { background:var(--surface); border:1px solid var(--cyan); padding:32px 40px; max-width:420px; width:100%; box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+  .gate-title { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; color:var(--text); text-align:center; margin-bottom:6px; }
+  .gate-sub { font-size:12px; color:var(--muted); text-align:center; margin-bottom:24px; line-height:1.6; }
+
+  .auth-tabs { display:flex; border-bottom:1px solid var(--border2); margin-bottom:20px; }
+  .auth-tab { flex:1; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:10px; text-align:center; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; transition:all 0.15s; background:none; border-left:none; border-right:none; border-top:none; }
+  .auth-tab:hover { color:var(--text); }
+  .auth-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+
+  .feature-list { margin-bottom:20px; }
+  .feature-item { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:12px; color:var(--muted); }
+  .feature-check { color:var(--green); font-size:14px; }
+
   .user-badge { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--cyan); padding:5px 12px; border:1px solid var(--cyan); cursor:default; }
   .signout-btn { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); background:none; border:1px solid var(--border2); padding:4px 10px; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
   .signout-btn:hover { color:var(--red); border-color:var(--red); }
@@ -131,17 +148,53 @@
   </div>
 </div>
 
-<!-- AUTH VIEW (shown when not logged in) -->
-<div class="main" id="authView">
-  <div class="auth-card fade-in">
-    <div class="auth-title">TAO Signals Portfolio</div>
-    <div class="auth-subtitle">
-      Sign in to access personalized subnet allocation recommendations based on your
-      risk profile and TAO budget. Your wallet keys never leave your device.
+<!-- AUTH GATE (shown when not logged in — blurred preview + sign in overlay) -->
+<div class="main gate-wrapper" id="authView">
+  <!-- Blurred preview of what they'll get -->
+  <div class="gate-preview">
+    <div class="profile-section">
+      <div class="section-title green">Risk Profile</div>
+      <div class="risk-toggle">
+        <button class="risk-btn">Conservative</button>
+        <button class="risk-btn active">Balanced</button>
+        <button class="risk-btn">Aggressive</button>
+      </div>
     </div>
+    <div class="profile-section">
+      <div class="section-title yellow">Recommended Allocations</div>
+      <div class="rec-card"><div class="rec-rank">1</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">2</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">3</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">4</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">5</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+    </div>
+    <div class="profile-section">
+      <div class="section-title cyan">Wallet Connection</div>
+      <div style="padding:20px 0;color:var(--dim)">Connect your wallet to track positions...</div>
+    </div>
+  </div>
 
-    <!-- Sign In Form -->
-    <div id="signInForm">
+  <!-- Sign in/Sign up overlay -->
+  <div class="gate-overlay">
+    <div class="gate-card fade-in">
+      <div class="gate-title">TAO Signals Portfolio</div>
+      <div class="gate-sub">
+        Personalized subnet allocations powered by our quantitative model.
+        Set your risk profile, connect your wallet, get recommendations.
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-item"><span class="feature-check">+</span> Risk-adjusted portfolio recommendations</div>
+        <div class="feature-item"><span class="feature-check">+</span> Connect wallet to track positions</div>
+        <div class="feature-item"><span class="feature-check">+</span> Conservative, balanced, or aggressive profiles</div>
+        <div class="feature-item"><span class="feature-check">+</span> Self-custody — we never touch your keys</div>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignIn" onclick="setAuthTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tabSignUp" onclick="setAuthTab('signup')">Sign Up</button>
+      </div>
+
       <div class="form-group">
         <label class="form-label">Email</label>
         <input type="email" class="form-input" id="authEmail" placeholder="you@example.com">
@@ -153,10 +206,7 @@
       <div id="authError" class="error-msg hidden"></div>
       <div id="authSuccess" class="success-msg hidden"></div>
       <div class="form-group" style="margin-top:20px">
-        <button class="btn btn-primary" onclick="signIn()">Sign In</button>
-      </div>
-      <div class="toggle-link" onclick="toggleAuthMode()">
-        <span id="authToggleText">Don't have an account? Sign up</span>
+        <button class="btn btn-primary" id="authSubmitBtn" onclick="signIn()">Sign In</button>
       </div>
     </div>
   </div>
@@ -264,12 +314,11 @@ let currentProfile = null;
 let isSignUp = false;
 
 // ── AUTH ──────────────────────────────────────────────────────
-function toggleAuthMode() {
-  isSignUp = !isSignUp;
-  document.getElementById('authToggleText').textContent = isSignUp
-    ? 'Already have an account? Sign in'
-    : "Don't have an account? Sign up";
-  document.querySelector('#signInForm .btn-primary').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+function setAuthTab(mode) {
+  isSignUp = mode === 'signup';
+  document.getElementById('tabSignIn').classList.toggle('active', !isSignUp);
+  document.getElementById('tabSignUp').classList.toggle('active', isSignUp);
+  document.getElementById('authSubmitBtn').textContent = isSignUp ? 'Create Account' : 'Sign In';
   hideMessages();
 }
 
