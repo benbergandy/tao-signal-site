@@ -8,8 +8,8 @@
       "entry_price": 0.00902725,
       "name": "oracle",
       "alpha_tokens_at_entry": 4885.2087,
-      "accumulated_emission_tokens": 17.4629,
-      "accumulated_emission_tao": 0.170655,
+      "accumulated_emission_tokens": 17.8721,
+      "accumulated_emission_tao": 0.175159,
       "cost_basis_tao": 44.1
     },
     "66": {
@@ -18,15 +18,15 @@
       "entry_price": 0.01640471,
       "name": "ninja",
       "alpha_tokens_at_entry": 2925.9889,
-      "accumulated_emission_tokens": 1.5757,
-      "accumulated_emission_tao": 0.025848,
+      "accumulated_emission_tokens": 3.1675,
+      "accumulated_emission_tao": 0.051603,
       "cost_basis_tao": 48.0
     }
   },
-  "root_stake": 942.5044,
-  "cash_value": 1004.68,
-  "accumulated_root_yield": 1.760749,
-  "benchmark_eq_weight": 974.17,
+  "root_stake": 942.6385,
+  "cash_value": 1003.98,
+  "accumulated_root_yield": 1.894874,
+  "benchmark_eq_weight": 978.33,
   "benchmark_eq_prices": {
     "1": 0.01260903,
     "3": 0.07180776,
@@ -108,8 +108,8 @@
     "126": 0.00916816,
     "128": 0.00394646
   },
-  "benchmark_eq_emissions": 26.000075,
-  "benchmark_mcw_emissions": 3.094283,
+  "benchmark_eq_emissions": 27.394714,
+  "benchmark_mcw_emissions": 3.252244,
   "benchmark_mcw_prices": {
     "1": {
       "price": 0.01260903,
@@ -428,7 +428,7 @@
       "weight": 0.003680874029691303
     }
   },
-  "benchmark_mcw": 855.37,
-  "benchmark_root_value": 1002.1966,
-  "benchmark_root": 1002.2
+  "benchmark_mcw": 859.09,
+  "benchmark_root_value": 1002.3392,
+  "benchmark_root": 1002.34
 }

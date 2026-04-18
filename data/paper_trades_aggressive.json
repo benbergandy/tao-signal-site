@@ -844,5 +844,85 @@
     "name": "Beam",
     "tao_added": 5.3,
     "new_total": 10.4
+  },
+  {
+    "date": "2026-04-18",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.8,
+    "tao_received": 20.58,
+    "slippage_pct": 0.999,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.8,
+    "tao_received": 20.58,
+    "slippage_pct": 0.999,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "EXIT",
+    "netuid": 54,
+    "name": "Yanez MIID",
+    "tao": 11.4,
+    "tao_received": 11.38,
+    "slippage_pct": 0.108,
+    "reason": "score 36.0 below exit threshold 46.9"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "EXIT",
+    "netuid": 113,
+    "name": "TensorUSD",
+    "tao": 6.9,
+    "tao_received": 6.87,
+    "slippage_pct": 0.411,
+    "reason": "score 43.2 below exit threshold 46.9"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 97,
+    "name": "distil",
+    "tao": 20.3,
+    "slippage_pct": 0.975,
+    "entry_price": 0.05134007,
+    "sortino": 3.2114
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 43,
+    "name": "Graphite",
+    "tao": 111.0,
+    "slippage_pct": 0.727,
+    "entry_price": 0.0062172,
+    "sortino": 2.4152
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 1,
+    "name": "Apex",
+    "tao": 27.8,
+    "slippage_pct": 0.095,
+    "entry_price": 0.01077014,
+    "sortino": 0.6051
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 63,
+    "name": "Enigma",
+    "tao": 21.8,
+    "slippage_pct": 0.15,
+    "entry_price": 0.00829211,
+    "sortino": 0.4733
   }
 ]

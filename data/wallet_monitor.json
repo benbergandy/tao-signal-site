@@ -584,6 +584,71 @@
       "total_value": 0.824112,
       "total_pnl_tao": -0.175888,
       "total_pnl_pct": -17.59
+    },
+    {
+      "date": "2026-04-18",
+      "balance": 0.485842,
+      "positions": {
+        "3": {
+          "name": "Templar",
+          "tokens": 1.40535,
+          "price": 0.02607307,
+          "tao_value": 0.036642,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.063358,
+          "pnl_pct": -63.36,
+          "emission": "\u200e0.000000000\u03b3\u200e",
+          "hotkey": "5HdTZQ6UXD7MWcRsMeEx..."
+        },
+        "15": {
+          "name": "ORO",
+          "tokens": 5.50198,
+          "price": 0.01373402,
+          "tao_value": 0.075564,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.024436,
+          "pnl_pct": -24.44,
+          "emission": "\u200e9.047794244\u03bf\u200e",
+          "hotkey": "5E2LP6EnZ54m3wS8s1yP..."
+        },
+        "24": {
+          "name": "Quasar",
+          "tokens": 7.743828,
+          "price": 0.01517714,
+          "tao_value": 0.117529,
+          "cost_basis": 0.1,
+          "pnl_tao": 0.017529,
+          "pnl_pct": 17.53,
+          "emission": "\u200e0.055802937\u03c9\u200e",
+          "hotkey": "5HbScNssaEfioJHXjcXd..."
+        },
+        "81": {
+          "name": "Grail",
+          "tokens": 3.796808,
+          "price": 0.00938209,
+          "tao_value": 0.035622,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.064378,
+          "pnl_pct": -64.38,
+          "emission": "\u200e0.000000000\u16a0\u200e",
+          "hotkey": "5F9uEDDovurwEJihzZSp..."
+        },
+        "105": {
+          "name": "Beam",
+          "tokens": 7.445831,
+          "price": 0.0106659,
+          "tao_value": 0.079417,
+          "cost_basis": 0.1,
+          "pnl_tao": -0.020583,
+          "pnl_pct": -20.58,
+          "emission": "\u200e0.298938247\u0533\u200e",
+          "hotkey": "5GUHsu6g6Kwq7dX9rM7v..."
+        }
+      },
+      "total_staked_value": 0.344774,
+      "total_value": 0.830615,
+      "total_pnl_tao": -0.169385,
+      "total_pnl_pct": -16.94
     }
   ],
   "initial_date": "2026-04-07"

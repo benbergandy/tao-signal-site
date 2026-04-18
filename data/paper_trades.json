@@ -808,5 +808,55 @@
     "name": "SOMA",
     "tao_added": 6.8,
     "new_total": 11.2
+  },
+  {
+    "date": "2026-04-18",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.8,
+    "tao_received": 20.58,
+    "slippage_pct": 0.999,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "GOVERNANCE_EXIT",
+    "netuid": 97,
+    "name": "distil",
+    "tao_removed": 20.8,
+    "tao_received": 20.58,
+    "slippage_pct": 0.999,
+    "reason": "governance flags=3 (top1=100% entropy=0.00)"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "EXIT",
+    "netuid": 108,
+    "name": "TalkHead",
+    "tao": 1.8,
+    "tao_received": 1.8,
+    "slippage_pct": 0.111,
+    "reason": "score 44.2 below exit threshold 45.9"
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 97,
+    "name": "distil",
+    "tao": 20.3,
+    "slippage_pct": 0.975,
+    "entry_price": 0.05134007,
+    "sortino": 3.2114
+  },
+  {
+    "date": "2026-04-18",
+    "type": "ENTRY",
+    "netuid": 43,
+    "name": "Graphite",
+    "tao": 62.9,
+    "slippage_pct": 0.413,
+    "entry_price": 0.0062172,
+    "sortino": 2.4152
   }
 ]

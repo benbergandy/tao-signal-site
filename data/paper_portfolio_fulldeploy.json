@@ -8,8 +8,8 @@
       "entry_price": 0.01289981,
       "name": "Beam",
       "alpha_tokens_at_entry": 2674.458,
-      "accumulated_emission_tokens": 43.0495,
-      "accumulated_emission_tao": 0.477036,
+      "accumulated_emission_tokens": 44.247,
+      "accumulated_emission_tao": 0.489807,
       "cost_basis_tao": 34.5
     },
     "24": {
@@ -18,8 +18,8 @@
       "entry_price": 0.01287611,
       "name": "Quasar",
       "alpha_tokens_at_entry": 6290.7198,
-      "accumulated_emission_tokens": 22.2509,
-      "accumulated_emission_tao": 0.305322,
+      "accumulated_emission_tokens": 22.9198,
+      "accumulated_emission_tao": 0.315472,
       "cost_basis_tao": 81.0
     },
     "28": {
@@ -28,8 +28,8 @@
       "entry_price": 0.00902725,
       "name": "oracle",
       "alpha_tokens_at_entry": 8452.1864,
-      "accumulated_emission_tokens": 26.7101,
-      "accumulated_emission_tao": 0.262751,
+      "accumulated_emission_tokens": 27.9646,
+      "accumulated_emission_tao": 0.276558,
       "cost_basis_tao": 76.3
     },
     "15": {
@@ -38,8 +38,8 @@
       "entry_price": 0.01651581,
       "name": "ORO",
       "alpha_tokens_at_entry": 787.1246,
-      "accumulated_emission_tokens": 40.4056,
-      "accumulated_emission_tao": 0.593331,
+      "accumulated_emission_tokens": 44.0515,
+      "accumulated_emission_tao": 0.643406,
       "cost_basis_tao": 13.0
     },
     "107": {
@@ -48,8 +48,8 @@
       "entry_price": 0.01300098,
       "name": "Minos",
       "alpha_tokens_at_entry": 799.9397,
-      "accumulated_emission_tokens": 39.1811,
-      "accumulated_emission_tao": 0.494012,
+      "accumulated_emission_tokens": 42.5057,
+      "accumulated_emission_tao": 0.536455,
       "cost_basis_tao": 10.4
     },
     "93": {
@@ -68,8 +68,8 @@
       "entry_price": 0.01943757,
       "name": "nion",
       "alpha_tokens_at_entry": 1147.2627,
-      "accumulated_emission_tokens": 7.8634,
-      "accumulated_emission_tao": 0.162624,
+      "accumulated_emission_tokens": 8.5849,
+      "accumulated_emission_tao": 0.179518,
       "cost_basis_tao": 22.3
     },
     "124": {
@@ -78,8 +78,8 @@
       "entry_price": 0.00830834,
       "name": "Swarm",
       "alpha_tokens_at_entry": 2515.5446,
-      "accumulated_emission_tokens": 9.4169,
-      "accumulated_emission_tao": 0.071758,
+      "accumulated_emission_tokens": 9.5302,
+      "accumulated_emission_tao": 0.072536,
       "cost_basis_tao": 20.9
     },
     "100": {
@@ -88,8 +88,8 @@
       "entry_price": 0.01534851,
       "name": "Pla\u03c4form",
       "alpha_tokens_at_entry": 1146.6911,
-      "accumulated_emission_tokens": 27.386,
-      "accumulated_emission_tao": 0.350301,
+      "accumulated_emission_tokens": 29.3583,
+      "accumulated_emission_tao": 0.370605,
       "cost_basis_tao": 17.6
     },
     "49": {
@@ -98,8 +98,8 @@
       "entry_price": 0.0074778,
       "name": "Nepher Robotics",
       "alpha_tokens_at_entry": 2126.2938,
-      "accumulated_emission_tokens": 28.2441,
-      "accumulated_emission_tao": 0.172054,
+      "accumulated_emission_tokens": 30.744,
+      "accumulated_emission_tao": 0.185731,
       "cost_basis_tao": 15.9
     },
     "113": {
@@ -108,8 +108,8 @@
       "entry_price": 0.00476233,
       "name": "TensorUSD",
       "alpha_tokens_at_entry": 3170.7169,
-      "accumulated_emission_tokens": 44.4172,
-      "accumulated_emission_tao": 0.21414,
+      "accumulated_emission_tokens": 48.4181,
+      "accumulated_emission_tao": 0.234566,
       "cost_basis_tao": 15.1
     },
     "86": {
@@ -118,8 +118,8 @@
       "entry_price": 0.00431907,
       "name": "\u2692",
       "alpha_tokens_at_entry": 2732.0696,
-      "accumulated_emission_tokens": 28.1232,
-      "accumulated_emission_tao": 0.115155,
+      "accumulated_emission_tokens": 30.6404,
+      "accumulated_emission_tao": 0.125061,
       "cost_basis_tao": 11.8
     },
     "92": {
@@ -128,8 +128,8 @@
       "entry_price": 0.00423013,
       "name": "TensorClaw",
       "alpha_tokens_at_entry": 2198.514,
-      "accumulated_emission_tokens": 32.7014,
-      "accumulated_emission_tao": 0.13356,
+      "accumulated_emission_tokens": 35.3799,
+      "accumulated_emission_tao": 0.143632,
       "cost_basis_tao": 9.3
     },
     "38": {
@@ -138,8 +138,8 @@
       "entry_price": 0.00912884,
       "name": "colosseum",
       "alpha_tokens_at_entry": 1150.2009,
-      "accumulated_emission_tokens": 28.9206,
-      "accumulated_emission_tao": 0.284631,
+      "accumulated_emission_tokens": 32.335,
+      "accumulated_emission_tao": 0.323609,
       "cost_basis_tao": 10.5
     },
     "17": {
@@ -148,8 +148,8 @@
       "entry_price": 0.01536762,
       "name": "404\u2014GEN",
       "alpha_tokens_at_entry": 8153.5072,
-      "accumulated_emission_tokens": 9.5052,
-      "accumulated_emission_tao": 0.142603,
+      "accumulated_emission_tokens": 10.2864,
+      "accumulated_emission_tao": 0.153725,
       "cost_basis_tao": 125.3
     },
     "66": {
@@ -158,8 +158,8 @@
       "entry_price": 0.01701281,
       "name": "ninja",
       "alpha_tokens_at_entry": 8528.8674,
-      "accumulated_emission_tokens": 18.8664,
-      "accumulated_emission_tao": 0.316318,
+      "accumulated_emission_tokens": 23.6462,
+      "accumulated_emission_tao": 0.393652,
       "cost_basis_tao": 145.1
     },
     "114": {
@@ -168,8 +168,8 @@
       "entry_price": 0.00919809,
       "name": "SOMA",
       "alpha_tokens_at_entry": 706.6684,
-      "accumulated_emission_tokens": 9.3784,
-      "accumulated_emission_tao": 0.089623,
+      "accumulated_emission_tokens": 13.6411,
+      "accumulated_emission_tao": 0.132412,
       "cost_basis_tao": 6.5
     },
     "116": {
@@ -178,8 +178,8 @@
       "entry_price": 0.00363869,
       "name": "TaoLend",
       "alpha_tokens_at_entry": 1621.4627,
-      "accumulated_emission_tokens": 2.3939,
-      "accumulated_emission_tao": 0.008736,
+      "accumulated_emission_tokens": 3.598,
+      "accumulated_emission_tao": 0.013144,
       "cost_basis_tao": 5.9
     },
     "104": {
@@ -188,8 +188,8 @@
       "entry_price": 0.00466355,
       "name": "for sale (burn to uid1)",
       "alpha_tokens_at_entry": 1136.4733,
-      "accumulated_emission_tokens": 1.8447,
-      "accumulated_emission_tao": 0.008537,
+      "accumulated_emission_tokens": 2.8189,
+      "accumulated_emission_tao": 0.013084,
       "cost_basis_tao": 5.3
     },
     "29": {
@@ -198,8 +198,8 @@
       "entry_price": 0.01394722,
       "name": "Coldint",
       "alpha_tokens_at_entry": 207.9267,
-      "accumulated_emission_tokens": 0.0787,
-      "accumulated_emission_tao": 0.001098,
+      "accumulated_emission_tokens": 0.1116,
+      "accumulated_emission_tao": 0.001558,
       "cost_basis_tao": 2.9
     },
     "108": {
@@ -208,25 +208,35 @@
       "entry_price": 0.00428848,
       "name": "TalkHead",
       "alpha_tokens_at_entry": 606.2754,
-      "accumulated_emission_tokens": 2.327,
-      "accumulated_emission_tao": 0.009987,
+      "accumulated_emission_tokens": 3.0887,
+      "accumulated_emission_tao": 0.013213,
       "cost_basis_tao": 2.6
     },
     "97": {
-      "tao": 20.8,
-      "entry_date": "2026-04-17",
-      "entry_price": 0.05644127,
+      "tao": 20.3,
+      "entry_date": "2026-04-18",
+      "entry_price": 0.05134007,
       "name": "distil",
-      "alpha_tokens_at_entry": 368.5247,
-      "accumulated_emission_tokens": 3.7365,
-      "accumulated_emission_tao": 0.210892,
-      "cost_basis_tao": 20.8
+      "alpha_tokens_at_entry": 395.4027,
+      "accumulated_emission_tokens": 3.5375,
+      "accumulated_emission_tao": 0.181615,
+      "cost_basis_tao": 20.3
+    },
+    "43": {
+      "tao": 92.5,
+      "entry_date": "2026-04-18",
+      "entry_price": 0.0062172,
+      "name": "Graphite",
+      "alpha_tokens_at_entry": 14878.0802,
+      "accumulated_emission_tokens": 1.2043,
+      "accumulated_emission_tao": 0.007487,
+      "cost_basis_tao": 92.5
     }
   },
-  "root_stake": 500.4304,
-  "cash_value": 993.27,
-  "accumulated_root_yield": 0.627334,
-  "benchmark_eq_weight": 977.48,
+  "root_stake": 408.2703,
+  "cash_value": 990.32,
+  "accumulated_root_yield": 0.685441,
+  "benchmark_eq_weight": 979.82,
   "benchmark_eq_prices": {
     "1": 0.01176801,
     "2": 0.00787769,
@@ -313,8 +323,8 @@
     "127": 0.00598287,
     "128": 0.00371591
   },
-  "benchmark_eq_emissions": 20.570591,
-  "benchmark_mcw_emissions": 2.06655,
+  "benchmark_eq_emissions": 22.113432,
+  "benchmark_mcw_emissions": 2.23436,
   "benchmark_mcw_prices": {
     "1": {
       "price": 0.01176801,
@@ -653,7 +663,7 @@
       "weight": 0.00329041332881925
     }
   },
-  "benchmark_mcw": 897.19,
-  "benchmark_root_value": 1001.4882,
-  "benchmark_root": 1001.49
+  "benchmark_mcw": 899.95,
+  "benchmark_root_value": 1001.6308,
+  "benchmark_root": 1001.63
 }
