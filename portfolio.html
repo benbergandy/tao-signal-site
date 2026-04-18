@@ -150,7 +150,7 @@
 
 <!-- AUTH GATE (shown when not logged in) -->
 <div class="main" id="authView">
-  <div style="max-width:420px;margin:0 auto">
+  <div style="max-width:420px;margin:0 auto;position:relative;z-index:2">
     <div class="auth-card fade-in" style="background:var(--surface);border:1px solid var(--border);padding:32px 40px">
       <div class="gate-title">TAO Signals Portfolio</div>
       <div class="gate-sub">
@@ -176,17 +176,41 @@
       </div>
       <div class="form-group">
         <label class="form-label" id="passwordLabel">Password</label>
-        <input type="password" class="form-input" id="authPassword" placeholder="password">
+        <input type="password" class="form-input" id="authPassword" placeholder="password" oninput="if(isSignUp)checkPasswordMatch()">
       </div>
       <div class="form-group hidden" id="confirmGroup">
-        <label class="form-label">Confirm Password</label>
-        <input type="password" class="form-input" id="authPasswordConfirm" placeholder="confirm password">
+        <label class="form-label">Confirm Password <span id="matchIndicator" style="margin-left:8px"></span></label>
+        <input type="password" class="form-input" id="authPasswordConfirm" placeholder="confirm password" oninput="checkPasswordMatch()">
       </div>
       <div id="authError" class="error-msg hidden"></div>
       <div id="authSuccess" class="success-msg hidden"></div>
       <div class="form-group" style="margin-top:20px">
         <button class="btn btn-primary" id="authSubmitBtn">Sign In</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Blurred preview below auth card -->
+  <div style="filter:blur(6px);pointer-events:none;user-select:none;opacity:0.3;margin-top:24px">
+    <div class="profile-section">
+      <div class="section-title green">Risk Profile</div>
+      <div class="risk-toggle">
+        <button class="risk-btn">Conservative</button>
+        <button class="risk-btn active">Balanced</button>
+        <button class="risk-btn">Aggressive</button>
+      </div>
+    </div>
+    <div class="profile-section">
+      <div class="section-title yellow">Recommended Allocations</div>
+      <div class="rec-card"><div class="rec-rank">1</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">2</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">3</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">4</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+      <div class="rec-card"><div class="rec-rank">5</div><div class="rec-name">SN--- --------</div><div class="rec-score">Score: --.-</div><div class="rec-alloc">--- TAO<span>--%</span></div></div>
+    </div>
+    <div class="profile-section">
+      <div class="section-title cyan">Wallet Connection</div>
+      <div style="padding:16px 0;color:var(--dim)">Connect your wallet to track positions...</div>
     </div>
   </div>
 </div>
@@ -299,7 +323,24 @@ function setAuthTab(mode) {
   document.getElementById('authSubmitBtn').textContent = isSignUp ? 'Create Account' : 'Sign In';
   document.getElementById('confirmGroup').classList.toggle('hidden', !isSignUp);
   document.getElementById('passwordLabel').textContent = isSignUp ? 'Create Password' : 'Password';
+  document.getElementById('matchIndicator').textContent = '';
+  document.getElementById('authPasswordConfirm').value = '';
   hideMessages();
+}
+
+function checkPasswordMatch() {
+  var pw = document.getElementById('authPassword').value;
+  var confirm = document.getElementById('authPasswordConfirm').value;
+  var indicator = document.getElementById('matchIndicator');
+  if (!confirm) {
+    indicator.textContent = '';
+  } else if (pw === confirm) {
+    indicator.textContent = 'Passwords match';
+    indicator.style.color = '#00ff88';
+  } else {
+    indicator.textContent = 'Passwords do not match';
+    indicator.style.color = '#ff3355';
+  }
 }
 </script>
 
