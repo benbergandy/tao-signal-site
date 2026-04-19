@@ -148,7 +148,7 @@
 </div>
 
 <!-- LOADING (shown while checking session) -->
-<div class="main" id="loadingView" style="display:flex;align-items:center;justify-content:center;min-height:60vh">
+<div id="loadingView" style="display:flex;align-items:center;justify-content:center;min-height:60vh">
   <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">Loading...</div>
 </div>
 
@@ -849,13 +849,13 @@ async function loadRecommendations() {
 
 // ── VIEW MANAGEMENT ──────────────────────────────────────────
 function showAuthView() {
-  document.getElementById('loadingView').classList.add('hidden');
+  document.getElementById('loadingView').style.display = 'none';
   document.getElementById('authView').classList.remove('hidden');
   document.getElementById('profileView').classList.add('hidden');
 }
 
 function showProfileView() {
-  document.getElementById('loadingView').classList.add('hidden');
+  document.getElementById('loadingView').style.display = 'none';
   document.getElementById('authView').classList.add('hidden');
   document.getElementById('profileView').classList.remove('hidden');
 
