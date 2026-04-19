@@ -234,12 +234,12 @@
     <div class="profile-section fade-in" style="padding:32px 24px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
         <div>
-          <div class="form-label" style="margin-bottom:4px">Portfolio Value</div>
+          <div class="form-label" style="margin-bottom:4px">Total Portfolio Value</div>
           <div id="heroValue" style="font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;line-height:1">-</div>
           <div id="heroPnl" style="font-family:'IBM Plex Mono',monospace;font-size:16px;margin-top:6px">-</div>
         </div>
         <div style="display:flex;gap:8px;align-items:flex-start">
-          <div style="display:flex;gap:4px">
+          <div style="display:flex;gap:0">
             <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
             <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
           </div>
@@ -252,23 +252,43 @@
         Strategy: <span id="strategyLabel" style="color:var(--cyan)">-</span>
       </div>
 
+      <!-- Pool split display -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:12px">
+        <div style="background:var(--surface);padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="form-label" style="margin:0">Managed Pool</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 6px;background:rgba(0,212,255,0.08);border:1px solid var(--cyan);color:var(--cyan)" id="managedBadge">BOT</div>
+          </div>
+          <div id="statManaged" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--cyan)">-</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);margin-top:4px" id="managedDetail">Managed by TAO Signals bot</div>
+        </div>
+        <div style="background:var(--surface);padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="form-label" style="margin:0">Free Pool</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 6px;background:rgba(0,255,136,0.08);border:1px solid var(--green);color:var(--green)">MANUAL</div>
+          </div>
+          <div id="statFreePool" style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--green)">-</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);margin-top:4px">Available for manual trades</div>
+        </div>
+      </div>
+
       <!-- Summary stats -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
-        <div style="background:var(--surface);padding:12px;text-align:center">
-          <div class="form-label">Free Balance</div>
-          <div id="statFree" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--cyan)">-</div>
+        <div style="background:var(--surface);padding:10px;text-align:center">
+          <div class="form-label">Unstaked</div>
+          <div id="statFree" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--cyan)">-</div>
         </div>
-        <div style="background:var(--surface);padding:12px;text-align:center">
+        <div style="background:var(--surface);padding:10px;text-align:center">
           <div class="form-label">Staked</div>
-          <div id="statStaked" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--green)">-</div>
+          <div id="statStaked" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--green)">-</div>
         </div>
-        <div style="background:var(--surface);padding:12px;text-align:center">
+        <div style="background:var(--surface);padding:10px;text-align:center">
           <div class="form-label">Positions</div>
-          <div id="statPositions" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--text)">-</div>
+          <div id="statPositions" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--text)">-</div>
         </div>
-        <div style="background:var(--surface);padding:12px;text-align:center">
+        <div style="background:var(--surface);padding:10px;text-align:center">
           <div class="form-label">TAO/USD</div>
-          <div id="statTaoUsd" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--yellow)">-</div>
+          <div id="statTaoUsd" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--yellow)">-</div>
         </div>
       </div>
     </div>
@@ -290,10 +310,21 @@
       <div id="portfolioChart" style="height:200px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">Loading chart...</div>
     </div>
 
-    <!-- Positions table -->
+    <!-- Managed Positions (shown when manager is on) -->
+    <div id="managedHoldingsSection" class="profile-section fade-in hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="section-title" style="margin:0;padding:0;border:none;color:var(--cyan)">Managed Holdings</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 6px;background:rgba(0,212,255,0.08);border:1px solid var(--cyan);color:var(--cyan)">BOT CONTROLLED</div>
+      </div>
+      <div id="managedHoldingsTable">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:20px 0;text-align:center">Enable portfolio manager to see managed positions</div>
+      </div>
+    </div>
+
+    <!-- Free / All Positions -->
     <div class="profile-section fade-in">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="section-title" style="margin:0;padding:0;border:none">Holdings</div>
+        <div class="section-title" style="margin:0;padding:0;border:none" id="holdingsTitle">Holdings</div>
         <button class="btn btn-secondary" onclick="loadPortfolio()" style="width:auto;padding:6px 12px;font-size:9px">Refresh</button>
       </div>
       <div id="holdingsTable">
@@ -803,6 +834,8 @@ function updateManagerUI() {
     label.style.color = '#445566';
     builder.classList.add('hidden');
   }
+  // Re-render portfolio with updated pool split
+  if (portfolioData) renderPortfolio(portfolioData);
 }
 
 function handleTradeClick() {
@@ -936,6 +969,25 @@ function renderPortfolio(d) {
   document.getElementById('heroValue').style.color = '#c8d8e8';
   document.getElementById('heroPnl').textContent = fmtPnl(totalPnl, d.total_pnl_pct, displayUnit);
   document.getElementById('heroPnl').style.color = pnlColor;
+
+  // Pool split (placeholder — will be dynamic when bot is built)
+  if (portfolioManagerEnabled) {
+    document.getElementById('statManaged').textContent = fmtVal(d.total_staked_tao * mult, displayUnit);
+    document.getElementById('statFreePool').textContent = fmtVal(d.free_balance_tao * mult, displayUnit);
+    document.getElementById('managedBadge').style.display = '';
+    document.getElementById('managedDetail').textContent = optimizeMode.toUpperCase() + ' strategy';
+    document.getElementById('managedHoldingsSection').classList.remove('hidden');
+    document.getElementById('holdingsTitle').textContent = 'Free Holdings';
+    document.getElementById('holdingsTitle').style.color = '#00ff88';
+  } else {
+    document.getElementById('statManaged').textContent = fmtVal(0, displayUnit);
+    document.getElementById('statFreePool').textContent = fmtVal(totalVal, displayUnit);
+    document.getElementById('managedBadge').style.display = 'none';
+    document.getElementById('managedDetail').textContent = 'Portfolio manager off';
+    document.getElementById('managedHoldingsSection').classList.add('hidden');
+    document.getElementById('holdingsTitle').textContent = 'Holdings';
+    document.getElementById('holdingsTitle').style.color = '';
+  }
 
   // Stats
   document.getElementById('statFree').textContent = fmtVal(d.free_balance_tao * mult, displayUnit);
