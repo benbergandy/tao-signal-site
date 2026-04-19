@@ -83,6 +83,7 @@
   .risk-toggle { display:flex; gap:0; border:1px solid var(--border2); }
   .risk-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 16px; cursor:pointer; background:transparent; border:none; border-right:1px solid var(--border2); color:var(--muted); transition:all 0.15s; }
   .risk-btn:last-child { border-right:none; }
+  .risk-btn:last-child { border-right:none; }
   .risk-btn:hover { color:var(--text); background:var(--surface2); }
   .risk-btn.active { color:var(--cyan); background:var(--cyan-dim); }
   .risk-btn.active.conservative { color:var(--green); background:var(--green-dim); }
@@ -242,6 +243,11 @@
           <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
           <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
         </div>
+      </div>
+
+      <!-- Active strategy label -->
+      <div id="activeStrategy" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:none">
+        Strategy: <span id="strategyLabel" style="color:var(--cyan)">-</span>
       </div>
 
       <!-- Summary stats -->
@@ -404,6 +410,38 @@
     <!-- Generate button -->
     <div style="margin-top:20px">
       <button class="btn btn-primary" onclick="loadRecommendations()">Generate Portfolio</button>
+    </div>
+  </div>
+
+  <!-- Manual trade -->
+  <div class="profile-section fade-in">
+    <div class="section-title" style="cursor:pointer" onclick="document.getElementById('manualTradeBody').classList.toggle('hidden')">Manual Trade <span style="font-size:8px;color:var(--dim)">click to expand</span></div>
+    <div id="manualTradeBody" class="hidden">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+        Stake into a specific subnet manually. This bypasses the portfolio builder.
+        You maintain full control — the bot (when available) will only execute trades you approve.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label class="form-label">Subnet (SN#)</label>
+          <input type="number" class="form-input" id="manualSubnet" placeholder="64" min="0" max="128">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount (TAO)</label>
+          <input type="number" class="form-input" id="manualAmount" placeholder="100" min="0.01" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Action</label>
+          <div class="risk-toggle">
+            <button class="risk-btn active" id="manualStake" onclick="document.getElementById('manualStake').classList.add('active');document.getElementById('manualUnstake').classList.remove('active')">Stake</button>
+            <button class="risk-btn" id="manualUnstake" onclick="document.getElementById('manualUnstake').classList.add('active');document.getElementById('manualStake').classList.remove('active')">Unstake</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-secondary" onclick="previewManualTrade()" style="width:auto;padding:8px 16px">Preview Trade</button>
+      </div>
+      <div id="manualTradePreview" style="margin-top:12px"></div>
     </div>
   </div>
 
@@ -942,10 +980,57 @@ function renderChart(d) {
 }
 
 // ── RECOMMENDATIONS ──────────────────────────────────────────
+function updateStrategyLabel() {
+  var el = document.getElementById('activeStrategy');
+  var label = document.getElementById('strategyLabel');
+  if (!el || !label) return;
+  var risk = currentProfile ? currentProfile.risk_preference : 'balanced';
+  var rootPct = document.getElementById('sliderRoot') ? document.getElementById('sliderRoot').value : '15';
+  var maxN = document.getElementById('sliderMaxN') ? document.getElementById('sliderMaxN').value : '20';
+  label.textContent = optimizeMode.toUpperCase() + ' | ' + risk.toUpperCase() + ' | ' + rootPct + '% root | ' + maxN + ' max positions';
+  el.style.display = 'block';
+}
+
+function previewManualTrade() {
+  var subnet = parseInt(document.getElementById('manualSubnet').value);
+  var amount = parseFloat(document.getElementById('manualAmount').value);
+  var isStake = document.getElementById('manualStake').classList.contains('active');
+  var container = document.getElementById('manualTradePreview');
+
+  if (!subnet || !amount || amount <= 0) {
+    container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--red)">Enter a valid subnet number and amount</div>';
+    return;
+  }
+
+  var action = isStake ? 'STAKE' : 'UNSTAKE';
+  var html = '<div style="background:var(--surface);border:1px solid var(--border);padding:14px">';
+  html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Trade Preview</div>';
+  html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;color:var(--text)">';
+  html += '<span style="color:' + (isStake ? 'var(--green)' : 'var(--red)') + '">' + action + '</span> ';
+  html += amount.toFixed(2) + ' TAO → SN' + subnet;
+  html += '</div>';
+  html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--muted);margin-top:8px">';
+  html += 'Execution requires the local bot (coming soon). For now, use btcli or the Bittensor wallet to execute this trade manually.';
+  html += '</div>';
+  html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);margin-top:8px">btcli stake add --netuid ' + subnet + ' --amount ' + amount.toFixed(2) + ' --wallet.name default</div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
 async function loadRecommendations() {
   const container = document.getElementById('recommendations');
-  const risk = currentProfile?.risk_preference || 'balanced';
-  const budget = currentProfile?.tao_budget || 1000;
+  const budgetEl = document.getElementById('taoBudget');
+  const budget = budgetEl ? parseFloat(budgetEl.value) || 1000 : 1000;
+
+  // Read from sliders
+  const rootPct = parseInt(document.getElementById('sliderRoot')?.value || 15);
+  const maxPosPct = parseInt(document.getElementById('sliderMaxPos')?.value || 12);
+  const maxPositions = parseInt(document.getElementById('sliderMaxN')?.value || 20);
+  const minSortino = parseInt(document.getElementById('sliderMinSortino')?.value || 0) / 10;
+  const maxVol = parseInt(document.getElementById('sliderMaxVol')?.value || 60);
+  const maxDD = parseInt(document.getElementById('sliderMaxDD')?.value || 100);
+
+  updateStrategyLabel();
 
   try {
     const res = await fetch('data/combined_scores.json?t=' + Date.now());
@@ -961,12 +1046,6 @@ async function loadRecommendations() {
 
     const riskSubs = riskData?.subnets || {};
 
-    // Simple allocation: top subnets by score, filtered by risk profile
-    const maxVol = risk === 'conservative' ? 30 : risk === 'balanced' ? 60 : 150;
-    const maxDD = risk === 'conservative' ? 50 : risk === 'balanced' ? 100 : 200;
-    const rootPct = risk === 'conservative' ? 40 : risk === 'balanced' ? 15 : 10;
-    const maxPositions = risk === 'conservative' ? 12 : risk === 'balanced' ? 20 : 25;
-
     const deployable = budget * (1 - rootPct / 100);
     const rootTao = budget * rootPct / 100;
 
@@ -976,7 +1055,8 @@ async function loadRecommendations() {
         const r = riskSubs[String(s.netuid)] || {};
         const vol = r.volatility || 999;
         const dd = r.max_drawdown_pct || 999;
-        return vol <= maxVol && dd <= maxDD;
+        const sortino = r.sortino_ratio || 0;
+        return vol <= maxVol && dd <= maxDD && sortino >= minSortino;
       })
       .sort((a, b) => b.combined_score - a.combined_score)
       .slice(0, maxPositions);
