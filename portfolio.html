@@ -273,8 +273,12 @@
         Read-only connection. We can view your on-chain positions but cannot move funds.
         Your private keys never leave your device.
       </div>
-      <div style="margin-top:12px">
-        <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect Wallet</button>
+      <div id="walletPositions" style="margin-top:16px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:12px 0">Loading positions...</div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="loadWalletPositions()" style="width:auto;padding:8px 16px">Refresh Positions</button>
+        <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect</button>
       </div>
     </div>
     <div id="walletDisconnected">
@@ -538,6 +542,8 @@ async function disconnectWallet() {
   updateWalletDisplay();
 }
 
+const API_BASE = 'http://137.184.219.32:8899';
+
 function updateWalletDisplay() {
   const connected = document.getElementById('walletConnected');
   const disconnected = document.getElementById('walletDisconnected');
@@ -546,9 +552,59 @@ function updateWalletDisplay() {
     connected.classList.remove('hidden');
     disconnected.classList.add('hidden');
     document.getElementById('walletAddress').textContent = currentProfile.wallet_address;
+    loadWalletPositions();
   } else {
     connected.classList.add('hidden');
     disconnected.classList.remove('hidden');
+  }
+}
+
+async function loadWalletPositions() {
+  const container = document.getElementById('walletPositions');
+  if (!currentProfile.wallet_address) return;
+
+  container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);padding:12px 0">Reading on-chain positions...</div>';
+
+  try {
+    const res = await fetch(API_BASE + '/api/positions?address=' + encodeURIComponent(currentProfile.wallet_address));
+    const data = await res.json();
+
+    if (data.error) {
+      container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--red);padding:12px 0">Error: ' + data.error + '</div>';
+      return;
+    }
+
+    let html = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">';
+    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
+    html += '<div class="form-label">Free Balance</div>';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--cyan)">' + data.free_balance.toFixed(4) + ' TAO</div></div>';
+
+    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
+    html += '<div class="form-label">Staked Value</div>';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--green)">' + data.total_staked_tao.toFixed(4) + ' TAO</div></div>';
+
+    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
+    html += '<div class="form-label">Total Value</div>';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--text)">' + data.total_value.toFixed(4) + ' TAO</div></div>';
+    html += '</div>';
+
+    if (data.positions.length > 0) {
+      html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">On-Chain Positions (' + data.positions.length + ')</div>';
+      data.positions.forEach(function(p) {
+        html += '<div class="rec-card">';
+        html += '<div class="rec-rank" style="font-size:12px;color:var(--muted)">SN' + p.netuid + '</div>';
+        html += '<div class="rec-name">' + p.name + ' <span>' + p.alpha_tokens.toFixed(2) + ' tokens</span></div>';
+        html += '<div class="rec-score" style="color:var(--muted)">@ ' + p.price_tao.toFixed(6) + ' TAO</div>';
+        html += '<div class="rec-alloc">' + p.tao_value.toFixed(4) + ' TAO</div>';
+        html += '</div>';
+      });
+    }
+
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);margin-top:8px">Updated: ' + new Date(data.timestamp).toLocaleString() + '</div>';
+
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--red);padding:12px 0">Failed to connect to API: ' + e.message + '</div>';
   }
 }
 
