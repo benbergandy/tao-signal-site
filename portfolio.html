@@ -223,65 +223,65 @@
 <!-- PROFILE VIEW (shown when logged in) -->
 <div class="main hidden" id="profileView">
 
-  <!-- Account -->
-  <div class="profile-section fade-in">
-    <div class="section-title">Account</div>
-    <div class="profile-field">
-      <span class="profile-key">Email</span>
-      <span class="profile-val" id="profileEmail">-</span>
+  <!-- Portfolio Hero (shown when wallet connected) -->
+  <div id="portfolioHero" class="hidden" style="margin-bottom:24px">
+    <!-- Value + P&L header -->
+    <div class="profile-section fade-in" style="padding:32px 24px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div>
+          <div class="form-label" style="margin-bottom:4px">Portfolio Value</div>
+          <div id="heroValue" style="font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;line-height:1">-</div>
+          <div id="heroPnl" style="font-family:'IBM Plex Mono',monospace;font-size:16px;margin-top:6px">-</div>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
+          <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
+        </div>
+      </div>
+
+      <!-- Summary stats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
+        <div style="background:var(--surface);padding:12px;text-align:center">
+          <div class="form-label">Free Balance</div>
+          <div id="statFree" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--cyan)">-</div>
+        </div>
+        <div style="background:var(--surface);padding:12px;text-align:center">
+          <div class="form-label">Staked</div>
+          <div id="statStaked" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--green)">-</div>
+        </div>
+        <div style="background:var(--surface);padding:12px;text-align:center">
+          <div class="form-label">Positions</div>
+          <div id="statPositions" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--text)">-</div>
+        </div>
+        <div style="background:var(--surface);padding:12px;text-align:center">
+          <div class="form-label">TAO/USD</div>
+          <div id="statTaoUsd" style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--yellow)">-</div>
+        </div>
+      </div>
     </div>
-    <div class="profile-field">
-      <span class="profile-key">Member since</span>
-      <span class="profile-val" id="profileCreated">-</span>
+
+    <!-- Portfolio chart -->
+    <div class="profile-section fade-in">
+      <div class="section-title">Portfolio History</div>
+      <div id="portfolioChart" style="height:200px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">Loading chart...</div>
+    </div>
+
+    <!-- Positions table -->
+    <div class="profile-section fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="section-title" style="margin:0;padding:0;border:none">Holdings</div>
+        <button class="btn btn-secondary" onclick="loadPortfolio()" style="width:auto;padding:6px 12px;font-size:9px">Refresh</button>
+      </div>
+      <div id="holdingsTable">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:12px 0;text-align:center">Loading...</div>
+      </div>
     </div>
   </div>
 
-  <!-- Risk Profile -->
-  <div class="profile-section fade-in">
-    <div class="section-title green">Risk Profile</div>
-    <div class="form-group">
-      <label class="form-label">Risk Preference</label>
-      <div class="risk-toggle" id="riskToggle">
-        <button class="risk-btn conservative" onclick="setRisk('conservative')">Conservative</button>
-        <button class="risk-btn" onclick="setRisk('balanced')">Balanced</button>
-        <button class="risk-btn aggressive" onclick="setRisk('aggressive')">Aggressive</button>
-      </div>
-    </div>
-    <div class="form-group" style="margin-top:16px">
-      <label class="form-label">TAO Budget</label>
-      <input type="number" class="form-input" id="taoBudget" placeholder="1000" min="1" step="1" onchange="saveProfile()">
-    </div>
-    <div class="form-group" style="margin-top:16px">
-      <label class="form-label">Rebalance Frequency</label>
-      <div class="risk-toggle" id="rebalToggle">
-        <button class="risk-btn" onclick="setRebalance('daily')">Daily</button>
-        <button class="risk-btn" onclick="setRebalance('weekly')">Weekly</button>
-        <button class="risk-btn" onclick="setRebalance('manual')">Manual</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Wallet -->
-  <div class="profile-section fade-in">
-    <div class="section-title cyan">Wallet Connection</div>
-    <div id="walletConnected" class="hidden">
-      <div class="profile-field">
-        <span class="profile-key">Coldkey Address</span>
-        <span class="wallet-display" id="walletAddress">-</span>
-      </div>
-      <div class="wallet-note">
-        Read-only connection. We can view your on-chain positions but cannot move funds.
-        Your private keys never leave your device.
-      </div>
-      <div id="walletPositions" style="margin-top:16px">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:12px 0">Loading positions...</div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn btn-secondary" onclick="loadWalletPositions()" style="width:auto;padding:8px 16px">Refresh Positions</button>
-        <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect</button>
-      </div>
-    </div>
-    <div id="walletDisconnected">
+  <!-- Wallet connection (shown when no wallet) -->
+  <div id="walletDisconnected">
+    <div class="profile-section fade-in">
+      <div class="section-title cyan">Connect Your Wallet</div>
       <div class="form-group">
         <label class="form-label">Bittensor Coldkey Address</label>
         <input type="text" class="form-input" id="walletInput" placeholder="5Fgft...mPvB (your public address, NOT your seed phrase)">
@@ -290,7 +290,45 @@
         Paste your public coldkey address (starts with 5). This is NOT your seed phrase or private key.
         Your address is already public on the blockchain. We use it to read your positions.
       </div>
-      <button class="btn btn-secondary" onclick="connectWallet()" style="width:auto;padding:8px 16px">Connect Wallet</button>
+      <button class="btn btn-primary" onclick="connectWallet()" style="width:auto;padding:10px 20px">Connect Wallet</button>
+    </div>
+  </div>
+
+  <!-- Settings (collapsible) -->
+  <div class="profile-section fade-in">
+    <div class="section-title" style="cursor:pointer" onclick="document.getElementById('settingsBody').classList.toggle('hidden')">Settings <span style="font-size:8px;color:var(--dim)">click to expand</span></div>
+    <div id="settingsBody" class="hidden">
+      <div class="profile-field">
+        <span class="profile-key">Email</span>
+        <span class="profile-val" id="profileEmail">-</span>
+      </div>
+      <div class="profile-field">
+        <span class="profile-key">Member since</span>
+        <span class="profile-val" id="profileCreated">-</span>
+      </div>
+      <div class="profile-field">
+        <span class="profile-key">Wallet</span>
+        <span class="profile-val wallet-display" id="walletAddress" style="font-size:10px">-</span>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Risk Preference</label>
+        <div class="risk-toggle" id="riskToggle">
+          <button class="risk-btn conservative" onclick="setRisk('conservative')">Conservative</button>
+          <button class="risk-btn" onclick="setRisk('balanced')">Balanced</button>
+          <button class="risk-btn aggressive" onclick="setRisk('aggressive')">Aggressive</button>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Rebalance Frequency</label>
+        <div class="risk-toggle" id="rebalToggle">
+          <button class="risk-btn" onclick="setRebalance('daily')">Daily</button>
+          <button class="risk-btn" onclick="setRebalance('weekly')">Weekly</button>
+          <button class="risk-btn" onclick="setRebalance('manual')">Manual</button>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect Wallet</button>
+      </div>
     </div>
   </div>
 
@@ -543,69 +581,187 @@ async function disconnectWallet() {
 }
 
 const API_BASE = 'https://api.taosignals.io:8443';
+var portfolioData = null;
+var displayUnit = 'tao';
+
+function setUnit(unit) {
+  displayUnit = unit;
+  document.getElementById('toggleTAO').classList.toggle('active', unit === 'tao');
+  document.getElementById('toggleUSD').classList.toggle('active', unit === 'usd');
+  if (portfolioData) renderPortfolio(portfolioData);
+}
+
+function fmtVal(val, unit) {
+  if (unit === 'usd') return '$' + val.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+  return val.toFixed(4) + ' TAO';
+}
+
+function fmtPnl(val, pct, unit) {
+  var sign = val >= 0 ? '+' : '';
+  var valStr = unit === 'usd' ? sign + '$' + Math.abs(val).toFixed(2) : sign + val.toFixed(4) + ' TAO';
+  return valStr + ' (' + sign + pct.toFixed(2) + '%)';
+}
 
 function updateWalletDisplay() {
-  const connected = document.getElementById('walletConnected');
-  const disconnected = document.getElementById('walletDisconnected');
+  var hero = document.getElementById('portfolioHero');
+  var disconnected = document.getElementById('walletDisconnected');
 
-  if (currentProfile.wallet_address) {
-    connected.classList.remove('hidden');
+  if (currentProfile && currentProfile.wallet_address) {
+    hero.classList.remove('hidden');
     disconnected.classList.add('hidden');
     document.getElementById('walletAddress').textContent = currentProfile.wallet_address;
-    loadWalletPositions();
+    loadPortfolio();
   } else {
-    connected.classList.add('hidden');
+    hero.classList.add('hidden');
     disconnected.classList.remove('hidden');
   }
 }
 
-async function loadWalletPositions() {
-  const container = document.getElementById('walletPositions');
-  if (!currentProfile.wallet_address) return;
-
-  container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);padding:12px 0">Reading on-chain positions...</div>';
+async function loadPortfolio() {
+  if (!currentProfile || !currentProfile.wallet_address) return;
 
   try {
-    const res = await fetch(API_BASE + '/api/positions?address=' + encodeURIComponent(currentProfile.wallet_address));
-    const data = await res.json();
+    var res = await fetch(API_BASE + '/api/portfolio?address=' + encodeURIComponent(currentProfile.wallet_address));
+    var data = await res.json();
 
     if (data.error) {
-      container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--red);padding:12px 0">Error: ' + data.error + '</div>';
+      document.getElementById('heroValue').textContent = 'Error';
+      document.getElementById('heroValue').style.color = '#ff3355';
       return;
     }
 
-    let html = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">';
-    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
-    html += '<div class="form-label">Free Balance</div>';
-    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--cyan)">' + data.free_balance.toFixed(4) + ' TAO</div></div>';
+    portfolioData = data;
+    setUnit('tao');
 
-    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
-    html += '<div class="form-label">Staked Value</div>';
-    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--green)">' + data.total_staked_tao.toFixed(4) + ' TAO</div></div>';
+  } catch(e) {
+    document.getElementById('heroValue').textContent = 'API Error';
+    document.getElementById('heroValue').style.color = '#ff3355';
+    document.getElementById('heroPnl').textContent = e.message;
+  }
+}
 
-    html += '<div style="background:var(--surface2);padding:12px;border:1px solid var(--border)">';
-    html += '<div class="form-label">Total Value</div>';
-    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:600;color:var(--text)">' + data.total_value.toFixed(4) + ' TAO</div></div>';
+function renderPortfolio(d) {
+  var mult = displayUnit === 'usd' ? d.tao_usd : 1;
+  var totalVal = d.total_value_tao * mult;
+  var totalPnl = d.total_pnl_tao * mult;
+  var pnlColor = d.total_pnl_tao >= 0 ? '#00ff88' : '#ff3355';
+
+  // Hero
+  document.getElementById('heroValue').textContent = fmtVal(totalVal, displayUnit);
+  document.getElementById('heroValue').style.color = '#c8d8e8';
+  document.getElementById('heroPnl').textContent = fmtPnl(totalPnl, d.total_pnl_pct, displayUnit);
+  document.getElementById('heroPnl').style.color = pnlColor;
+
+  // Stats
+  document.getElementById('statFree').textContent = fmtVal(d.free_balance_tao * mult, displayUnit);
+  document.getElementById('statStaked').textContent = fmtVal(d.total_staked_tao * mult, displayUnit);
+  document.getElementById('statPositions').textContent = d.n_positions;
+  document.getElementById('statTaoUsd').textContent = '$' + d.tao_usd.toFixed(2);
+
+  // Holdings table
+  var html = '';
+  d.positions.forEach(function(p) {
+    var val = p.tao_value * mult;
+    var pnl = p.pnl_tao * mult;
+    var color = p.pnl_tao >= 0 ? '#00ff88' : '#ff3355';
+    var sign = p.pnl_tao >= 0 ? '+' : '';
+    var costVal = p.cost_basis * mult;
+
+    html += '<div style="background:var(--surface2);border:1px solid var(--border);padding:14px;margin-bottom:6px;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center">';
+
+    // Left: subnet badge
+    html += '<div style="text-align:center">';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted)">SN' + p.netuid + '</div>';
+    html += '<div style="font-size:10px;color:var(--dim)">' + p.pct_of_portfolio.toFixed(1) + '%</div>';
     html += '</div>';
 
-    if (data.positions.length > 0) {
-      html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">On-Chain Positions (' + data.positions.length + ')</div>';
-      data.positions.forEach(function(p) {
-        html += '<div class="rec-card">';
-        html += '<div class="rec-rank" style="font-size:12px;color:var(--muted)">SN' + p.netuid + '</div>';
-        html += '<div class="rec-name">' + p.name + ' <span>' + p.alpha_tokens.toFixed(2) + ' tokens</span></div>';
-        html += '<div class="rec-score" style="color:var(--muted)">@ ' + p.price_tao.toFixed(6) + ' TAO</div>';
-        html += '<div class="rec-alloc">' + p.tao_value.toFixed(4) + ' TAO</div>';
-        html += '</div>';
-      });
+    // Middle: name + details
+    html += '<div>';
+    html += '<div style="font-weight:600;font-size:13px;margin-bottom:4px"><a href="subnet.html?id=' + p.netuid + '" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">' + p.name + '</a></div>';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--muted)">';
+    html += p.alpha_tokens.toFixed(2) + ' tokens @ ' + p.price_tao.toFixed(6) + ' TAO';
+    if (p.cost_basis > 0) html += ' | Cost: ' + fmtVal(costVal, displayUnit);
+    html += '</div>';
+    html += '</div>';
+
+    // Right: value + P&L
+    html += '<div style="text-align:right">';
+    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:600">' + fmtVal(val, displayUnit) + '</div>';
+    if (p.cost_basis > 0) {
+      html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:' + color + '">' + sign + p.pnl_pct.toFixed(1) + '% (' + (displayUnit === 'usd' ? sign + '$' + Math.abs(pnl).toFixed(2) : sign + Math.abs(pnl).toFixed(4) + ' TAO') + ')</div>';
     }
+    html += '</div>';
+    html += '</div>';
+  });
 
-    html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);margin-top:8px">Updated: ' + new Date(data.timestamp).toLocaleString() + '</div>';
+  // Free balance row
+  html += '<div style="background:var(--surface);border:1px solid var(--border);border-color:var(--cyan);padding:14px;margin-bottom:6px;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center">';
+  html += '<div style="text-align:center;font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--cyan)">FREE</div>';
+  html += '<div style="font-weight:600;font-size:13px;color:var(--cyan)">Unstaked Balance</div>';
+  html += '<div style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:600;color:var(--cyan)">' + fmtVal(d.free_balance_tao * mult, displayUnit) + '</div>';
+  html += '</div>';
 
-    container.innerHTML = html;
-  } catch(e) {
-    container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--red);padding:12px 0">Failed to connect to API: ' + e.message + '</div>';
+  html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);margin-top:8px;text-align:right">Updated: ' + new Date(d.timestamp).toLocaleString() + '</div>';
+
+  document.getElementById('holdingsTable').innerHTML = html;
+
+  // Chart
+  renderChart(d);
+}
+
+function renderChart(d) {
+  var container = document.getElementById('portfolioChart');
+  if (!d.history || d.history.length < 2) {
+    container.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted)">Chart requires 2+ days of data</div>';
+    return;
   }
+
+  var mult = displayUnit === 'usd' ? d.tao_usd : 1;
+  var values = d.history.map(function(h) { return h.total_value * mult; });
+  var dates = d.history.map(function(h) { return h.date; });
+  var minVal = Math.min.apply(null, values) * 0.95;
+  var maxVal = Math.max.apply(null, values) * 1.05;
+  var range = maxVal - minVal || 1;
+  var w = container.offsetWidth || 700;
+  var h = 200;
+  var padding = 40;
+  var chartW = w - padding * 2;
+  var chartH = h - padding;
+
+  var points = values.map(function(v, i) {
+    var x = padding + (i / (values.length - 1)) * chartW;
+    var y = h - padding - ((v - minVal) / range) * chartH;
+    return x + ',' + y;
+  });
+
+  var lineColor = values[values.length-1] >= values[0] ? '#00ff88' : '#ff3355';
+
+  var svg = '<svg width="' + w + '" height="' + h + '" style="width:100%;height:' + h + 'px">';
+  // Grid lines
+  for (var gi = 0; gi <= 4; gi++) {
+    var gy = h - padding - (gi / 4) * chartH;
+    var gval = minVal + (gi / 4) * range;
+    svg += '<line x1="' + padding + '" y1="' + gy + '" x2="' + (w-10) + '" y2="' + gy + '" stroke="#1a2230" stroke-width="1"/>';
+    svg += '<text x="' + (padding-5) + '" y="' + (gy+3) + '" fill="#445566" font-size="9" font-family="IBM Plex Mono" text-anchor="end">' + (displayUnit === 'usd' ? '$' + gval.toFixed(0) : gval.toFixed(2)) + '</text>';
+  }
+  // Line
+  svg += '<polyline points="' + points.join(' ') + '" fill="none" stroke="' + lineColor + '" stroke-width="2"/>';
+  // Dots
+  points.forEach(function(pt) {
+    svg += '<circle cx="' + pt.split(',')[0] + '" cy="' + pt.split(',')[1] + '" r="3" fill="' + lineColor + '"/>';
+  });
+  // Date labels
+  var labelEvery = Math.max(1, Math.floor(dates.length / 5));
+  dates.forEach(function(d, i) {
+    if (i % labelEvery === 0 || i === dates.length - 1) {
+      var x = padding + (i / (dates.length - 1)) * chartW;
+      svg += '<text x="' + x + '" y="' + (h-5) + '" fill="#445566" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">' + d.slice(5) + '</text>';
+    }
+  });
+  svg += '</svg>';
+
+  container.innerHTML = svg;
+  container.style.height = h + 'px';
 }
 
 // ── RECOMMENDATIONS ──────────────────────────────────────────
