@@ -80,10 +80,9 @@
   .profile-key { font-size:12px; color:var(--muted); }
   .profile-val { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text); }
 
-  .risk-toggle { display:flex; gap:0; border:1px solid var(--border2); }
-  .risk-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 16px; cursor:pointer; background:transparent; border:none; border-right:1px solid var(--border2); color:var(--muted); transition:all 0.15s; }
-  .risk-btn:last-child { border-right:none; }
-  .risk-btn:last-child { border-right:none; }
+  .risk-toggle { display:flex; gap:0; }
+  .risk-btn { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 16px; cursor:pointer; background:transparent; border:1px solid var(--border2); border-right:none; color:var(--muted); transition:all 0.15s; }
+  .risk-btn:last-child { border-right:1px solid var(--border2); }
   .risk-btn:hover { color:var(--text); background:var(--surface2); }
   .risk-btn.active { color:var(--cyan); background:var(--cyan-dim); }
   .risk-btn.active.conservative { color:var(--green); background:var(--green-dim); }
