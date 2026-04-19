@@ -265,9 +265,20 @@
       </div>
     </div>
 
-    <!-- Portfolio chart -->
+    <!-- Portfolio chart with time range -->
     <div class="profile-section fade-in">
-      <div class="section-title">Portfolio History</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="section-title" style="margin:0;padding:0;border:none">Portfolio History</div>
+        <div style="display:flex;gap:4px" id="chartRangeButtons">
+          <button class="risk-btn" onclick="setChartRange('1d')">1D</button>
+          <button class="risk-btn" onclick="setChartRange('1w')">1W</button>
+          <button class="risk-btn active" onclick="setChartRange('1m')">1M</button>
+          <button class="risk-btn" onclick="setChartRange('3m')">3M</button>
+          <button class="risk-btn" onclick="setChartRange('ytd')">YTD</button>
+          <button class="risk-btn" onclick="setChartRange('1y')">1Y</button>
+          <button class="risk-btn" onclick="setChartRange('all')">ALL</button>
+        </div>
+      </div>
       <div id="portfolioChart" style="height:200px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">Loading chart...</div>
     </div>
 
@@ -299,10 +310,117 @@
     </div>
   </div>
 
-  <!-- Settings (collapsible) -->
+  <!-- Portfolio Builder -->
   <div class="profile-section fade-in">
-    <div class="section-title" style="cursor:pointer" onclick="document.getElementById('settingsBody').classList.toggle('hidden')">Settings <span style="font-size:8px;color:var(--dim)">click to expand</span></div>
-    <div id="settingsBody" class="hidden">
+    <div class="section-title yellow">Portfolio Builder</div>
+
+    <!-- Optimization mode -->
+    <div class="form-group">
+      <label class="form-label">Optimization Target</label>
+      <div class="risk-toggle" id="optimToggle">
+        <button class="risk-btn active" onclick="setOptimize('sortino')">Sortino</button>
+        <button class="risk-btn" onclick="setOptimize('sharpe')">Sharpe</button>
+        <button class="risk-btn" onclick="setOptimize('calmar')">Calmar</button>
+        <button class="risk-btn" onclick="setOptimize('alpha')">Alpha</button>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);margin-top:4px" id="optimDesc">Maximize return per unit downside risk</div>
+    </div>
+
+    <!-- Risk preset -->
+    <div class="form-group" style="margin-top:16px">
+      <label class="form-label">Risk Profile</label>
+      <div class="risk-toggle" id="riskToggle">
+        <button class="risk-btn conservative" onclick="setRisk('conservative')">Conservative</button>
+        <button class="risk-btn active" onclick="setRisk('balanced')">Balanced</button>
+        <button class="risk-btn aggressive" onclick="setRisk('aggressive')">Aggressive</button>
+        <button class="risk-btn" onclick="setRisk('custom')">Custom</button>
+      </div>
+    </div>
+
+    <!-- Budget -->
+    <div class="form-group" style="margin-top:16px">
+      <label class="form-label">TAO Budget</label>
+      <input type="number" class="form-input" id="taoBudget" value="1000" min="1" step="1" style="max-width:200px">
+    </div>
+
+    <!-- Advanced settings (shown when Custom or always visible) -->
+    <div id="advancedSettings" style="margin-top:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label class="form-label">Root Allocation (min %)</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderRoot" min="0" max="60" value="15" oninput="document.getElementById('valRoot').textContent=this.value+'%'" style="flex:1">
+            <span id="valRoot" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">15%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Per Position (%)</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderMaxPos" min="3" max="30" value="12" oninput="document.getElementById('valMaxPos').textContent=this.value+'%'" style="flex:1">
+            <span id="valMaxPos" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">12%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Positions</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderMaxN" min="3" max="30" value="20" oninput="document.getElementById('valMaxN').textContent=this.value" style="flex:1">
+            <span id="valMaxN" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">20</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Min Sortino Ratio</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderMinSortino" min="-10" max="20" value="0" oninput="document.getElementById('valMinSortino').textContent=(this.value/10).toFixed(1)" style="flex:1">
+            <span id="valMinSortino" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">0.0</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Volatility (%)</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderMaxVol" min="10" max="200" value="60" oninput="document.getElementById('valMaxVol').textContent=this.value+'%'" style="flex:1">
+            <span id="valMaxVol" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">60%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Drawdown (%)</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="sliderMaxDD" min="20" max="300" value="100" oninput="document.getElementById('valMaxDD').textContent=this.value+'%'" style="flex:1">
+            <span id="valMaxDD" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan);width:35px">100%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rebalance frequency -->
+    <div class="form-group" style="margin-top:16px">
+      <label class="form-label">Rebalance Frequency</label>
+      <div class="risk-toggle" id="rebalToggle">
+        <button class="risk-btn active" onclick="setRebalance('daily')">Daily</button>
+        <button class="risk-btn" onclick="setRebalance('weekly')">Weekly</button>
+        <button class="risk-btn" onclick="setRebalance('manual')">Manual</button>
+      </div>
+    </div>
+
+    <!-- Generate button -->
+    <div style="margin-top:20px">
+      <button class="btn btn-primary" onclick="loadRecommendations()">Generate Portfolio</button>
+    </div>
+  </div>
+
+  <!-- Recommendations output -->
+  <div class="profile-section fade-in">
+    <div class="section-title green">Recommended Allocations</div>
+    <div id="recommendations">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:20px 0;text-align:center">
+        Configure your strategy above and click Generate Portfolio
+      </div>
+    </div>
+  </div>
+
+  <!-- Account settings -->
+  <div class="profile-section fade-in">
+    <div class="section-title" style="cursor:pointer" onclick="document.getElementById('accountBody').classList.toggle('hidden')">Account <span style="font-size:8px;color:var(--dim)">click to expand</span></div>
+    <div id="accountBody" class="hidden">
       <div class="profile-field">
         <span class="profile-key">Email</span>
         <span class="profile-val" id="profileEmail">-</span>
@@ -315,41 +433,11 @@
         <span class="profile-key">Wallet</span>
         <span class="profile-val wallet-display" id="walletAddress" style="font-size:10px">-</span>
       </div>
-      <div class="form-group" style="margin-top:12px">
-        <label class="form-label">Risk Preference</label>
-        <div class="risk-toggle" id="riskToggle">
-          <button class="risk-btn conservative" onclick="setRisk('conservative')">Conservative</button>
-          <button class="risk-btn" onclick="setRisk('balanced')">Balanced</button>
-          <button class="risk-btn aggressive" onclick="setRisk('aggressive')">Aggressive</button>
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px">
-        <label class="form-label">Rebalance Frequency</label>
-        <div class="risk-toggle" id="rebalToggle">
-          <button class="risk-btn" onclick="setRebalance('daily')">Daily</button>
-          <button class="risk-btn" onclick="setRebalance('weekly')">Weekly</button>
-          <button class="risk-btn" onclick="setRebalance('manual')">Manual</button>
-        </div>
-      </div>
-      <div style="margin-top:12px">
+      <div style="margin-top:12px;display:flex;gap:8px">
         <button class="btn btn-danger" onclick="disconnectWallet()" style="width:auto;padding:8px 16px">Disconnect Wallet</button>
+        <button class="btn btn-danger" onclick="signOut()" style="width:auto;padding:8px 16px">Sign Out</button>
       </div>
     </div>
-  </div>
-
-  <!-- Recommendations -->
-  <div class="profile-section fade-in">
-    <div class="section-title yellow">Recommended Allocations</div>
-    <div id="recommendations">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);padding:20px 0;text-align:center">
-        Loading recommendations...
-      </div>
-    </div>
-  </div>
-
-  <!-- Sign Out -->
-  <div style="text-align:center;margin-top:24px">
-    <button class="btn btn-danger" onclick="signOut()" style="width:auto;padding:10px 24px">Sign Out</button>
   </div>
 </div>
 
@@ -536,9 +624,10 @@ async function saveProfile() {
 }
 
 function setRisk(risk) {
-  currentProfile.risk_preference = risk;
+  if (currentProfile) currentProfile.risk_preference = risk;
   updateRiskButtons();
-  saveProfile();
+  if (risk !== 'custom') applyPreset(risk);
+  if (currentProfile) saveProfile();
 }
 
 function setRebalance(freq) {
@@ -589,6 +678,52 @@ async function disconnectWallet() {
 const API_BASE = 'https://api.taosignals.io:8443';
 var portfolioData = null;
 var displayUnit = 'tao';
+var chartRange = '1m';
+var optimizeMode = 'sortino';
+
+var OPTIM_DESCRIPTIONS = {
+  sortino: 'Maximize return per unit downside risk',
+  sharpe: 'Maximize return per unit total volatility',
+  calmar: 'Maximize return per unit max drawdown',
+  alpha: 'Maximize expected return (ignore risk)',
+};
+
+var RISK_PRESETS = {
+  conservative: {root: 40, maxPos: 8, maxN: 12, minSortino: 5, maxVol: 30, maxDD: 50},
+  balanced:     {root: 15, maxPos: 12, maxN: 20, minSortino: 0, maxVol: 60, maxDD: 100},
+  aggressive:   {root: 10, maxPos: 20, maxN: 25, minSortino: -5, maxVol: 150, maxDD: 200},
+};
+
+function setOptimize(mode) {
+  optimizeMode = mode;
+  document.querySelectorAll('#optimToggle .risk-btn').forEach(function(b) { b.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('optimDesc').textContent = OPTIM_DESCRIPTIONS[mode] || '';
+}
+
+function setChartRange(range) {
+  chartRange = range;
+  document.querySelectorAll('#chartRangeButtons .risk-btn').forEach(function(b) { b.classList.remove('active'); });
+  event.target.classList.add('active');
+  if (portfolioData) renderChart(portfolioData);
+}
+
+function applyPreset(preset) {
+  var p = RISK_PRESETS[preset];
+  if (!p) return;
+  document.getElementById('sliderRoot').value = p.root;
+  document.getElementById('valRoot').textContent = p.root + '%';
+  document.getElementById('sliderMaxPos').value = p.maxPos;
+  document.getElementById('valMaxPos').textContent = p.maxPos + '%';
+  document.getElementById('sliderMaxN').value = p.maxN;
+  document.getElementById('valMaxN').textContent = p.maxN;
+  document.getElementById('sliderMinSortino').value = p.minSortino;
+  document.getElementById('valMinSortino').textContent = (p.minSortino / 10).toFixed(1);
+  document.getElementById('sliderMaxVol').value = p.maxVol;
+  document.getElementById('valMaxVol').textContent = p.maxVol + '%';
+  document.getElementById('sliderMaxDD').value = p.maxDD;
+  document.getElementById('valMaxDD').textContent = p.maxDD + '%';
+}
 
 function setUnit(unit) {
   displayUnit = unit;
@@ -673,7 +808,11 @@ function renderPortfolio(d) {
     var sign = p.pnl_tao >= 0 ? '+' : '';
     var costVal = p.cost_basis * mult;
 
-    html += '<div style="background:var(--surface2);border:1px solid var(--border);padding:14px;margin-bottom:6px;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center">';
+    var posId = 'pos_' + p.netuid;
+    html += '<div style="background:var(--surface2);border:1px solid var(--border);margin-bottom:6px">';
+
+    // Main row (clickable)
+    html += '<div onclick="document.getElementById(\'' + posId + '\').classList.toggle(\'hidden\')" style="padding:14px;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;cursor:pointer">';
 
     // Left: subnet badge
     html += '<div style="text-align:center">';
@@ -683,10 +822,9 @@ function renderPortfolio(d) {
 
     // Middle: name + details
     html += '<div>';
-    html += '<div style="font-weight:600;font-size:13px;margin-bottom:4px"><a href="subnet.html?id=' + p.netuid + '" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border2)">' + p.name + '</a></div>';
+    html += '<div style="font-weight:600;font-size:13px;margin-bottom:4px">' + p.name + ' <span style="font-size:9px;color:var(--dim)">click to expand</span></div>';
     html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--muted)">';
     html += p.alpha_tokens.toFixed(2) + ' tokens @ ' + p.price_tao.toFixed(6) + ' TAO';
-    if (p.cost_basis > 0) html += ' | Cost: ' + fmtVal(costVal, displayUnit);
     html += '</div>';
     html += '</div>';
 
@@ -697,6 +835,23 @@ function renderPortfolio(d) {
       html += '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:' + color + '">' + sign + p.pnl_pct.toFixed(1) + '% (' + (displayUnit === 'usd' ? sign + '$' + Math.abs(pnl).toFixed(2) : sign + Math.abs(pnl).toFixed(4) + ' TAO') + ')</div>';
     }
     html += '</div>';
+    html += '</div>';
+
+    // Expanded detail (hidden by default)
+    html += '<div id="' + posId + '" class="hidden" style="padding:0 14px 14px;border-top:1px solid var(--border)">';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">';
+    html += '<div><div class="form-label">Cost Basis</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">' + fmtVal(costVal, displayUnit) + '</div></div>';
+    html += '<div><div class="form-label">Current Value</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">' + fmtVal(val, displayUnit) + '</div></div>';
+    html += '<div><div class="form-label">P&L</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:' + color + '">' + fmtPnl(pnl, p.pnl_pct, displayUnit) + '</div></div>';
+    html += '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px">';
+    html += '<div><div class="form-label">Alpha Tokens</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">' + p.alpha_tokens.toFixed(4) + '</div></div>';
+    html += '<div><div class="form-label">Token Price</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">' + p.price_tao.toFixed(6) + ' TAO</div></div>';
+    html += '<div><div class="form-label">% of Portfolio</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px">' + p.pct_of_portfolio.toFixed(1) + '%</div></div>';
+    html += '</div>';
+    html += '<div style="margin-top:8px"><a href="subnet.html?id=' + p.netuid + '" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--cyan);text-decoration:none">View subnet detail →</a></div>';
+    html += '</div>';
+
     html += '</div>';
   });
 
@@ -722,9 +877,25 @@ function renderChart(d) {
     return;
   }
 
+  // Filter history by selected range
+  var now = new Date();
+  var cutoff = new Date();
+  switch(chartRange) {
+    case '1d': cutoff.setDate(now.getDate() - 1); break;
+    case '1w': cutoff.setDate(now.getDate() - 7); break;
+    case '1m': cutoff.setMonth(now.getMonth() - 1); break;
+    case '3m': cutoff.setMonth(now.getMonth() - 3); break;
+    case 'ytd': cutoff = new Date(now.getFullYear(), 0, 1); break;
+    case '1y': cutoff.setFullYear(now.getFullYear() - 1); break;
+    case 'all': cutoff = new Date(2020, 0, 1); break;
+  }
+  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  var filtered = d.history.filter(function(h) { return h.date >= cutoffStr; });
+  if (filtered.length < 2) filtered = d.history;
+
   var mult = displayUnit === 'usd' ? d.tao_usd : 1;
-  var values = d.history.map(function(h) { return h.total_value * mult; });
-  var dates = d.history.map(function(h) { return h.date; });
+  var values = filtered.map(function(h) { return h.total_value * mult; });
+  var dates = filtered.map(function(h) { return h.date; });
   var minVal = Math.min.apply(null, values) * 0.95;
   var maxVal = Math.max.apply(null, values) * 1.05;
   var range = maxVal - minVal || 1;
