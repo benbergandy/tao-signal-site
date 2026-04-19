@@ -318,9 +318,46 @@
     </div>
   </div>
 
-  <!-- Portfolio Builder -->
+  <!-- Portfolio Manager Toggle -->
   <div class="profile-section fade-in">
-    <div class="section-title yellow">Portfolio Builder</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="section-title" style="margin:0;padding:0;border:none">Portfolio Manager</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="managerStatusLabel" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">OFF</span>
+        <div onclick="togglePortfolioManager()" id="managerToggle" style="width:44px;height:24px;border-radius:12px;background:var(--border2);cursor:pointer;position:relative;transition:background 0.2s">
+          <div id="managerToggleKnob" style="width:20px;height:20px;border-radius:10px;background:var(--muted);position:absolute;top:2px;left:2px;transition:all 0.2s"></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:8px;line-height:1.5">
+      When enabled, the TAO Signals bot will automatically manage your portfolio based on the strategy you configure below.
+    </div>
+
+    <!-- Warning (shown when toggling on) -->
+    <div id="managerWarning" class="hidden" style="margin-top:12px;padding:14px;background:rgba(255,208,0,0.06);border:1px solid var(--yellow)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--yellow);font-weight:600;margin-bottom:8px">IMPORTANT: AUTOMATED PORTFOLIO MANAGEMENT</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
+        By enabling the portfolio manager, you authorize the TAO Signals bot to automatically
+        stake and unstake TAO on your behalf according to your configured strategy. This means:
+      </div>
+      <ul style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8;margin:8px 0 8px 16px;padding:0">
+        <li>Your current positions may be rebalanced or exited</li>
+        <li>New positions may be opened in subnets selected by the model</li>
+        <li>Trades are executed within the limits you set (max position size, root allocation, etc.)</li>
+        <li>You can disable the bot at any time — all positions remain yours</li>
+        <li>Your private keys never leave your device — the bot signs locally</li>
+      </ul>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="confirmPortfolioManager(true)" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;cursor:pointer;background:var(--yellow);color:var(--bg);font-weight:600;border:none">I Understand, Enable</button>
+        <button onclick="confirmPortfolioManager(false)" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;cursor:pointer;background:transparent;border:1px solid var(--border2);color:var(--muted)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Builder (shown when manager is ON) -->
+  <div id="portfolioBuilderSection" class="hidden">
+  <div class="profile-section fade-in">
+    <div class="section-title yellow">Portfolio Strategy</div>
 
     <!-- Optimization mode -->
     <div class="form-group">
@@ -456,6 +493,7 @@
       </div>
     </div>
   </div>
+  </div> <!-- end portfolioBuilderSection -->
 
   <!-- Account settings -->
   <div class="profile-section fade-in">
@@ -722,6 +760,50 @@ var portfolioData = null;
 var displayUnit = 'tao';
 var chartRange = '1m';
 var optimizeMode = 'sortino';
+
+var portfolioManagerEnabled = false;
+
+function togglePortfolioManager() {
+  if (!portfolioManagerEnabled) {
+    // Show warning before enabling
+    document.getElementById('managerWarning').classList.remove('hidden');
+  } else {
+    // Disable immediately
+    portfolioManagerEnabled = false;
+    updateManagerUI();
+  }
+}
+
+function confirmPortfolioManager(confirmed) {
+  document.getElementById('managerWarning').classList.add('hidden');
+  if (confirmed) {
+    portfolioManagerEnabled = true;
+    updateManagerUI();
+  }
+}
+
+function updateManagerUI() {
+  var toggle = document.getElementById('managerToggle');
+  var knob = document.getElementById('managerToggleKnob');
+  var label = document.getElementById('managerStatusLabel');
+  var builder = document.getElementById('portfolioBuilderSection');
+
+  if (portfolioManagerEnabled) {
+    toggle.style.background = '#00ff88';
+    knob.style.left = '22px';
+    knob.style.background = '#050709';
+    label.textContent = 'ON';
+    label.style.color = '#00ff88';
+    builder.classList.remove('hidden');
+  } else {
+    toggle.style.background = '#243040';
+    knob.style.left = '2px';
+    knob.style.background = '#445566';
+    label.textContent = 'OFF';
+    label.style.color = '#445566';
+    builder.classList.add('hidden');
+  }
+}
 
 var OPTIM_DESCRIPTIONS = {
   sortino: 'Maximize return per unit downside risk',
