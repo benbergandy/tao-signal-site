@@ -510,7 +510,8 @@ async function loadProfile() {
 async function saveProfile() {
   if (!currentUser || !currentProfile) return;
 
-  const budget = parseFloat(document.getElementById('taoBudget').value) || 1000;
+  const budgetEl = document.getElementById('taoBudget');
+  const budget = budgetEl ? parseFloat(budgetEl.value) : (currentProfile?.tao_budget || 1000);
 
   const { error } = await supabase
     .from('user_profiles')
@@ -852,17 +853,13 @@ function showProfileView() {
   document.getElementById('authView').classList.add('hidden');
   document.getElementById('profileView').classList.remove('hidden');
 
-  // Topbar auth handled by auth.js
-
   // Profile fields
   document.getElementById('profileEmail').textContent = currentUser.email;
   document.getElementById('profileCreated').textContent = new Date(currentUser.created_at).toLocaleDateString();
-  document.getElementById('taoBudget').value = currentProfile?.tao_budget || 1000;
 
   updateRiskButtons();
   updateRebalanceButtons();
   updateWalletDisplay();
-  loadRecommendations();
 }
 
 // ── INIT ─────────────────────────────────────────────────────
