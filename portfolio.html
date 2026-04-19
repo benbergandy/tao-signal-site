@@ -6,7 +6,6 @@
 <title>TAO Signals — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg:        #050709;
@@ -144,7 +143,7 @@
     </nav>
   </div>
   <div class="topbar-right" id="topbarRight">
-    <!-- Populated by JS -->
+    <div id="authContainer"></div>
   </div>
 </div>
 
@@ -344,17 +343,13 @@ function checkPasswordMatch() {
 }
 </script>
 
-<script>
-// ── SUPABASE INIT (separate script block so UI works even if this fails) ──
-const SUPABASE_URL = 'https://ofbdkvoyodxyqzxqcerr.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mYmRrdm95b2R4eXF6eHFjZXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NDU2NjIsImV4cCI6MjA5MjEyMTY2Mn0.mXy237k1du2tZVb2zE4KIQhtyCtHNl9oDLsYhXqQYVk';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>initAuthDropdown('authContainer');</script>
 
-let supabase;
-try {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch(e) {
-  console.error('Supabase init failed:', e);
-}
+<script>
+// ── SUPABASE (uses _supabase from auth.js) ──
+var supabase = typeof _supabase !== 'undefined' ? _supabase : null;
 
 function showError(msg) {
   const el = document.getElementById('authError');
@@ -622,11 +617,7 @@ function showProfileView() {
   document.getElementById('authView').classList.add('hidden');
   document.getElementById('profileView').classList.remove('hidden');
 
-  // Topbar
-  document.getElementById('topbarRight').innerHTML = `
-    <div class="user-badge">${currentUser.email}</div>
-    <button class="signout-btn" onclick="signOut()">Sign Out</button>
-  `;
+  // Topbar auth handled by auth.js
 
   // Profile fields
   document.getElementById('profileEmail').textContent = currentUser.email;

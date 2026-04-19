@@ -163,6 +163,7 @@
   </div>
   <div class="topbar-right">
     <div class="last-updated" id="lastUpdated">—</div>
+    <div id="authContainer"></div>
   </div>
 </div>
 
@@ -953,5 +954,8 @@ loadData();
   document.fonts.ready.then(function() { setTimeout(drawLogo, 80); });
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>initAuthDropdown('authContainer');</script>
 </body>
 </html>

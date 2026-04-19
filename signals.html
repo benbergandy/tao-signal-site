@@ -193,16 +193,7 @@
   <div class="topbar-right">
     <div class="live-indicator"><div class="live-dot"></div>CHAIN NATIVE</div>
     <div class="last-updated" id="lastUpdated">—</div>
-    <div class="account-wrap">
-      <button class="account-btn" id="accountBtn" onclick="toggleAccount()">
-        Account <span class="chevron">▾</span>
-      </button>
-      <div class="account-dropdown" id="accountDropdown">
-        <div class="account-item">Settings <span class="soon">Soon</span></div>
-        <div class="account-item">Watchlist <span class="soon">Soon</span></div>
-        <div class="account-item">Login / Logout <span class="soon">Soon</span></div>
-      </div>
-    </div>
+    <div id="authContainer"></div>
   </div>
 </div>
 
@@ -405,19 +396,7 @@ function positionTooltip(e) {
 document.addEventListener('mousemove', e => { if (_ttVisible) positionTooltip(e); });
 document.addEventListener('mouseleave', hideTooltip);
 
-// ── ACCOUNT DROPDOWN ───────────────────────────────────────
-function toggleAccount() {
-  const btn  = document.getElementById('accountBtn');
-  const drop = document.getElementById('accountDropdown');
-  btn.classList.toggle('open');
-  drop.classList.toggle('open');
-}
-document.addEventListener('click', e => {
-  if (!e.target.closest('.account-wrap')) {
-    document.getElementById('accountBtn').classList.remove('open');
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-});
+// ── ACCOUNT DROPDOWN (handled by auth.js) ─────────────────
 
 // ── STATE ──────────────────────────────────────────────────
 const RAO = 1_000_000_000;
@@ -964,5 +943,8 @@ loadData();
   document.fonts.ready.then(() => setTimeout(drawLogo, 80));
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>initAuthDropdown('authContainer');</script>
 </body>
 </html>
