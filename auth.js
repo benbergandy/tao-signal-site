@@ -113,8 +113,8 @@ function renderLoggedOut() {
   var itemStyle = 'font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:#445566;padding:10px 14px;cursor:pointer;display:block;border-bottom:1px solid #1a2230;transition:all 0.15s;text-decoration:none;width:100%;text-align:left;background:none;border-left:none;border-right:none;border-top:none;';
 
   content.innerHTML = '' +
-    '<a href="portfolio.html" style="' + itemStyle + '" onmouseover="this.style.color=\'#00d4ff\';this.style.background=\'#0a0e12\'" onmouseout="this.style.color=\'#445566\';this.style.background=\'none\'">Sign In</a>' +
-    '<a href="portfolio.html" style="' + itemStyle + 'border-bottom:none" onmouseover="this.style.color=\'#00d4ff\';this.style.background=\'#0a0e12\'" onmouseout="this.style.color=\'#445566\';this.style.background=\'none\'">Create Account</a>';
+    '<a href="portfolio.html?mode=signin" style="' + itemStyle + '" onmouseover="this.style.color=\'#00d4ff\';this.style.background=\'#0a0e12\'" onmouseout="this.style.color=\'#445566\';this.style.background=\'none\'">Sign In</a>' +
+    '<a href="portfolio.html?mode=signup" style="' + itemStyle + 'border-bottom:none" onmouseover="this.style.color=\'#00d4ff\';this.style.background=\'#0a0e12\'" onmouseout="this.style.color=\'#445566\';this.style.background=\'none\'">Create Account</a>';
 }
 
 async function globalSignOut() {
