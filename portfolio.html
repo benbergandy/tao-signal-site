@@ -243,7 +243,7 @@
             <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
             <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
           </div>
-          <button onclick="openTradeModal({mode:'stake'})" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;cursor:pointer;background:#00ff88;color:#050709;font-weight:600;border:none">Trade</button>
+          <button id="heroTradeBtn" onclick="handleTradeClick()" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;cursor:pointer;background:#00ff88;color:#050709;font-weight:600;border:none">Trade</button>
         </div>
       </div>
 
@@ -803,6 +803,26 @@ function updateManagerUI() {
     label.style.color = '#445566';
     builder.classList.add('hidden');
   }
+}
+
+function handleTradeClick() {
+  if (portfolioManagerEnabled) {
+    // Show warning instead of opening trade modal
+    var msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#0f1419;border:1px solid #ffd000;padding:16px 24px;z-index:10001;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,0.5)';
+    msg.innerHTML = '' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#ffd000;font-weight:600;margin-bottom:8px">PORTFOLIO MANAGER ACTIVE</div>' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#445566;line-height:1.5;margin-bottom:12px">' +
+      'Manual trades are disabled while the portfolio manager is running. ' +
+      'Manual trades would conflict with the bot\'s next rebalance cycle.<br><br>' +
+      'To trade manually, disable the portfolio manager first.' +
+      '</div>' +
+      '<button onclick="this.parentElement.remove()" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;padding:6px 14px;background:transparent;border:1px solid #243040;color:#445566;cursor:pointer">Dismiss</button>';
+    document.body.appendChild(msg);
+    setTimeout(function() { if (msg.parentElement) msg.remove(); }, 5000);
+    return;
+  }
+  openTradeModal({mode: 'stake'});
 }
 
 var OPTIM_DESCRIPTIONS = {

@@ -45,6 +45,22 @@ function createTradeModal() {
 }
 
 function openTradeModal(opts) {
+  // Check if portfolio manager is active (variable from portfolio.html)
+  if (typeof portfolioManagerEnabled !== 'undefined' && portfolioManagerEnabled) {
+    var msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#0f1419;border:1px solid #ffd000;padding:16px 24px;z-index:10001;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,0.5)';
+    msg.innerHTML = '' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#ffd000;font-weight:600;margin-bottom:8px">PORTFOLIO MANAGER ACTIVE</div>' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#445566;line-height:1.5;margin-bottom:12px">' +
+      'Manual trades are disabled while the portfolio manager is running. ' +
+      'Disable the portfolio manager on the Portfolio page to trade manually.' +
+      '</div>' +
+      '<button onclick="this.parentElement.remove()" style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;padding:6px 14px;background:transparent;border:1px solid #243040;color:#445566;cursor:pointer">Dismiss</button>';
+    document.body.appendChild(msg);
+    setTimeout(function() { if (msg.parentElement) msg.remove(); }, 5000);
+    return;
+  }
+
   createTradeModal();
 
   _tradeData.mode = opts.mode || 'stake';
