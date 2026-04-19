@@ -143,16 +143,7 @@
   <div style="display:flex;align-items:center;gap:16px">
     <div class="breadcrumb">TAO Signal / <span id="breadcrumbName">Loading...</span></div>
     <div class="netuid-badge" id="netuidBadge">SN—</div>
-    <div style="position:relative">
-      <button style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;background:transparent;border:1px solid var(--border2);color:var(--muted);padding:5px 12px;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:6px;transition:all 0.15s" id="accountBtn" onclick="toggleAccount()" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">
-        Account <span id="chevron" style="font-size:8px;transition:transform 0.15s">▾</span>
-      </button>
-      <div id="accountDropdown" style="display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--surface2);border:1px solid var(--border2);min-width:160px;z-index:300">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">Settings <span style="font-size:8px;color:var(--dim)">Soon</span></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">Watchlist <span style="font-size:8px;color:var(--dim)">Soon</span></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding:10px 14px;cursor:not-allowed;display:flex;align-items:center;justify-content:space-between">Login / Logout <span style="font-size:8px;color:var(--dim)">Soon</span></div>
-      </div>
-    </div>
+    <div id="authContainer"></div>
   </div>
 </div>
 
@@ -161,6 +152,10 @@
     <div class="subnet-eyebrow">Subnet Intelligence</div>
     <div class="subnet-name" id="subnetName">Loading... <span class="symbol" id="subnetSymbol"></span></div>
     <div class="signal-row" id="signalRow"></div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button onclick="openTradeModal({mode:'stake',netuid:NETUID})" style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:8px 20px;cursor:pointer;background:#00ff88;color:#050709;font-weight:600;border:none;transition:opacity 0.15s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">Stake</button>
+      <button onclick="openTradeModal({mode:'unstake',netuid:NETUID})" style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:8px 20px;cursor:pointer;background:transparent;border:1px solid #ff3355;color:#ff3355;transition:all 0.15s" onmouseover="this.style.background='rgba(255,51,85,0.08)'" onmouseout="this.style.background='transparent'">Unstake</button>
+    </div>
   </div>
   <div class="hero-right">
     <div class="score-cell">
@@ -1171,5 +1166,10 @@ document.addEventListener('click', e => {
   document.fonts.ready.then(() => setTimeout(drawLogo, 80));
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>initAuthDropdown('authContainer');</script>
+<link rel="stylesheet" href="trade-modal.css">
+<script src="trade-modal.js"></script>
 </body>
 </html>

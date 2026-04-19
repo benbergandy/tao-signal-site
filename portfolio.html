@@ -238,9 +238,12 @@
           <div id="heroValue" style="font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;line-height:1">-</div>
           <div id="heroPnl" style="font-family:'IBM Plex Mono',monospace;font-size:16px;margin-top:6px">-</div>
         </div>
-        <div style="display:flex;gap:4px">
-          <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
-          <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="display:flex;gap:4px">
+            <button class="risk-btn" id="toggleTAO" onclick="setUnit('tao')" style="padding:6px 12px">TAO</button>
+            <button class="risk-btn" id="toggleUSD" onclick="setUnit('usd')" style="padding:6px 12px">USD</button>
+          </div>
+          <button onclick="openTradeModal({mode:'stake'})" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;cursor:pointer;background:#00ff88;color:#050709;font-weight:600;border:none">Trade</button>
         </div>
       </div>
 
@@ -541,6 +544,8 @@ function checkPasswordMatch() {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
 <script>initAuthDropdown('authContainer');</script>
+<link rel="stylesheet" href="trade-modal.css">
+<script src="trade-modal.js"></script>
 
 <script>
 // ── SUPABASE (uses _supabase from auth.js) ──

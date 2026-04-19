@@ -1,0 +1,17 @@
+/* trade-modal.css — Styles for the universal trade modal */
+#tradeModalOverlay {
+  backdrop-filter: blur(4px);
+}
+
+#tradeModal {
+  animation: modalSlideUp 0.2s ease;
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#tradeModal::-webkit-scrollbar { width: 4px; }
+#tradeModal::-webkit-scrollbar-track { background: #0a0e12; }
+#tradeModal::-webkit-scrollbar-thumb { background: #243040; }
